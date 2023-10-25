@@ -12,7 +12,7 @@ public class Conexion {
 
     private static final String CLASSPATH = "org.mariadb.jdbc.Driver";
     private static final String URL = "jdbc:mariadb://localhost:3306/";
-    private static final String DB = "proyecto_transversal";
+    private static final String DB = "proyecto_final";
     private static final String USUARIO = "root";
     private static final String PASSWORD = "";
 
