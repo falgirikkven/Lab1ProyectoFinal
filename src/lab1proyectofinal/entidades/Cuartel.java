@@ -9,51 +9,51 @@ public class Cuartel {
     /**
      * SUJETO A CAMBIOS
      */
-    private int codigo_cuartel;
-    private String nombre_cuartel;
+    private int codigoCuartel;
+    private String nombreCuartel;
     private String direccion;
-    private int coordenada_x;
-    private int coordenada_y;
+    private int coordenadaX;
+    private int coordenadaY;
     private long telefono;
     private String correo;
 
     public Cuartel() {
     }
 
-    public Cuartel(String nombre_cuartel, String direccion, int coordenada_x, int coordenada_y, long telefono, String correo) {
-        this.codigo_cuartel = -1;
-        this.nombre_cuartel = nombre_cuartel;
+    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo) {
+        this.codigoCuartel = -1;
+        this.nombreCuartel = nombreCuartel;
         this.direccion = direccion;
-        this.coordenada_x = coordenada_x;
-        this.coordenada_y = coordenada_y;
+        this.coordenadaX = coordenadaX;
+        this.coordenadaY = coordenadaY;
         this.telefono = telefono;
         this.correo = correo;
     }
 
-    public Cuartel(int codigo_cuartel, String nombre_cuartel, String direccion, int coordenada_x, int coordenada_y, long telefono, String correo) {
-        this.codigo_cuartel = codigo_cuartel;
-        this.nombre_cuartel = nombre_cuartel;
+    public Cuartel(int codigoCuartel, String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo) {
+        this.codigoCuartel = codigoCuartel;
+        this.nombreCuartel = nombreCuartel;
         this.direccion = direccion;
-        this.coordenada_x = coordenada_x;
-        this.coordenada_y = coordenada_y;
+        this.coordenadaX = coordenadaX;
+        this.coordenadaY = coordenadaY;
         this.telefono = telefono;
         this.correo = correo;
     }
 
-    public int getCodigo_cuartel() {
-        return codigo_cuartel;
+    public int getCodigoCuartel() {
+        return codigoCuartel;
     }
 
-    public void setCodigo_cuartel(int codigo_cuartel) {
-        this.codigo_cuartel = codigo_cuartel;
+    public void setCodigoCuartel(int codigoCuartel) {
+        this.codigoCuartel = codigoCuartel;
     }
 
-    public String getNombre_cuartel() {
-        return nombre_cuartel;
+    public String getNombreCuartel() {
+        return nombreCuartel;
     }
 
-    public void setNombre_cuartel(String nombre_cuartel) {
-        this.nombre_cuartel = nombre_cuartel;
+    public void setNombreCuartel(String nombreCuartel) {
+        this.nombreCuartel = nombreCuartel;
     }
 
     public String getDireccion() {
@@ -64,20 +64,20 @@ public class Cuartel {
         this.direccion = direccion;
     }
 
-    public int getCoordenada_x() {
-        return coordenada_x;
+    public int getCoordenadaX() {
+        return coordenadaX;
     }
 
-    public void setCoordenada_x(int coordenada_x) {
-        this.coordenada_x = coordenada_x;
+    public void setCoordenadaX(int coordenadaX) {
+        this.coordenadaX = coordenadaX;
     }
 
-    public int getCoordenada_y() {
-        return coordenada_y;
+    public int getCoordenadaY() {
+        return coordenadaY;
     }
 
-    public void setCoordenada_y(int coordenada_y) {
-        this.coordenada_y = coordenada_y;
+    public void setCoordenadaY(int coordenadaY) {
+        this.coordenadaY = coordenadaY;
     }
 
     public long getTelefono() {
@@ -98,7 +98,7 @@ public class Cuartel {
 
     @Override
     public String toString() {
-        return "Cuartel{" + "codigo_cuartel=" + codigo_cuartel + ", nombre_cuartel=" + nombre_cuartel + ", direccion=" + direccion + ", coordenada_x=" + coordenada_x + ", coordenada_y=" + coordenada_y + ", telefono=" + telefono + ", correo=" + correo + '}';
+        return "Cuartel{" + "codigoCuartel=" + codigoCuartel + ", nombreCuartel=" + nombreCuartel + ", direccion=" + direccion + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", telefono=" + telefono + ", correo=" + correo + '}';
     }
 
 }
