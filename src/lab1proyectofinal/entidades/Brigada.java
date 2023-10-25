@@ -9,45 +9,45 @@ public class Brigada {
     /**
      * SUJETO A CAMBIOS
      */
-    private int codigo_brigada;
-    private String nombre_brigada;
+    private int codigoBrigada;
+    private String nombreBrigada;
     private String especialidad;
     private boolean disponible;
-    private int codigo_cuartel;
+    private int codigoCuartel;
 
     public Brigada() {
     }
 
-    public Brigada(String nombre_brigada, String especialidad, boolean disponible, int codigo_cuartel) {
-        this.codigo_brigada = -1;
-        this.nombre_brigada = nombre_brigada;
+    public Brigada(String nombreBrigada, String especialidad, boolean disponible, int codigoCuartel) {
+        this.codigoBrigada = -1;
+        this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
         this.disponible = disponible;
-        this.codigo_cuartel = codigo_cuartel;
+        this.codigoCuartel = codigoCuartel;
     }
 
-    public Brigada(int codigo_brigada, String nombre_brigada, String especialidad, boolean disponible, int codigo_cuartel) {
-        this.codigo_brigada = codigo_brigada;
-        this.nombre_brigada = nombre_brigada;
+    public Brigada(int codigoBrigada, String nombreBrigada, String especialidad, boolean disponible, int codigoCuartel) {
+        this.codigoBrigada = codigoBrigada;
+        this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
         this.disponible = disponible;
-        this.codigo_cuartel = codigo_cuartel;
+        this.codigoCuartel = codigoCuartel;
     }
 
-    public int getCodigo_brigada() {
-        return codigo_brigada;
+    public int getCodigoBrigada() {
+        return codigoBrigada;
     }
 
-    public void setCodigo_brigada(int codigo_brigada) {
-        this.codigo_brigada = codigo_brigada;
+    public void setCodigoBrigada(int codigoBrigada) {
+        this.codigoBrigada = codigoBrigada;
     }
 
     public String getNombre_brigada() {
-        return nombre_brigada;
+        return nombreBrigada;
     }
 
-    public void setNombre_brigada(String nombre_brigada) {
-        this.nombre_brigada = nombre_brigada;
+    public void setNombreBrigada(String nombreBrigada) {
+        this.nombreBrigada = nombreBrigada;
     }
 
     public String getEspecialidad() {
@@ -67,16 +67,16 @@ public class Brigada {
     }
 
     public int getCodigo_cuartel() {
-        return codigo_cuartel;
+        return codigoCuartel;
     }
 
-    public void setCodigo_cuartel(int codigo_cuartel) {
-        this.codigo_cuartel = codigo_cuartel;
+    public void setCodigoCuartel(int codigoCuartel) {
+        this.codigoCuartel = codigoCuartel;
     }
 
     @Override
     public String toString() {
-        return "Brigada{" + "codigo_brigada=" + codigo_brigada + ", nombre_brigada=" + nombre_brigada + ", especialidad=" + especialidad + ", disponible=" + disponible + ", codigo_cuartel=" + codigo_cuartel + '}';
+        return "Brigada{" + "codigo_brigada=" + codigoBrigada + ", nombre_brigada=" + nombreBrigada + ", especialidad=" + especialidad + ", disponible=" + disponible + ", codigo_cuartel=" + codigoCuartel + '}';
     }
 
 }
