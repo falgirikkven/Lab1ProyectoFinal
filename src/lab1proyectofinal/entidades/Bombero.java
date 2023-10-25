@@ -11,40 +11,43 @@ public class Bombero {
     /**
      * SUJETO A CAMBIOS
      */
-    private int id_bombero;
+    private int idBombero;
     private int dni;
-    private String nombre_apellido;
+    private String nombreApellido;
     private LocalDate fechaNacimiento;
     private long telefono;
     private int codigo_brigada;
+    private boolean estado;
 
     public Bombero() {
     }
 
-    public Bombero(int dni, String nombre_apellido, LocalDate fechaNacimiento, long telefono, int codigo_brigada) {
-        this.id_bombero = -1;
+    public Bombero(int dni, String nombreApellido, LocalDate fechaNacimiento, long telefono, int codigo_brigada, boolean estado) {
+        this.idBombero = -1;
         this.dni = dni;
-        this.nombre_apellido = nombre_apellido;
+        this.nombreApellido = nombreApellido;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.codigo_brigada = codigo_brigada;
+        this.estado = estado;
     }
 
-    public Bombero(int id_bombero, int dni, String nombre_apellido, LocalDate fechaNacimiento, long telefono, int codigo_brigada) {
-        this.id_bombero = id_bombero;
+    public Bombero(int idBombero, int dni, String nombreApellido, LocalDate fechaNacimiento, long telefono, int codigo_brigada, boolean estado) {
+        this.idBombero = idBombero;
         this.dni = dni;
-        this.nombre_apellido = nombre_apellido;
+        this.nombreApellido = nombreApellido;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.codigo_brigada = codigo_brigada;
+        this.estado = estado;
     }
 
-    public int getId_bombero() {
-        return id_bombero;
+    public int getIdBombero() {
+        return idBombero;
     }
 
-    public void setId_bombero(int id_bombero) {
-        this.id_bombero = id_bombero;
+    public void setIdBombero(int idBombero) {
+        this.idBombero = idBombero;
     }
 
     public int getDni() {
@@ -55,12 +58,12 @@ public class Bombero {
         this.dni = dni;
     }
 
-    public String getNombre_apellido() {
-        return nombre_apellido;
+    public String getNombreApellido() {
+        return nombreApellido;
     }
 
-    public void setNombre_apellido(String nombre_apellido) {
-        this.nombre_apellido = nombre_apellido;
+    public void setNombreApellido(String nombreApellido) {
+        this.nombreApellido = nombreApellido;
     }
 
     public LocalDate getFechaNacimiento() {
@@ -87,9 +90,17 @@ public class Bombero {
         this.codigo_brigada = codigo_brigada;
     }
 
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
+    }
+
     @Override
     public String toString() {
-        return "Bombero{" + "id_bombero=" + id_bombero + ", dni=" + dni + ", nombre_apellido=" + nombre_apellido + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", codigo_brigada=" + codigo_brigada + '}';
+        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", codigo_brigada=" + codigo_brigada + '}';
     }
 
 }
