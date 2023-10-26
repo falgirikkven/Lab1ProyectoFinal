@@ -1,14 +1,11 @@
 package lab1proyectofinal;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lab1proyectofinal.accesoADatos.BomberoData;
 import lab1proyectofinal.accesoADatos.Conexion;
 import lab1proyectofinal.entidades.Bombero;
@@ -29,8 +26,10 @@ public class Pruebas {
             Statement statementBrigada = connection.createStatement();
             String sqlBrigada = "INSERT INTO `brigada`(`codigoBrigada`, `nombreBrigada`, `especialidad`, `disponible`, `codigoCuartel`, `estado`) VALUES (1,'Brigada SOS','Quien sabe', 1, 1, 1)";
             statementBrigada.executeQuery(sqlBrigada);
-        } catch (SQLException ex) {
-            Logger.getLogger(Pruebas.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            if (e.getErrorCode() != 1062) { // Ignorar datos repetidos
+                e.printStackTrace();
+            }
         }
     }
 
