@@ -14,6 +14,7 @@ public class Bombero {
     private int idBombero;
     private int dni;
     private String nombreApellido;
+    private String grupoSanguineo;
     private LocalDate fechaNacimiento;
     private long telefono;
     private int codigoBrigada;
@@ -22,20 +23,22 @@ public class Bombero {
     public Bombero() {
     }
 
-    public Bombero(int dni, String nombreApellido, LocalDate fechaNacimiento, long telefono, int codigoBrigada, boolean estado) {
+    public Bombero(int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, int codigoBrigada, boolean estado) {
         this.idBombero = -1;
         this.dni = dni;
         this.nombreApellido = nombreApellido;
+        this.grupoSanguineo = grupoSanguineo;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.codigoBrigada = codigoBrigada;
         this.estado = estado;
     }
 
-    public Bombero(int idBombero, int dni, String nombreApellido, LocalDate fechaNacimiento, long telefono, int codigoBrigada, boolean estado) {
+    public Bombero(int idBombero, int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, int codigoBrigada, boolean estado) {
         this.idBombero = idBombero;
         this.dni = dni;
         this.nombreApellido = nombreApellido;
+        this.grupoSanguineo = grupoSanguineo;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.codigoBrigada = codigoBrigada;
@@ -64,6 +67,14 @@ public class Bombero {
 
     public void setNombreApellido(String nombreApellido) {
         this.nombreApellido = nombreApellido;
+    }
+
+    public String getGrupoSanguineo() {
+        return grupoSanguineo;
+    }
+
+    public void setGrupoSanguineo(String grupoSanguineo) {
+        this.grupoSanguineo = grupoSanguineo;
     }
 
     public LocalDate getFechaNacimiento() {
@@ -100,7 +111,7 @@ public class Bombero {
 
     @Override
     public String toString() {
-        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", codigoBrigada=" + codigoBrigada + '}';
+        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", codigoBrigada=" + codigoBrigada + ", estado=" + estado + '}';
     }
 
 }

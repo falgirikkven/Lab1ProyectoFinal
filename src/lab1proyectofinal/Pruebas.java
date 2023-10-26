@@ -1,6 +1,8 @@
 package lab1proyectofinal;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
@@ -13,6 +15,23 @@ import lab1proyectofinal.entidades.Bombero;
  * @author Grupo-3
  */
 public class Pruebas {
+
+    // Este bloque de codigo es temporal
+    private static void insertarCuartelyBrigada(Connection connection) {
+        try {
+            Statement statementCuartel = connection.createStatement();
+            String sqlCuartel = "INSERT INTO `cuartel`(`codigoCuartel`, `nombreCuartel`, `direccion`, `coordenadaX`, `coordenadaY`, `telefono`, `correo`, `estado`) VALUES (1,'Manso  cuartel', 'Calle falsa 123', 0, 0, 2664666666, 'mansocuartel@fromhell.666', true);";
+            statementCuartel.executeQuery(sqlCuartel);
+
+            Statement statementBrigada = connection.createStatement();
+            String sqlBrigada = "INSERT INTO `brigada`(`codigoBrigada`, `nombreBrigada`, `especialidad`, `disponible`, `codigoCuartel`, `estado`) VALUES (1,'Brigada SOS','Quien sabe', 1, 1, 1)";
+            statementBrigada.executeQuery(sqlBrigada);
+        } catch (SQLException e) {
+            if (e.getErrorCode() != 1062) { // Ignorar datos repetidos
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -28,14 +47,15 @@ public class Pruebas {
 
         /* NOTA: Deberia crearse cuartel y brigada antes de intentar guardar los bomberos.
            Caso contrario Ocurren Errores */
-        
+        insertarCuartelyBrigada(con); // Metodo static temporal
+
         // Bombero Data
         BomberoData bomberoData = new BomberoData();
 
         // Bomberos
-        Bombero bombero1 = new Bombero(1, 11000111, "Nahuel Lucero", LocalDate.of(1998, Month.AUGUST, 1), 11000111, 1, true);
-        Bombero bombero2 = new Bombero(2, 37666666, "Leonel Nievas", LocalDate.of(1993, Month.AUGUST, 7), 37666666, 1, true);
-        Bombero bombero3 = new Bombero(3, 40000444, "Nahuel Ochoa", LocalDate.of(1999, Month.OCTOBER, 18), 40000444, 1, true);
+        Bombero bombero1 = new Bombero(1, 11000111, "Nahuel Lucero", "A+", LocalDate.of(1998, Month.AUGUST, 1), 11000111, 1, true);
+        Bombero bombero2 = new Bombero(2, 37666666, "Leonel Nievas", "A+", LocalDate.of(1993, Month.AUGUST, 7), 37666666, 1, true);
+        Bombero bombero3 = new Bombero(3, 40000444, "Nahuel Ochoa", "B+", LocalDate.of(1999, Month.OCTOBER, 18), 40000444, 1, true);
         Bombero bomberos[] = new Bombero[]{bombero1, bombero2, bombero3};
 
         // Guardar Bomberos
@@ -78,12 +98,12 @@ public class Pruebas {
         int cualBomberoEditar = 2;
         Bombero bomberoModificado;
         System.out.println("\n----- Modificar Bombero (con id " + cualBomberoEditar + ")-----");
-        bomberoModificado = new Bombero(cualBomberoEditar, 42897241, "Ramiro Moran", LocalDate.of(2000, Month.NOVEMBER, 13), 42897241, 1, true);
+        bomberoModificado = new Bombero(cualBomberoEditar, 42897241, "Ramiro Moran", "O-", LocalDate.of(2000, Month.NOVEMBER, 13), 42897241, 1, true);
         bomberoData.modificarBombero(bomberoModificado);
 
         // Listar Bomberos para ver los efectos de la edición
         System.out.println("\n----- Listar Bomberos -----");
-        listaBomberos = listaBomberos = bomberoData.listarBomberos();
+        listaBomberos = bomberoData.listarBomberos();
         for (Bombero bombero : listaBomberos) {
             System.out.println(bombero.toString());
         }
