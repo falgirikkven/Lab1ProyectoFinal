@@ -29,9 +29,9 @@ public class BomberoData {
         try {
             String sql;
             if (bombero.getIdBombero() == -1) {
-                sql = "INSERT INTO bombero(dni, nombre_apellido, grupo_sanguineo, fecha_nacimiento, telefono, codigo_brigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
             } else {
-                sql = "INSERT INTO bombero(dni, nombre_apellido, grupo_sanguineo, fecha_nacimiento, telefono, codigo_brigada, estado, id_bombero) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado, idBombero) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
