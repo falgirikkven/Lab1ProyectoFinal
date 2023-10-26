@@ -1,9 +1,14 @@
 package lab1proyectofinal;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lab1proyectofinal.accesoADatos.BomberoData;
 import lab1proyectofinal.accesoADatos.Conexion;
 import lab1proyectofinal.entidades.Bombero;
@@ -13,6 +18,21 @@ import lab1proyectofinal.entidades.Bombero;
  * @author Grupo-3
  */
 public class Pruebas {
+
+    // Este bloque de codigo es temporal
+    private static void insertarCuartelyBrigada(Connection connection) {
+        try {
+            Statement statementCuartel = connection.createStatement();
+            String sqlCuartel = "INSERT INTO `cuartel`(`codigoCuartel`, `nombreCuartel`, `direccion`, `coordenadaX`, `coordenadaY`, `telefono`, `correo`, `estado`) VALUES (1,'Manso  cuartel', 'Calle falsa 123', 0, 0, 2664666666, 'mansocuartel@fromhell.666', true);";
+            statementCuartel.executeQuery(sqlCuartel);
+
+            Statement statementBrigada = connection.createStatement();
+            String sqlBrigada = "INSERT INTO `brigada`(`codigoBrigada`, `nombreBrigada`, `especialidad`, `disponible`, `codigoCuartel`, `estado`) VALUES (1,'Brigada SOS','Quien sabe', 1, 1, 1)";
+            statementBrigada.executeQuery(sqlBrigada);
+        } catch (SQLException ex) {
+            Logger.getLogger(Pruebas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -28,6 +48,8 @@ public class Pruebas {
 
         /* NOTA: Deberia crearse cuartel y brigada antes de intentar guardar los bomberos.
            Caso contrario Ocurren Errores */
+        insertarCuartelyBrigada(con); // Metodo static temporal
+
         // Bombero Data
         BomberoData bomberoData = new BomberoData();
 
@@ -41,6 +63,10 @@ public class Pruebas {
         System.out.println("----- Guardar Bomberos -----");
         for (Bombero bombero : bomberos) {
             bomberoData.guardarBombero(bombero);
+        }
+
+        if (true) {
+            return;
         }
 
         // Listar Bomberos
