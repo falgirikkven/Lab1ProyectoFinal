@@ -29,19 +29,20 @@ public class BomberoData {
         try {
             String sql;
             if (bombero.getIdBombero() == -1) {
-                sql = "INSERT INTO bombero(dni, nombre_apellido, fecha_nacimiento, telefono, codigo_brigada, estado) VALUES (?, ?, ?, ?, ?, ?)";
+                sql = "INSERT INTO bombero(dni, nombre_apellido, grupo_sanguineo, fecha_nacimiento, telefono, codigo_brigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
             } else {
-                sql = "INSERT INTO bombero(dni, nombre_apellido, fecha_nacimiento, telefono, codigo_brigada, estado, id_bombero) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                sql = "INSERT INTO bombero(dni, nombre_apellido, grupo_sanguineo, fecha_nacimiento, telefono, codigo_brigada, estado, id_bombero) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
             ps.setString(2, bombero.getNombreApellido());
-            ps.setDate(3, Date.valueOf(bombero.getFechaNacimiento()));
-            ps.setLong(4, bombero.getTelefono());
-            ps.setInt(5, bombero.getCodigoBrigada());
-            ps.setBoolean(6, true);
+            ps.setString(3, bombero.getGrupoSanguineo());
+            ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
+            ps.setLong(5, bombero.getTelefono());
+            ps.setInt(6, bombero.getCodigoBrigada());
+            ps.setBoolean(7, true);
             if (bombero.getIdBombero() != -1) {
-                ps.setInt(7, bombero.getIdBombero());
+                ps.setInt(8, bombero.getIdBombero());
             }
             if (ps.executeUpdate() > 0) {
                 resultado = true;
@@ -72,6 +73,7 @@ public class BomberoData {
                 bombero.setIdBombero(rs.getInt("id_bombero"));
                 bombero.setDni(rs.getInt("dni"));
                 bombero.setNombreApellido(rs.getString("nombre_apellido"));
+                bombero.setGrupoSanguineo(rs.getString("grupo_sanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
                 bombero.setTelefono(rs.getLong("telefono"));
                 bombero.setCodigoBrigada(rs.getInt("codigo_brigada"));
@@ -100,6 +102,7 @@ public class BomberoData {
                 bombero.setIdBombero(rs.getInt("id_bombero"));
                 bombero.setDni(rs.getInt("dni"));
                 bombero.setNombreApellido(rs.getString("nombre_apellido"));
+                bombero.setGrupoSanguineo(rs.getString("grupo_sanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
                 bombero.setTelefono(rs.getLong("telefono"));
                 bombero.setCodigoBrigada(rs.getInt("codigo_brigada"));
@@ -128,6 +131,7 @@ public class BomberoData {
                 bombero.setIdBombero(rs.getInt("id_bombero"));
                 bombero.setDni(rs.getInt("dni"));
                 bombero.setNombreApellido(rs.getString("nombre_apellido"));
+                bombero.setGrupoSanguineo(rs.getString("grupo_sanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
                 bombero.setTelefono(rs.getLong("telefono"));
                 bombero.setCodigoBrigada(rs.getInt("codigo_brigada"));
@@ -145,15 +149,16 @@ public class BomberoData {
     public boolean modificarBombero(Bombero bombero) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE bombero SET dni=?, nombre_apellido=?, fecha_nacimiento=?, telefono=?, codigo_brigada=?, estado=? WHERE id_bombero=?";
+            String sql = "UPDATE bombero SET dni=?, nombre_apellido=?, grupo_sanguineo=?, fecha_nacimiento=?, telefono=?, codigo_brigada=?, estado=? WHERE id_bombero=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
             ps.setString(2, bombero.getNombreApellido());
-            ps.setDate(3, Date.valueOf(bombero.getFechaNacimiento()));
-            ps.setLong(4, bombero.getTelefono());
-            ps.setInt(5, bombero.getCodigoBrigada());
-            ps.setBoolean(6, true);
-            ps.setInt(7, bombero.getIdBombero());
+            ps.setString(3, bombero.getGrupoSanguineo());
+            ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
+            ps.setLong(5, bombero.getTelefono());
+            ps.setInt(6, bombero.getCodigoBrigada());
+            ps.setBoolean(7, true);
+            ps.setInt(8, bombero.getIdBombero());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[BomberoData] Bombero modificado");
