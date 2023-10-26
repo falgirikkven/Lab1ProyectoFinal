@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Oct 25, 2023 at 04:29 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 26-10-2023 a las 15:50:59
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,156 +18,182 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `proyecto_final`
+-- Base de datos: `proyecto_final`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bombero`
+-- Estructura de tabla para la tabla `bombero`
 --
 
 CREATE TABLE `bombero` (
-  `id_bombero` int(11) NOT NULL,
+  `idBombero` int(11) NOT NULL,
   `dni` int(11) NOT NULL,
-  `nombre_apellido` varchar(50) NOT NULL,
-  `fecha_nacimiento` date NOT NULL,
-  `telefono` bigint(20) NOT NULL,
-  `codigo_brigada` int(20) NOT NULL,
+  `nombreApellido` varchar(50) NOT NULL,
+  `grupoSanguineo` varchar(8) NOT NULL,
+  `fechaNacimiento` date NOT NULL,
+  `celular` bigint(20) NOT NULL,
+  `codigoBrigada` int(11) NOT NULL,
   `estado` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `bombero`
+--
+
+INSERT INTO `bombero` (`idBombero`, `dni`, `nombreApellido`, `grupoSanguineo`, `fechaNacimiento`, `celular`, `codigoBrigada`, `estado`) VALUES
+(1, 11000111, 'Nahuel Lucero', 'A+', '1998-08-01', 11000111, 1, 1),
+(2, 42897241, 'Ramiro Moran', 'B-', '2000-11-13', 42897241, 1, 0),
+(3, 40000444, 'Nahuel Ochoa', 'O+', '1999-10-18', 40000444, 1, 1);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `brigada`
+-- Estructura de tabla para la tabla `brigada`
 --
 
 CREATE TABLE `brigada` (
-  `codigo_brigada` int(11) NOT NULL,
-  `nombre_brigada` varchar(20) NOT NULL,
+  `codigoBrigada` int(11) NOT NULL,
+  `nombreBrigada` varchar(20) NOT NULL,
   `especialidad` varchar(30) NOT NULL,
   `disponible` tinyint(4) NOT NULL,
-  `codigo_cuartel` int(11) NOT NULL
+  `codigoCuartel` int(11) NOT NULL,
+  `estado` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `brigada`
+--
+
+INSERT INTO `brigada` (`codigoBrigada`, `nombreBrigada`, `especialidad`, `disponible`, `codigoCuartel`, `estado`) VALUES
+(1, 'Mansa Brigada', 'Programar', 1, 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cuartel`
+-- Estructura de tabla para la tabla `cuartel`
 --
 
 CREATE TABLE `cuartel` (
-  `codigo_cuartel` int(11) NOT NULL,
-  `nombre_cuartel` varchar(20) NOT NULL,
+  `codigoCuartel` int(11) NOT NULL,
+  `nombreCuartel` varchar(20) NOT NULL,
   `direccion` varchar(30) NOT NULL,
-  `coordenada_x` int(11) NOT NULL,
-  `coordenada_y` int(11) NOT NULL,
+  `coordenadaX` int(11) NOT NULL,
+  `coordenadaY` int(11) NOT NULL,
   `telefono` bigint(20) NOT NULL,
-  `correo` varchar(30) NOT NULL
+  `correo` varchar(30) NOT NULL,
+  `estado` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cuartel`
+--
+
+INSERT INTO `cuartel` (`codigoCuartel`, `nombreCuartel`, `direccion`, `coordenadaX`, `coordenadaY`, `telefono`, `correo`, `estado`) VALUES
+(1, 'test', 'calle falsa 123', 0, 0, 2664666666, 'mansocorreo@fromhell.666', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `siniestro`
+-- Estructura de tabla para la tabla `siniestro`
 --
 
 CREATE TABLE `siniestro` (
-  `codigo` int(11) NOT NULL,
-  `tipo` varchar(20) NOT NULL,
-  `fecha_siniestro` date NOT NULL,
-  `coordenada_x` int(11) NOT NULL,
-  `coordenada_y` int(11) NOT NULL,
+  `codigoSiniestro` int(11) NOT NULL,
+  `tipo` varchar(30) NOT NULL,
+  `fechaSiniestro` date NOT NULL,
+  `coordenadaX` int(11) NOT NULL,
+  `coordenadaY` int(11) NOT NULL,
   `detalles` text NOT NULL,
-  `fecha_resolucion` date DEFAULT NULL,
+  `fechaResolucion` date DEFAULT NULL,
   `puntuacion` int(11) DEFAULT NULL,
-  `codigo_brigada` int(11) DEFAULT NULL
+  `codigoBrigada` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `bombero`
+-- Indices de la tabla `bombero`
 --
 ALTER TABLE `bombero`
-  ADD PRIMARY KEY (`id_bombero`),
+  ADD PRIMARY KEY (`idBombero`),
   ADD UNIQUE KEY `dni` (`dni`),
-  ADD KEY `codigo_brigada` (`codigo_brigada`);
+  ADD KEY `codigo_brigada` (`codigoBrigada`);
 
 --
--- Indexes for table `brigada`
+-- Indices de la tabla `brigada`
 --
 ALTER TABLE `brigada`
-  ADD PRIMARY KEY (`codigo_brigada`),
-  ADD UNIQUE KEY `nombre_brigada` (`nombre_brigada`) USING BTREE,
-  ADD KEY `codigo_cuartel` (`codigo_cuartel`);
+  ADD PRIMARY KEY (`codigoBrigada`),
+  ADD UNIQUE KEY `nombre_brigada` (`nombreBrigada`) USING BTREE,
+  ADD KEY `codigo_cuartel` (`codigoCuartel`);
 
 --
--- Indexes for table `cuartel`
+-- Indices de la tabla `cuartel`
 --
 ALTER TABLE `cuartel`
-  ADD PRIMARY KEY (`codigo_cuartel`),
-  ADD UNIQUE KEY `nombre_cuartel` (`nombre_cuartel`);
+  ADD PRIMARY KEY (`codigoCuartel`),
+  ADD UNIQUE KEY `nombre_cuartel` (`nombreCuartel`);
 
 --
--- Indexes for table `siniestro`
+-- Indices de la tabla `siniestro`
 --
 ALTER TABLE `siniestro`
-  ADD PRIMARY KEY (`codigo`),
-  ADD KEY `codigo_brigada` (`codigo_brigada`);
+  ADD PRIMARY KEY (`codigoSiniestro`),
+  ADD KEY `codigo_brigada` (`codigoBrigada`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `bombero`
+-- AUTO_INCREMENT de la tabla `bombero`
 --
 ALTER TABLE `bombero`
-  MODIFY `id_bombero` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idBombero` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `brigada`
+-- AUTO_INCREMENT de la tabla `brigada`
 --
 ALTER TABLE `brigada`
-  MODIFY `codigo_brigada` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `codigoBrigada` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `cuartel`
+-- AUTO_INCREMENT de la tabla `cuartel`
 --
 ALTER TABLE `cuartel`
-  MODIFY `codigo_cuartel` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `codigoCuartel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `siniestro`
+-- AUTO_INCREMENT de la tabla `siniestro`
 --
 ALTER TABLE `siniestro`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `codigoSiniestro` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `bombero`
+-- Filtros para la tabla `bombero`
 --
 ALTER TABLE `bombero`
-  ADD CONSTRAINT `bombero_ibfk_1` FOREIGN KEY (`codigo_brigada`) REFERENCES `brigada` (`codigo_brigada`);
+  ADD CONSTRAINT `bombero_ibfk_1` FOREIGN KEY (`codigoBrigada`) REFERENCES `brigada` (`codigoBrigada`);
 
 --
--- Constraints for table `brigada`
+-- Filtros para la tabla `brigada`
 --
 ALTER TABLE `brigada`
-  ADD CONSTRAINT `brigada_ibfk_1` FOREIGN KEY (`codigo_cuartel`) REFERENCES `cuartel` (`codigo_cuartel`);
+  ADD CONSTRAINT `brigada_ibfk_1` FOREIGN KEY (`codigoCuartel`) REFERENCES `cuartel` (`codigoCuartel`);
 
 --
--- Constraints for table `siniestro`
+-- Filtros para la tabla `siniestro`
 --
 ALTER TABLE `siniestro`
-  ADD CONSTRAINT `siniestro_ibfk_1` FOREIGN KEY (`codigo_brigada`) REFERENCES `brigada` (`codigo_brigada`);
+  ADD CONSTRAINT `siniestro_ibfk_1` FOREIGN KEY (`codigoBrigada`) REFERENCES `brigada` (`codigoBrigada`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
