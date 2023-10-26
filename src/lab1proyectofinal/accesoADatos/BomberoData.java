@@ -75,7 +75,7 @@ public class BomberoData {
                 bombero.setNombreApellido(rs.getString("nombreApellido"));
                 bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("telefono"));
+                bombero.setTelefono(rs.getLong("celular"));
                 bombero.setCodigoBrigada(rs.getInt("codigoBrigada"));
                 bombero.setEstado(rs.getBoolean("estado"));
                 System.out.println("[BomberoData] Bombero con id=" + idBombero + " encontrado");
@@ -104,7 +104,7 @@ public class BomberoData {
                 bombero.setNombreApellido(rs.getString("nombreApellido"));
                 bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("telefono"));
+                bombero.setTelefono(rs.getLong("celular"));
                 bombero.setCodigoBrigada(rs.getInt("codigoBrigada"));
                 bombero.setEstado(rs.getBoolean("estado"));
                 System.out.println("[BomberoData] Bombero con dni=" + dni + " encontrado");
@@ -133,7 +133,7 @@ public class BomberoData {
                 bombero.setNombreApellido(rs.getString("nombreApellido"));
                 bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("telefono"));
+                bombero.setTelefono(rs.getLong("celular"));
                 bombero.setCodigoBrigada(rs.getInt("codigoBrigada"));
                 bombero.setEstado(rs.getBoolean("estado"));
                 bomberos.add(bombero);
@@ -149,7 +149,7 @@ public class BomberoData {
     public boolean modificarBombero(Bombero bombero) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE bombero SET dni=?, nombreApellido=?, grupoSanguineo=?, fechaNacimiento=?, telefono=?, codigoBrigada=?, estado=? WHERE id_bombero=?";
+            String sql = "UPDATE bombero SET dni=?, nombreApellido=?, grupoSanguineo=?, fechaNacimiento=?, celular=?, codigoBrigada=?, estado=? WHERE idBombero=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
             ps.setString(2, bombero.getNombreApellido());
@@ -176,7 +176,7 @@ public class BomberoData {
     public boolean eliminarBombero(int idBombero) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE bombero SET estado=false WHERE id_bombero=?";
+            String sql = "UPDATE bombero SET estado=false WHERE idBombero=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, idBombero);
             if (ps.executeUpdate() > 0) {

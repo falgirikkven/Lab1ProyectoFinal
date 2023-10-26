@@ -64,10 +64,6 @@ public class Pruebas {
             bomberoData.guardarBombero(bombero);
         }
 
-        if (true) {
-            return;
-        }
-
         // Listar Bomberos
         System.out.println("\n----- Listar Bomberos -----");
         List<Bombero> listaBomberos = bomberoData.listarBomberos();
@@ -107,7 +103,7 @@ public class Pruebas {
 
         // Listar Bomberos para ver los efectos de la edición
         System.out.println("\n----- Listar Bomberos -----");
-        listaBomberos = listaBomberos = bomberoData.listarBomberos();
+        listaBomberos = bomberoData.listarBomberos();
         for (Bombero bombero : listaBomberos) {
             System.out.println(bombero.toString());
         }
