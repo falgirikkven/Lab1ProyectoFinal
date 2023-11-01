@@ -11,7 +11,7 @@ public class Siniestro {
     /**
      * SUJETO A CAMBIOS
      */
-    private int codigo;
+    private int codigoSiniestro;
     private String tipo;
     private LocalDate fechaSiniestro;
     private int coordenadaX;
@@ -25,7 +25,7 @@ public class Siniestro {
     }
 
     public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles) {
-        this.codigo = -1;
+        this.codigoSiniestro = -1;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
@@ -36,8 +36,8 @@ public class Siniestro {
         this.codigoBrigada = -1;
     }
 
-    public Siniestro(int codigo, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles) {
-        this.codigo = codigo;
+    public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles) {
+        this.codigoSiniestro = codigoSiniestro;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
@@ -48,8 +48,8 @@ public class Siniestro {
         this.codigoBrigada = -1;
     }
 
-    public Siniestro(int codigo, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
-        this.codigo = codigo;
+    public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
+        this.codigoSiniestro = codigoSiniestro;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
@@ -60,8 +60,8 @@ public class Siniestro {
         this.codigoBrigada = codigoBrigada;
     }
 
-    public Siniestro(int codigo, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, LocalDate fechaResolucion, int puntuacion, int codigoBrigada) {
-        this.codigo = codigo;
+    public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, LocalDate fechaResolucion, int puntuacion, int codigoBrigada) {
+        this.codigoSiniestro = codigoSiniestro;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
@@ -72,12 +72,12 @@ public class Siniestro {
         this.codigoBrigada = codigoBrigada;
     }
 
-    public int getCodigo() {
-        return codigo;
+    public int getCodigoSiniestro() {
+        return codigoSiniestro;
     }
 
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+    public void setCodigoSiniestro(int codigoSiniestro) {
+        this.codigoSiniestro = codigoSiniestro;
     }
 
     public String getTipo() {
@@ -108,7 +108,7 @@ public class Siniestro {
         return coordenadaY;
     }
 
-    public void setCoordenada_y(int coordenadaY) {
+    public void setCoordenadaY(int coordenadaY) {
         this.coordenadaY = coordenadaY;
     }
 
@@ -146,7 +146,7 @@ public class Siniestro {
 
     @Override
     public String toString() {
-        return "Siniestro{" + "codigo=" + codigo + ", tipo=" + tipo + ", fechaSiniestro=" + fechaSiniestro + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", fechaResolucion=" + fechaResolucion + ", puntuacion=" + puntuacion + ", codigoBrigada=" + codigoBrigada + '}';
+        return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaSiniestro=" + fechaSiniestro + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", fechaResolucion=" + fechaResolucion + ", puntuacion=" + puntuacion + ", codigoBrigada=" + codigoBrigada + '}';
     }
 
 }
