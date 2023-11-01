@@ -49,6 +49,8 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         BtnLimpiar = new javax.swing.JButton();
         BtnGuardar = new javax.swing.JButton();
         BtnSalir = new javax.swing.JButton();
+        jlEstado = new javax.swing.JLabel();
+        jtfEstado = new javax.swing.JTextField();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -107,46 +109,60 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             }
         });
 
+        jlEstado.setText("Estado:");
+
+        jtfEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtfEstadoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(titulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(codigoLabel)
-                            .addComponent(telefonoLabel)
-                            .addComponent(correoLabel)
-                            .addComponent(direccionLabel)
-                            .addComponent(nombreLabel))
-                        .addGap(29, 29, 29)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(correoTF, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                            .addComponent(telefonoTF)
-                            .addComponent(direccionTF)
-                            .addComponent(nombreTF)
-                            .addComponent(codigoTF))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(BtnBuscarCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(BtnBuscarNombre, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(coordenadaXLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                        .addComponent(coordenadaYLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(BtnLimpiar)
                         .addGap(18, 18, 18)
                         .addComponent(BtnGuardar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(BtnSalir)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
+                        .addComponent(BtnSalir))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(codigoLabel)
+                                    .addComponent(telefonoLabel)
+                                    .addComponent(correoLabel)
+                                    .addComponent(direccionLabel)
+                                    .addComponent(nombreLabel)
+                                    .addComponent(jlEstado))
+                                .addGap(29, 29, 29)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(correoTF)
+                                    .addComponent(telefonoTF)
+                                    .addComponent(direccionTF)
+                                    .addComponent(nombreTF)
+                                    .addComponent(codigoTF)
+                                    .addComponent(jtfEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(BtnBuscarCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(BtnBuscarNombre, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(coordenadaXLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(35, 35, 35)
+                                .addComponent(coordenadaYLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -177,13 +193,17 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                     .addComponent(correoLabel)
                     .addComponent(correoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(coordenadaXTF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jlEstado)
+                    .addComponent(jtfEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(coordenadaYLabel))
                     .addComponent(coordenadaXLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnLimpiar)
                     .addComponent(BtnGuardar)
@@ -214,6 +234,10 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         this.hide();
     }//GEN-LAST:event_BtnSalirActionPerformed
 
+    private void jtfEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfEstadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtfEstadoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnBuscarCodigo;
@@ -231,6 +255,8 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     private javax.swing.JTextField correoTF;
     private javax.swing.JLabel direccionLabel;
     private javax.swing.JTextField direccionTF;
+    private javax.swing.JLabel jlEstado;
+    private javax.swing.JTextField jtfEstado;
     private javax.swing.JLabel nombreLabel;
     private javax.swing.JTextField nombreTF;
     private javax.swing.JLabel telefonoLabel;
