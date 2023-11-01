@@ -26,45 +26,53 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="titulo" alignment="1" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="codigoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="telefonoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="correoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="direccionLabel" min="-2" max="-2" attributes="0"/>
-                          <Component id="nombreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="correoTF" alignment="0" pref="160" max="32767" attributes="0"/>
-                          <Component id="telefonoTF" alignment="0" max="32767" attributes="0"/>
-                          <Component id="direccionTF" alignment="0" max="32767" attributes="0"/>
-                          <Component id="nombreTF" alignment="0" max="32767" attributes="0"/>
-                          <Component id="codigoTF" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="BtnBuscarCodigo" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="BtnBuscarNombre" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
                   <Group type="102" attributes="0">
-                      <Component id="coordenadaXLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="coordenadaXTF" min="-2" pref="75" max="-2" attributes="0"/>
-                      <EmptySpace pref="35" max="32767" attributes="0"/>
-                      <Component id="coordenadaYLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="coordenadaYTF" min="-2" pref="75" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="BtnLimpiar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="BtnGuardar" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="190" max="32767" attributes="0"/>
                       <Component id="BtnSalir" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="codigoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="telefonoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="correoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="direccionLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="nombreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jlEstado" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="correoTF" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="telefonoTF" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="direccionTF" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="nombreTF" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="codigoTF" max="32767" attributes="0"/>
+                                  <Component id="jtfEstado" min="-2" pref="160" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="BtnBuscarCodigo" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="BtnBuscarNombre" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="coordenadaXLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="coordenadaXTF" min="-2" pref="75" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                              <Component id="coordenadaYLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="coordenadaYTF" min="-2" pref="75" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -104,15 +112,20 @@
                   <Component id="correoTF" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="coordenadaXTF" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jlEstado" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtfEstado" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="25" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="coordenadaXTF" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="3" groupAlignment="3" attributes="0">
                       <Component id="coordenadaYTF" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="coordenadaYLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="coordenadaXLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="coordenadaXLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="32" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="BtnLimpiar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="BtnGuardar" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -220,6 +233,16 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnSalirActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlEstado">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Estado:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtfEstado">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfEstadoActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

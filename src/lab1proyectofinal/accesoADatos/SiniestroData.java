@@ -120,6 +120,7 @@ public class SiniestroData {
             Siniestro siniestro;
             while (rs.next()) {
                 siniestro = new Siniestro();
+                siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));
                 siniestro.setTipo(rs.getString("tipo"));
                 siniestro.setFechaSiniestro(rs.getDate("fechaSiniestro").toLocalDate());
                 siniestro.setCoordenadaX(rs.getInt("coordenadaX"));

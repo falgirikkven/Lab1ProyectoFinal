@@ -11,7 +11,7 @@ public class Siniestro {
     /**
      * SUJETO A CAMBIOS
      */
-    private int codigoSiniestro;
+    private int codigoSiniestro;    // según mi idea inicial sobre la implementación del proyecto, es probable que se pueda prescindir de 'codigoSiniestro' (solo tendría utilidad para corroborar el correcto funcionamiento del programa, pero nada que deba interesarle al usuario)
     private String tipo;
     private LocalDate fechaSiniestro;
     private int coordenadaX;
@@ -25,41 +25,44 @@ public class Siniestro {
     }
 
     public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles) {
-        this.codigoSiniestro = -1;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;
         this.detalles = detalles;
-        this.fechaResolucion = null;
-        this.puntuacion = -1;
         this.codigoBrigada = -1;
     }
-
-    public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles) {
-        this.codigoSiniestro = codigoSiniestro;
+    
+    public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;
         this.detalles = detalles;
-        this.fechaResolucion = null;
-        this.puntuacion = -1;
-        this.codigoBrigada = -1;
-    }
-
-    public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
-        this.codigoSiniestro = codigoSiniestro;
-        this.tipo = tipo;
-        this.fechaSiniestro = fechaSiniestro;
-        this.coordenadaX = coordenadaX;
-        this.coordenadaY = coordenadaY;
-        this.detalles = detalles;
-        this.fechaResolucion = null;
-        this.puntuacion = -1;
         this.codigoBrigada = codigoBrigada;
-    }
+    }    
 
+    // todos los constructores que inicializan 'codigoSiniestro' (excepto el que inicializa todo) en una instancia con un valor pasado por parámetro son potencialmente prescindibles en la implementación que estoy pensando
+
+//    public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles) {
+//        this.codigoSiniestro = codigoSiniestro;
+//        this.tipo = tipo;
+//        this.fechaSiniestro = fechaSiniestro;
+//        this.coordenadaX = coordenadaX;
+//        this.coordenadaY = coordenadaY;
+//        this.detalles = detalles;
+//    }
+//
+//    public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
+//        this.codigoSiniestro = codigoSiniestro;
+//        this.tipo = tipo;
+//        this.fechaSiniestro = fechaSiniestro;
+//        this.coordenadaX = coordenadaX;
+//        this.coordenadaY = coordenadaY;
+//        this.detalles = detalles;
+//        this.codigoBrigada = codigoBrigada;
+//    }
+//
     public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, LocalDate fechaResolucion, int puntuacion, int codigoBrigada) {
         this.codigoSiniestro = codigoSiniestro;
         this.tipo = tipo;
@@ -71,6 +74,10 @@ public class Siniestro {
         this.puntuacion = puntuacion;
         this.codigoBrigada = codigoBrigada;
     }
+
+    
+    
+    
 
     public int getCodigoSiniestro() {
         return codigoSiniestro;
@@ -148,5 +155,6 @@ public class Siniestro {
     public String toString() {
         return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaSiniestro=" + fechaSiniestro + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", fechaResolucion=" + fechaResolucion + ", puntuacion=" + puntuacion + ", codigoBrigada=" + codigoBrigada + '}';
     }
-
+    
+    
 }
