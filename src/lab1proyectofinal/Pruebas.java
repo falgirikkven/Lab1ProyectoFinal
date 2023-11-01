@@ -9,8 +9,10 @@ import java.util.List;
 import lab1proyectofinal.accesoADatos.BomberoData;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.Conexion;
+import lab1proyectofinal.accesoADatos.CuartelData;
 import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
+import lab1proyectofinal.entidades.Cuartel;
 
 /**
  *
@@ -19,22 +21,21 @@ import lab1proyectofinal.entidades.Brigada;
 public class Pruebas {
 
     // Este bloque de codigo es temporal
-    private static void insertarCuartelyBrigada(Connection connection) {
-        try {
-            Statement statementCuartel = connection.createStatement();
-            String sqlCuartel = "INSERT INTO `cuartel`(`codigoCuartel`, `nombreCuartel`, `direccion`, `coordenadaX`, `coordenadaY`, `telefono`, `correo`, `estado`) VALUES (1,'Manso  cuartel', 'Calle falsa 123', 0, 0, 2664666666, 'mansocuartel@fromhell.666', true);";
-            statementCuartel.executeQuery(sqlCuartel);
-
-            Statement statementBrigada = connection.createStatement();
-            String sqlBrigada = "INSERT INTO `brigada`(`codigoBrigada`, `nombreBrigada`, `especialidad`, `disponible`, `codigoCuartel`, `estado`) VALUES (1,'Brigada SOS','Quien sabe', 1, 1, 1)";
-            statementBrigada.executeQuery(sqlBrigada);
-        } catch (SQLException e) {
-            if (e.getErrorCode() != 1062) { // Ignorar datos repetidos
-                e.printStackTrace();
-            }
-        }
-    }
-
+//    private static void insertarCuartelyBrigada(Connection connection) {
+//        try {
+//            Statement statementCuartel = connection.createStatement();
+//            String sqlCuartel = "INSERT INTO `cuartel`(`codigoCuartel`, `nombreCuartel`, `direccion`, `coordenadaX`, `coordenadaY`, `telefono`, `correo`, `estado`) VALUES (1,'Manso  cuartel', 'Calle falsa 123', 0, 0, 2664666666, 'mansocuartel@fromhell.666', true);";
+//            statementCuartel.executeQuery(sqlCuartel);
+//
+//            Statement statementBrigada = connection.createStatement();
+//            String sqlBrigada = "INSERT INTO `brigada`(`codigoBrigada`, `nombreBrigada`, `especialidad`, `disponible`, `codigoCuartel`, `estado`) VALUES (1,'Brigada SOS','Quien sabe', 1, 1, 1)";
+//            statementBrigada.executeQuery(sqlBrigada);
+//        } catch (SQLException e) {
+//            if (e.getErrorCode() != 1062) { // Ignorar datos repetidos
+//                e.printStackTrace();
+//            }
+//        }
+//    }
     /**
      * @param args the command line arguments
      */
@@ -189,5 +190,83 @@ public class Pruebas {
         // ***** FIN BOMBERO PRUEBAS *****
         //
 
+        //------------------cuartel-------------------
+        //CuartelData
+        CuartelData cuartelData = new CuartelData();
+
+        //Cuarteles
+        Cuartel cuartel1 = new Cuartel(1, "central1", "Bolivar 123", 2, 3, 266498271, "cuartel1@gmail.com", true);
+        Cuartel cuartel2 = new Cuartel(2, "central2", "Maipu 345", 4, 1, 266421345, "cuartel2@gmail.com", true);
+        Cuartel cuartel3 = new Cuartel(3, "central3", "Pringles 678", 5, 7, 266456437, "cuartel3@gmail.com", true);
+        Cuartel cuarteles[] = new Cuartel[]{cuartel1, cuartel2, cuartel3};
+
+        //Guardar Cuartel
+        System.out.println("----- Guardar Cuartel -----");
+        for (Cuartel cuartel : cuarteles) {
+            cuartelData.guardarCuartel(cuartel);
+        }
+
+        //Listar Cuartel
+        System.out.println("\n----- Listar Cuartel -----");
+        List<Cuartel> listaCuartel = cuartelData.listarCuarteles();
+        for (Cuartel cuartel : listaCuartel) {
+            System.out.println(cuartel.toString());
+        }
+
+        //Buscar Cuartel
+        int cualcuartel;
+        Cuartel cuartelEncontrado;
+        System.out.println("\n----- Buscar Cuartel -----");
+        //
+        cualcuartel = 1;
+        cuartelEncontrado = cuartelData.buscarCuartel(cualcuartel);
+        System.out.println("Datos del cuartel " + cualcuartel + ":");
+        if (cuartelEncontrado != null) {
+            System.out.println(cuartelEncontrado.toString());
+        } else {
+            System.out.println("No encontrado");
+        }
+        //
+        cualcuartel = 2;
+        cuartelEncontrado = cuartelData.buscarCuartel(cualcuartel);
+        System.out.println("Datos del cuartel " + cualcuartel + ":");
+        if (cuartelEncontrado != null) {
+            System.out.println(cuartelEncontrado.toString());
+        } else {
+            System.out.println("No encontrado");
+        }
+        //Editar Cuartel
+        int cualcuartelEdi = 1;
+        Cuartel cuartelModificado;
+        System.out.println("\n----- Modificar cuartel (con id " + cualcuartelEdi + ")-----");
+        cuartelModificado = new Cuartel(cualcuartelEdi, "central1Nueva", "Bolivar 341", 3, 1, 26641323, "cuartelnue@gmail.com", true);
+        cuartelData.modificarCuartel(cuartelModificado);
+        //Listar cuarteles
+        System.out.println("\n----- Listar Cuarteles -----");
+        listaCuartel = cuartelData.listarCuarteles();
+        for (Cuartel cuartel : listaCuartel) {
+            System.out.println(cuartel.toString());
+        }
+        //Listar Brigadas en cuartel
+        System.out.println("\n----- Listar Brigadas en Cuarteles -----");
+        List<Brigada> listaBrigada = cuartelData.listarBrigadasEnCuartel(1);
+        for (Brigada brigada : listaBrigada) {
+            System.out.println(brigada.toString());
+        }
+        //Listar Bomberos en el cuartel
+        System.out.println("\n----- Listar Bomberos en Cuarteles -----");
+        List<Bombero> listaBombero = cuartelData.listarBomberosEnCuartel(cuartel1);
+        for (Bombero bombero : listaBombero) {
+            System.out.println(bombero.toString());
+        }
+        //Eliminar Cuartel
+        int cualEliminar = 3;
+        System.out.println("\n----- Eliminar Cuartel (con id " + cualEliminar + ") -----");
+        cuartelData.eliminarCuartel(cualEliminar);
+        //Eliminar por Nombre
+        //int cualEliminarNombre=2;
+        //System.out.println("\n----- Eliminar Bombero (con id " + cualEliminarNombre + ") -----");
+        //cuartelData.eliminarNombre(cualEliminarNombre);
+        //no se si esta bien
     }
 }
