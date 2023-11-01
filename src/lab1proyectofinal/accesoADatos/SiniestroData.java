@@ -30,7 +30,11 @@ public class SiniestroData {
         boolean resultado = false;
         try {
             String sql;
-            sql = "UPDATE siniestro SET tipo=?, fechaSiniestro=?, coordenadaX=?, coordenadaY=?, detalles=?, fechaResolucion=?, puntuacion=?, codigoBrigada=? WHERE codigoSiniestro=?";
+            if (siniestro.getCodigoSiniestro() != -1) {
+                sql = "INSERT INTO siniestro(tipo, fechaSiniestro, coordenadaX, coordenadaY, detalles, fechaResolucion, puntuacion, codigoBrigada) VALUES (?,?,?, ?, ?, ?, ?, ?)";
+            } else {
+                sql = "INSERT INTO siniestro(tipo, fechaSiniestro, coordenadaX, coordenadaY, detalles, fechaResolucion, puntuacion, codigoBrigada, codigoSiniestro) VALUES (?,?,?,?, ?, ?, ?, ?, ?)";
+            }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, siniestro.getTipo());
             ps.setDate(2, Date.valueOf(siniestro.getFechaSiniestro()));
@@ -143,15 +147,10 @@ public class SiniestroData {
     }
 
     public boolean modificarSiniestro(Siniestro siniestro) {
-        // TODO: Implementar este método
         boolean resultado = false;
         try {
             String sql;
-            if (siniestro.getCodigoSiniestro() != -1) {
-                sql = "UPDATE siniestro SET tipo=?, fechaSiniestro=?, coordenadaX=?, coordenadaY=?, detalles=?, fechaResolucion=?, puntuacion=?, codigoBrigada=? WHERE codigoSiniestro=?";
-            } else {
-                sql = "INSERT INTO siniestro(tipo, fechaSiniestro, coordenadaX, coordenadaY, detalles, fechaResolucion, puntuacion, codigoBrigada, codigoSiniestro) VALUES (?,?,?,?, ?, ?, ?, ?, ?)";
-            }
+            sql = "UPDATE siniestro SET tipo=?, fechaSiniestro=?, coordenadaX=?, coordenadaY=?, detalles=?, fechaResolucion=?, puntuacion=?, codigoBrigada=? WHERE codigoSiniestro=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, siniestro.getTipo());
             ps.setDate(2, Date.valueOf(siniestro.getFechaSiniestro()));
@@ -193,9 +192,10 @@ public class SiniestroData {
     }
 
     public boolean asignarBrigada(Siniestro siniestro, Brigada brigada) {
-        // TODO: Implementar este método
         boolean resultado = false;
+
         return resultado;
+        
     }
 
     public boolean asignarResolucion(Siniestro siniestro, Date fechaResolucion, int puntaje) {
