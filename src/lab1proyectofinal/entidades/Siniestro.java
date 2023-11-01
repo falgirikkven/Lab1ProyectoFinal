@@ -25,46 +25,31 @@ public class Siniestro {
     }
 
     public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles) {
+        this.codigoSiniestro = -1;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;
         this.detalles = detalles;
+        this.fechaResolucion = null;
+        this.puntuacion = -1;
         this.codigoBrigada = -1;
     }
-    
+
     public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
+        this.codigoSiniestro = -1;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;
         this.detalles = detalles;
+        this.fechaResolucion = null;
+        this.puntuacion = -1;
         this.codigoBrigada = codigoBrigada;
-    }    
+    }
 
-    // todos los constructores que inicializan 'codigoSiniestro' (excepto el que inicializa todo) en una instancia con un valor pasado por parámetro son potencialmente prescindibles en la implementación que estoy pensando
-
-//    public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles) {
-//        this.codigoSiniestro = codigoSiniestro;
-//        this.tipo = tipo;
-//        this.fechaSiniestro = fechaSiniestro;
-//        this.coordenadaX = coordenadaX;
-//        this.coordenadaY = coordenadaY;
-//        this.detalles = detalles;
-//    }
-//
-//    public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
-//        this.codigoSiniestro = codigoSiniestro;
-//        this.tipo = tipo;
-//        this.fechaSiniestro = fechaSiniestro;
-//        this.coordenadaX = coordenadaX;
-//        this.coordenadaY = coordenadaY;
-//        this.detalles = detalles;
-//        this.codigoBrigada = codigoBrigada;
-//    }
-//
-    public Siniestro(int codigoSiniestro, String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, LocalDate fechaResolucion, int puntuacion, int codigoBrigada) {
-        this.codigoSiniestro = codigoSiniestro;
+    public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada, LocalDate fechaResolucion, int puntuacion) {
+        this.codigoSiniestro = -1;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
@@ -75,9 +60,17 @@ public class Siniestro {
         this.codigoBrigada = codigoBrigada;
     }
 
-    
-    
-    
+    public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada, LocalDate fechaResolucion, int puntuacion, int codigoSiniestro) {
+        this.codigoSiniestro = codigoSiniestro;
+        this.tipo = tipo;
+        this.fechaSiniestro = fechaSiniestro;
+        this.coordenadaX = coordenadaX;
+        this.coordenadaY = coordenadaY;
+        this.detalles = detalles;
+        this.fechaResolucion = fechaResolucion;
+        this.puntuacion = puntuacion;
+        this.codigoBrigada = codigoBrigada;
+    }
 
     public int getCodigoSiniestro() {
         return codigoSiniestro;
@@ -155,6 +148,5 @@ public class Siniestro {
     public String toString() {
         return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaSiniestro=" + fechaSiniestro + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", fechaResolucion=" + fechaResolucion + ", puntuacion=" + puntuacion + ", codigoBrigada=" + codigoBrigada + '}';
     }
-    
-    
+
 }
