@@ -1,6 +1,6 @@
 package lab1proyectofinal.entidades;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -11,20 +11,24 @@ public class Siniestro {
     /**
      * SUJETO A CAMBIOS
      */
-    private int codigoSiniestro;    // según mi idea inicial sobre la implementación del proyecto, es probable que se pueda prescindir de 'codigoSiniestro' (solo tendría utilidad para corroborar el correcto funcionamiento del programa, pero nada que deba interesarle al usuario)
+    public static final int PUNTUACION_NIL = -1;
+    public static final int PUNTUACION_MIN = 1;
+    public static final int PUNTUACION_MAX = 10;
+
+    private int codigoSiniestro;
     private String tipo;
-    private LocalDate fechaSiniestro;
+    private LocalDateTime fechaSiniestro;
     private int coordenadaX;
     private int coordenadaY;
     private String detalles;
-    private LocalDate fechaResolucion;
+    private LocalDateTime fechaResolucion;
     private int puntuacion;
     private int codigoBrigada;
 
     public Siniestro() {
     }
 
-    public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles) {
+    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
         this.codigoSiniestro = -1;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
@@ -32,23 +36,11 @@ public class Siniestro {
         this.coordenadaY = coordenadaY;
         this.detalles = detalles;
         this.fechaResolucion = null;
-        this.puntuacion = -1;
-        this.codigoBrigada = -1;
-    }
-
-    public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
-        this.codigoSiniestro = -1;
-        this.tipo = tipo;
-        this.fechaSiniestro = fechaSiniestro;
-        this.coordenadaX = coordenadaX;
-        this.coordenadaY = coordenadaY;
-        this.detalles = detalles;
-        this.fechaResolucion = null;
-        this.puntuacion = -1;
+        this.puntuacion = PUNTUACION_NIL;
         this.codigoBrigada = codigoBrigada;
     }
 
-    public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada, LocalDate fechaResolucion, int puntuacion) {
+    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada, LocalDateTime fechaResolucion, int puntuacion) {
         this.codigoSiniestro = -1;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
@@ -60,7 +52,7 @@ public class Siniestro {
         this.codigoBrigada = codigoBrigada;
     }
 
-    public Siniestro(String tipo, LocalDate fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada, LocalDate fechaResolucion, int puntuacion, int codigoSiniestro) {
+    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada, LocalDateTime fechaResolucion, int puntuacion, int codigoSiniestro) {
         this.codigoSiniestro = codigoSiniestro;
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
@@ -88,11 +80,11 @@ public class Siniestro {
         this.tipo = tipo;
     }
 
-    public LocalDate getFechaSiniestro() {
+    public LocalDateTime getFechaSiniestro() {
         return fechaSiniestro;
     }
 
-    public void setFechaSiniestro(LocalDate fechaSiniestro) {
+    public void setFechaSiniestro(LocalDateTime fechaSiniestro) {
         this.fechaSiniestro = fechaSiniestro;
     }
 
@@ -120,11 +112,11 @@ public class Siniestro {
         this.detalles = detalles;
     }
 
-    public LocalDate getFechaResolucion() {
+    public LocalDateTime getFechaResolucion() {
         return fechaResolucion;
     }
 
-    public void setFechaResolucion(LocalDate fechaResolucion) {
+    public void setFechaResolucion(LocalDateTime fechaResolucion) {
         this.fechaResolucion = fechaResolucion;
     }
 
