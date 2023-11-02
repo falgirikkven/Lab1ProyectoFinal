@@ -27,30 +27,30 @@ public class CuartelData {
     }
 
     public boolean guardarCuartel(Cuartel cuartel) {
-        // TODO: Implementar este método
         boolean resultado = false;
         try {
             String sql;
             if (cuartel.getCodigoCuartel() == -1) {
-                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo) VALUES (?, ?, ?, ?, ?, ?)";
+                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
             } else {
-                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, codigoCuartel) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";       // si en el futuro dejamos la idea de que el usuario ingrese un id/código, entonces considero que esto va a quedar obsoleto
             }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, cuartel.getNombreCuartel());
             ps.setString(2, cuartel.getDireccion());
             ps.setInt(3, cuartel.getCoordenadaX());
             ps.setInt(4, cuartel.getCoordenadaY());
-            ps.setInt(5, (int) cuartel.getTelefono());
+            ps.setLong(5, cuartel.getTelefono());
             ps.setString(6, cuartel.getCorreo());
-            if (cuartel.getCodigoCuartel() != -1) {
-                ps.setInt(7, cuartel.getCodigoCuartel());
+            ps.setBoolean(7, cuartel.isEstado());       // en la práctica, siempre debería de ser true
+            if (cuartel.getCodigoCuartel() != -1) {         // (comentario copiado) si en el futuro dejamos la idea de que el usuario ingrese un id/código, entonces considero que esto va a quedar obsoleto
+                ps.setInt(8, cuartel.getCodigoCuartel());
             }
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[CuartelData] cuartel agregado");
+                System.out.println("[CuartelData] Cuartel agregado");
             } else {
-                System.out.println("[CuartelData] cuartel no agregado");
+                System.out.println("[CuartelData] No se pudo agregar el cuartel");
             }
             ps.close();
         } catch (SQLException e) {
@@ -61,15 +61,16 @@ public class CuartelData {
             }
         }
         return resultado;
-    }
-
-    public Cuartel buscarCuartel(int codigoCuartel) {
-        // TODO: Implementar este método
+    }    
+    
+    public Cuartel buscarCuartel(int codigoCuartel, boolean estado) { 
         Cuartel cuartel = null;
         try {
-            String sql = "SELECT * FROM cuartel WHERE codigoCuartel";
+            String sql;            
+            sql = "SELECT * FROM cuartel WHERE codigoCuartel=? AND estado=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoCuartel);
+            ps.setBoolean(2, estado);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 cuartel = new Cuartel();
@@ -80,7 +81,8 @@ public class CuartelData {
                 cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
                 cuartel.setTelefono(rs.getInt("telefono"));
                 cuartel.setCorreo(rs.getString("correo"));
-                System.out.println("[CuartelData] cuartel con id=" + codigoCuartel + " encontrado");
+                cuartel.setEstado(rs.getBoolean("estado"));
+                System.out.println("[CuartelData] Cuartel con id=" + codigoCuartel + " encontrado");
             } else {
                 System.out.println("[CuartelData] No se ha encontrado al cuartel con id=" + codigoCuartel);
             }
@@ -90,15 +92,15 @@ public class CuartelData {
             e.printStackTrace();
         }
         return cuartel;
-    }
+    }          
 
-    public Cuartel buscarCuartelPorNombre(String nombreCuartel) {
-        // TODO: Implementar este método
+    public Cuartel buscarCuartelPorNombre(String nombreCuartel, boolean estado) {
         Cuartel cuartel = null;
         try {
-            String sql = "SELECT * FROM cuartel WHERE nombreCuartel";
+            String sql = "SELECT * FROM cuartel WHERE nombreCuartel=? AND estado=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, nombreCuartel);
+            ps.setBoolean(2, estado);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 cuartel = new Cuartel();
@@ -109,7 +111,7 @@ public class CuartelData {
                 cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
                 cuartel.setTelefono(rs.getInt("telefono"));
                 cuartel.setCorreo(rs.getString("correo"));
-                System.out.println("[CuartelData] cuartel con id=" + nombreCuartel + " encontrado");
+                System.out.println("[CuartelData] Cuartel con id=" + nombreCuartel + " encontrado");
             } else {
                 System.out.println("[CuartelData] No se ha encontrado al cuartel con id=" + nombreCuartel);
             }
@@ -119,14 +121,14 @@ public class CuartelData {
             e.printStackTrace();
         }
         return cuartel;
-    }
+    }       
 
-    public List<Cuartel> listarCuarteles() {
-        // TODO: Implementar este método
+    public List<Cuartel> listarCuarteles(boolean estado) {        
         List<Cuartel> cuarteles = new ArrayList();
         try {
-            String sql = "SELECT * FROM cuartel;";
+            String sql = "SELECT * FROM cuartel WHERE estado=?;";
             PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setBoolean(1, estado);
             ResultSet rs = ps.executeQuery();
             Cuartel cuartel;
             while (rs.next()) {
@@ -146,16 +148,15 @@ public class CuartelData {
             e.printStackTrace();
         }
         return cuarteles;
-    }
+    }        
 
-    public List<Brigada> listarBrigadasEnCuartel(int codigoCuartel) {
-        // TODO: Implementar este método
+    public List<Brigada> listarBrigadasEnCuartel(int codigoCuartel, boolean estado) {        
         List<Brigada> brigadas = new ArrayList();
-        try {
-            //SELECT*FROM brigada WHERE codigoBrigda IN(SELECT codigoBrigada FROM cuartel WHERE codigoBrigada=?)AND estado=true;
-            String sql = "SELECT * FROM brigada WHERE codigoCuartel = ? AND estado = true";
+        try {            
+            String sql = "SELECT * FROM brigada WHERE codigoCuartel=? AND estado=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoCuartel);
+            ps.setBoolean(2, estado);
             ResultSet rs = ps.executeQuery();
             Brigada brigada;
             while (rs.next()) {
@@ -165,6 +166,7 @@ public class CuartelData {
                 brigada.setEspecialidad(rs.getString("especialidad"));
                 brigada.setNombreBrigada(rs.getString("nombreBrigada"));
                 brigada.setDisponible(rs.getBoolean("disponible"));
+                brigada.setEstado(rs.getBoolean("estado"));
                 brigadas.add(brigada);
             }
             ps.close();
@@ -174,19 +176,19 @@ public class CuartelData {
         }
         return brigadas;
     }
-
-    public List<Bombero> listarBomberosEnCuartel(Cuartel cuartel) {
-        // TODO: Implementar este método
+    
+    public List<Bombero> listarBomberosEnCuartel(Cuartel cuartel, boolean estadoBrigada, boolean estadoBombero) {        
         List<Bombero> bomberos = new ArrayList();
         try {
             String sql = "SELECT * FROM bombero WHERE codigoBrigada IN "
-                    + "(SELECT codigoBrigada FROM brigada WHERE codigoCuartel = ? AND estado = true) AND estado = true";
+                    + "(SELECT codigoBrigada FROM brigada WHERE codigoCuartel=? AND estado=?) AND estado=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cuartel.getCodigoCuartel());
+            ps.setBoolean(2, estadoBrigada);
+            ps.setBoolean(3, estadoBombero);
             ResultSet rs = ps.executeQuery();
             Bombero bombero;
             while (rs.next()) {
-                //inserta bombero
                 bombero = new Bombero();
                 bombero.setIdBombero(rs.getInt("idBombero"));
                 bombero.setDni(rs.getInt("dni"));
@@ -206,19 +208,19 @@ public class CuartelData {
         return bomberos;
     }
 
-    public boolean modificarCuartel(Cuartel cuartel) {
-        // TODO: Implementar este método
+    public boolean modificarCuartel(Cuartel cuartel) {        
         boolean resultado = false;
         try {
-            String sql = "UPDATE cuartel SET nombreCuartel= ? , direccion = ? , coordenadaX = ? , coordenadaY = ? , telefono = ? , correo = ? WHERE codigoCuartel=?";
+            String sql = "UPDATE cuartel SET nombreCuartel=? , direccion=? , coordenadaX=? , coordenadaY=? , telefono=? , correo=?, estado=? WHERE codigoCuartel=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, cuartel.getNombreCuartel());
             ps.setString(2, cuartel.getDireccion());
             ps.setInt(3, cuartel.getCoordenadaX());
             ps.setInt(4, cuartel.getCoordenadaY());
-            ps.setInt(5, (int) cuartel.getTelefono());
+            ps.setLong(5, cuartel.getTelefono());
             ps.setString(6, cuartel.getCorreo());
-            ps.setInt(7, cuartel.getCodigoCuartel());
+            ps.setBoolean(7, cuartel.isEstado());
+            ps.setInt(8, cuartel.getCodigoCuartel());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[CuartelData] Cuartel modificado");
@@ -232,8 +234,15 @@ public class CuartelData {
         return resultado;
     }
 
+    public boolean bajaBomberos(Cuartel cuartel){
+        boolean resultado = false;
+        try {
+            
+        } catch (Exception e) {
+        }
+    }
+    
     public boolean eliminarCuartel(int codigoCuartel) {
-        // TODO: Implementar este método
         boolean resultado = false;
         try {
             String sql = "UPDATE cuartel SET estado=false WHERE codigoCuartel=?";

@@ -21,17 +21,8 @@ public class Cuartel {
     public Cuartel() {
     }
 
-    //public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo) {
-        //this.codigoCuartel = -1;
-        //this.nombreCuartel = nombreCuartel;
-        //this.direccion = direccion;
-        //this.coordenadaX = coordenadaX;
-        //this.coordenadaY = coordenadaY;
-        //this.telefono = telefono;
-        //this.correo = correo;
-    //}
-
-    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo, boolean estado) {
+    // usuario inicializa todo menos 'codigoCuartel' y 'estado'
+    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo) {
         this.codigoCuartel = -1;
         this.nombreCuartel = nombreCuartel;
         this.direccion = direccion;
@@ -39,8 +30,20 @@ public class Cuartel {
         this.coordenadaY = coordenadaY;
         this.telefono = telefono;
         this.correo = correo;
-        this.estado = estado;
+        this.estado = true;         // no parece tener sentido poder crear un registro ya dado de baja
     }
+
+    
+//    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo, boolean estado) {
+//        this.codigoCuartel = -1;
+//        this.nombreCuartel = nombreCuartel;
+//        this.direccion = direccion;
+//        this.coordenadaX = coordenadaX;
+//        this.coordenadaY = coordenadaY;
+//        this.telefono = telefono;
+//        this.correo = correo;
+//        this.estado = estado;
+//    }
     
     //public Cuartel(int codigoCuartel, String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo) {
         //this.codigoCuartel = codigoCuartel;
@@ -51,7 +54,9 @@ public class Cuartel {
         //this.telefono = telefono;
         //this.correo = correo;
     //}
+    
 
+    // usuario inicializa todo 
     public Cuartel(int codigoCuartel, String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo, boolean estado) {
         this.codigoCuartel = codigoCuartel;
         this.nombreCuartel = nombreCuartel;
