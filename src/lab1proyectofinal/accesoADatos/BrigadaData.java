@@ -19,7 +19,7 @@ public class BrigadaData {
     /**
      * SUJETO A CAMBIOS
      */
-    private Connection connection;
+    private final Connection connection;
 
     public BrigadaData() {
         this.connection = Conexion.getInstance();
@@ -28,21 +28,22 @@ public class BrigadaData {
     public boolean guardarBrigada(Brigada brigada) {
         boolean resultado = false;
         try {
-            String sql;
+            String sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado) VALUES (?, ?, ?, ?, ?);";
+            /* String sql;
             if (brigada.getCodigoBrigada() != -1) {
                 sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado, codigoBrigada) VALUES (?, ?, ?, ?, ?, ?);";
             } else {
                 sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado) VALUES (?, ?, ?, ?, ?);";
-            }
+            } */
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, brigada.getNombreBrigada());
             ps.setString(2, brigada.getEspecialidad());
             ps.setBoolean(3, brigada.isDisponible());
             ps.setInt(4, brigada.getCodigoCuartel());
             ps.setBoolean(5, brigada.isEstado());
-            if (brigada.getCodigoBrigada() != -1) {
+            /* if (brigada.getCodigoBrigada() != -1) {
                 ps.setInt(6, brigada.getCodigoBrigada());
-            }
+            } */
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[BrigadaData] Brigada agregada");
@@ -51,11 +52,13 @@ public class BrigadaData {
             }
             ps.close();
         } catch (SQLException e) {
-            int errorCode = e.getErrorCode();
+            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            e.printStackTrace();
+            /* int errorCode = e.getErrorCode();
             System.out.println("[BrigadaData Error " + errorCode + "] " + e.getMessage());
             if (errorCode != 1062) { // Ignorar datos repetidos
                 e.printStackTrace();
-            }
+            } */
         }
         return resultado;
     }
@@ -63,7 +66,7 @@ public class BrigadaData {
     public Brigada buscarBrigada(int codigoBrigada) {
         Brigada brigada = null;
         try {
-            String sql = "SELECT * FROM brigada WHERE codigoBrigada=?;";
+            String sql = "SELECT * FROM brigada WHERE codigoBrigada=? AND estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoBrigada);
             ResultSet rs = ps.executeQuery();
@@ -90,7 +93,7 @@ public class BrigadaData {
     public Brigada buscarBrigadaPorNombre(String nombreBrigada) {
         Brigada brigada = null;
         try {
-            String sql = "SELECT * FROM brigada WHERE nombreBrigada=?;";
+            String sql = "SELECT * FROM brigada WHERE nombreBrigada=? AND estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, nombreBrigada);
             ResultSet rs = ps.executeQuery();
@@ -117,7 +120,7 @@ public class BrigadaData {
     public List<Brigada> listarBrigadas() {
         List<Brigada> brigadas = new ArrayList();
         try {
-            String sql = "SELECT * FROM brigada;";
+            String sql = "SELECT * FROM brigada WHERE estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -141,7 +144,7 @@ public class BrigadaData {
     public List<Bombero> listarBomberosEnBrigada(Brigada brigada) {
         List<Bombero> bomberos = new ArrayList();
         try {
-            String sql = "SELECT * FROM bombero WHERE codigoBrigada IN (SELECT codigoBrigada From brigada WHERE codigoBrigada=?) AND estado=true;";
+            String sql = "SELECT * FROM bombero WHERE codigoBrigada IN (SELECT codigoBrigada From brigada WHERE codigoBrigada=? AND estado=true) AND estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, brigada.getCodigoBrigada());
             ResultSet rs = ps.executeQuery();
@@ -168,7 +171,7 @@ public class BrigadaData {
     public boolean modificarBrigada(Brigada brigada) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE brigada SET nombreBrigada=?, especialidad=?, disponible=?, codigoCuartel=?, estado=? WHERE codigoBrigada=?";
+            String sql = "UPDATE brigada SET nombreBrigada=?, especialidad=?, disponible=?, codigoCuartel=? WHERE codigoBrigada=? AND estado=true";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, brigada.getNombreBrigada());
             ps.setString(2, brigada.getEspecialidad());
@@ -193,7 +196,7 @@ public class BrigadaData {
     public boolean eliminarBrigada(int codigoBrigada) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE brigada SET estado=false WHERE codigoBrigada=?";
+            String sql = "UPDATE brigada SET estado=false WHERE codigoBrigada=? AND estado=true";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoBrigada);
             if (ps.executeUpdate() > 0) {
@@ -213,7 +216,7 @@ public class BrigadaData {
     public boolean eliminarBrigadaPorNombre(String nombreBrigada) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE brigada SET estado=false WHERE nombreBrigada=?";
+            String sql = "UPDATE brigada SET estado=false WHERE nombreBrigada=? AND estado=true";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, nombreBrigada);
             if (ps.executeUpdate() > 0) {

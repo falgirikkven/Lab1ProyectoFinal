@@ -19,13 +19,13 @@ public class Brigada {
     public Brigada() {
     }
 
-    public Brigada(String nombreBrigada, String especialidad, boolean disponible, int codigoCuartel, boolean estado) {
+    public Brigada(String nombreBrigada, String especialidad, boolean disponible, int codigoCuartel) {
         this.codigoBrigada = -1;
         this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
         this.disponible = disponible;
         this.codigoCuartel = codigoCuartel;
-        this.estado = estado;
+        this.estado = true;
     }
 
     public Brigada(int codigoBrigada, String nombreBrigada, String especialidad, boolean disponible, int codigoCuartel, boolean estado) {
