@@ -28,22 +28,22 @@ public class BrigadaData {
     public boolean guardarBrigada(Brigada brigada) {
         boolean resultado = false;
         try {
-            String sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado) VALUES (?, ?, ?, ?, ?);";
-            /* String sql;
+            //String sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado) VALUES (?, ?, ?, ?, ?);";
+            String sql;
             if (brigada.getCodigoBrigada() != -1) {
                 sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado, codigoBrigada) VALUES (?, ?, ?, ?, ?, ?);";
             } else {
                 sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado) VALUES (?, ?, ?, ?, ?);";
-            } */
+            }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, brigada.getNombreBrigada());
             ps.setString(2, brigada.getEspecialidad());
             ps.setBoolean(3, brigada.isDisponible());
             ps.setInt(4, brigada.getCodigoCuartel());
             ps.setBoolean(5, brigada.isEstado());
-            /* if (brigada.getCodigoBrigada() != -1) {
+            if (brigada.getCodigoBrigada() != -1) {
                 ps.setInt(6, brigada.getCodigoBrigada());
-            } */
+            }
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[BrigadaData] Brigada agregada");
@@ -52,13 +52,11 @@ public class BrigadaData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
-            e.printStackTrace();
-            /* int errorCode = e.getErrorCode();
+            int errorCode = e.getErrorCode();
             System.out.println("[BrigadaData Error " + errorCode + "] " + e.getMessage());
             if (errorCode != 1062) { // Ignorar datos repetidos
                 e.printStackTrace();
-            } */
+            }
         }
         return resultado;
     }
@@ -141,7 +139,55 @@ public class BrigadaData {
         return brigadas;
     }
 
-    public List<Bombero> listarBomberosEnBrigada(Brigada brigada) {
+    public List<Brigada> listarBrigadasDisponibles() {
+        List<Brigada> brigadas = new ArrayList();
+        try {
+            String sql = "SELECT * FROM brigada WHERE disponible=true AND estado=true;";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Brigada brigada = new Brigada();
+                brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
+                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
+                brigada.setEspecialidad(rs.getString("especialidad"));
+                brigada.setDisponible(rs.getBoolean("disponible"));
+                brigada.setCodigoCuartel(rs.getInt("codigoCuartel"));
+                brigada.setEstado(rs.getBoolean("estado"));
+                brigadas.add(brigada);
+            }
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            e.printStackTrace();
+        }
+        return brigadas;
+    }
+
+    public List<Brigada> listarBrigadasOcupadas() {
+        List<Brigada> brigadas = new ArrayList();
+        try {
+            String sql = "SELECT * FROM brigada WHERE disponible=false AND estado=true;";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Brigada brigada = new Brigada();
+                brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
+                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
+                brigada.setEspecialidad(rs.getString("especialidad"));
+                brigada.setDisponible(rs.getBoolean("disponible"));
+                brigada.setCodigoCuartel(rs.getInt("codigoCuartel"));
+                brigada.setEstado(rs.getBoolean("estado"));
+                brigadas.add(brigada);
+            }
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            e.printStackTrace();
+        }
+        return brigadas;
+    }
+
+    public List<Bombero> listarBomberosOcupadas(Brigada brigada) {
         List<Bombero> bomberos = new ArrayList();
         try {
             String sql = "SELECT * FROM bombero WHERE codigoBrigada IN (SELECT codigoBrigada From brigada WHERE codigoBrigada=? AND estado=true) AND estado=true;";

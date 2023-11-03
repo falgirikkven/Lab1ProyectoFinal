@@ -27,13 +27,13 @@ public class BomberoData {
     public boolean guardarBombero(Bombero bombero) {
         boolean resultado = false;
         try {
-            String sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            /* String sql;
+            //String sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String sql;
             if (bombero.getIdBombero() == -1) {
                 sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
             } else {
                 sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado, idBombero) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            } */
+            }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
             ps.setString(2, bombero.getNombreApellido());
@@ -42,9 +42,9 @@ public class BomberoData {
             ps.setLong(5, bombero.getTelefono());
             ps.setInt(6, bombero.getCodigoBrigada());
             ps.setBoolean(7, true);
-            /* if (bombero.getIdBombero() != -1) {
+            if (bombero.getIdBombero() != -1) {
                 ps.setInt(8, bombero.getIdBombero());
-            } */
+            }
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[BomberoData] Bombero agregado");
@@ -53,13 +53,13 @@ public class BomberoData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
-            e.printStackTrace();
-            /* int errorCode = e.getErrorCode();
+            // System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            // e.printStackTrace();
+            int errorCode = e.getErrorCode();
             System.out.println("[BomberoData Error " + errorCode + "] " + e.getMessage());
             if (errorCode != 1062) { // Ignorar datos repetidos
                 e.printStackTrace();
-            } */
+            }
         }
         return resultado;
     }
