@@ -23,7 +23,7 @@ public class Bombero {
     public Bombero() {
     }
 
-    public Bombero(int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, int codigoBrigada, boolean estado) {
+    public Bombero(int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, int codigoBrigada) {
         this.idBombero = -1;
         this.dni = dni;
         this.nombreApellido = nombreApellido;
@@ -31,7 +31,7 @@ public class Bombero {
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.codigoBrigada = codigoBrigada;
-        this.estado = estado;
+        this.estado = true;
     }
 
     public Bombero(int idBombero, int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, int codigoBrigada, boolean estado) {
