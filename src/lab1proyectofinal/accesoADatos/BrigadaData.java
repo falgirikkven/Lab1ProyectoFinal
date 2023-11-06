@@ -150,7 +150,7 @@ public class BrigadaData {
                 brigada.setEspecialidad(rs.getString("especialidad"));
                 brigada.setDisponible(rs.getBoolean("disponible"));
                 brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("estado"));
+                brigada.setEstado(rs.getBoolean("bri.estado"));
                 System.out.println("[BrigadaData] Brigada '" + nombreBrigada + "' encontrada");
             } else {
                 System.out.println("[BrigadaData] No se ha encontrado a la brigada '" + nombreBrigada + "'");
@@ -188,7 +188,7 @@ public class BrigadaData {
                 brigada.setEspecialidad(rs.getString("especialidad"));
                 brigada.setDisponible(rs.getBoolean("disponible"));
                 brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("estado"));
+                brigada.setEstado(rs.getBoolean("bri.estado"));
                 brigadas.add(brigada);
             }
             ps.close();
@@ -224,7 +224,7 @@ public class BrigadaData {
                 brigada.setEspecialidad(rs.getString("especialidad"));
                 brigada.setDisponible(rs.getBoolean("disponible"));
                 brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("estado"));
+                brigada.setEstado(rs.getBoolean("bri.estado"));
                 brigadas.add(brigada);
             }
             ps.close();
@@ -260,7 +260,7 @@ public class BrigadaData {
                 brigada.setEspecialidad(rs.getString("especialidad"));
                 brigada.setDisponible(rs.getBoolean("disponible"));
                 brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("estado"));
+                brigada.setEstado(rs.getBoolean("bri.estado"));
                 brigadas.add(brigada);
             }
             ps.close();

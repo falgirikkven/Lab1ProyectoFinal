@@ -131,6 +131,7 @@ public class CuartelData {
                 cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
                 cuartel.setTelefono(rs.getInt("telefono"));
                 cuartel.setCorreo(rs.getString("correo"));
+                cuartel.setEstado(rs.getBoolean("estado"));
                 System.out.println("[CuartelData] Cuartel con nombre=" + nombreCuartel + " encontrado");
             } else {
                 System.out.println("[CuartelData] No se ha encontrado al cuartel con nombre=" + nombreCuartel);
@@ -159,6 +160,7 @@ public class CuartelData {
                 cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
                 cuartel.setTelefono(rs.getInt("telefono"));
                 cuartel.setCorreo(rs.getString("correo"));
+                cuartel.setEstado(rs.getBoolean("estado"));
                 cuarteles.add(cuartel);
             }
             ps.close();
