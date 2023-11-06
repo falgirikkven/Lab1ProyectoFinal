@@ -25,6 +25,28 @@ public class CuartelData {
         this.connection = Conexion.getInstance();
 
     }
+    
+    public boolean crearFalsoCuartel(){
+        boolean resultado = false;
+        try {
+            String sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) VALUES ('cuartel inexistente', '' , 0, 0, 0, '', false,-1)";
+            PreparedStatement ps = connection.prepareStatement(sql);            
+            if (ps.executeUpdate() > 0) {
+                resultado = true;
+                System.out.println("[CuartelData] Cuartel falso agregado");
+            } else {
+                System.out.println("[CuartelData] No se pudo agregar el cuartel falso");
+            }
+            ps.close();
+        } catch (SQLException e) {
+            int errorCode = e.getErrorCode();
+            System.out.println("[CuartelData Error " + errorCode + "] " + e.getMessage());
+            if (errorCode != 1062) { // Ignorar datos repetidos
+                e.printStackTrace();
+            }
+        }
+        return resultado;
+    }
 
     public boolean guardarCuartel(Cuartel cuartel) {
         boolean resultado = false;
@@ -147,22 +169,22 @@ public class CuartelData {
         return cuarteles;
     }
 
-    public List<Brigada> listarBrigadasEnCuartel(int codigoCuartel) {
+    public List<Brigada> listarBrigadasEnCuartel(Cuartel cuartel) {
         List<Brigada> brigadas = new ArrayList();
         try {
-            String sql = "SELECT * FROM brigada WHERE codigoCuartel=? AND estado=true";
+            String sql = "SELECT * FROM brigada WHERE codigoCuartel=? AND estado=true";  
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, codigoCuartel);
+            ps.setInt(1, cuartel.getCodigoCuartel());
             ResultSet rs = ps.executeQuery();
-            Brigada brigada;
-            while (rs.next()) {
+            Brigada brigada;            
+            while (rs.next()) {                
                 brigada = new Brigada();
                 brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                brigada.setCodigoCuartel(rs.getInt("codigoCuartel"));
+                brigada.setCuartel(cuartel);
                 brigada.setEspecialidad(rs.getString("especialidad"));
                 brigada.setNombreBrigada(rs.getString("nombreBrigada"));
                 brigada.setDisponible(rs.getBoolean("disponible"));
-                brigada.setEstado(rs.getBoolean("estado"));
+                brigada.setEstado(rs.getBoolean("bri.estado"));
                 brigadas.add(brigada);
             }
             ps.close();
@@ -176,13 +198,23 @@ public class CuartelData {
     public List<Bombero> listarBomberosEnCuartel(Cuartel cuartel) {
         List<Bombero> bomberos = new ArrayList();
         try {
-            String sql = "SELECT * FROM bombero WHERE codigoBrigada IN "
-                    + "(SELECT codigoBrigada FROM brigada WHERE codigoCuartel=? AND estado=true) AND estado=true";
+            String sql = "SELECT * FROM bombero bom, brigada bri "
+                    + "WHERE bom.codigoBrigada IN (SELECT codigoBrigada FROM brigada WHERE bri.codigoCuartel = ? "
+                    + "AND bri.estado = true) AND bom.estado = true AND bri.codigoBrigada = bom.codigoBrigada ";    // con el objetivo de llevar a cabo este método haciendo solo una consulta, no se hace uso del método buscarBrigada()
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cuartel.getCodigoCuartel());
             ResultSet rs = ps.executeQuery();
+            Brigada brigada;
             Bombero bombero;
-            while (rs.next()) {
+            while (rs.next()) {                
+                brigada = new Brigada();
+                brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
+                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
+                brigada.setEspecialidad(rs.getString("especialidad"));
+                brigada.setDisponible(rs.getBoolean("disponible"));
+                brigada.setCuartel(cuartel);
+                brigada.setEstado(rs.getBoolean("estado"));
+                
                 bombero = new Bombero();
                 bombero.setIdBombero(rs.getInt("idBombero"));
                 bombero.setDni(rs.getInt("dni"));
@@ -190,7 +222,7 @@ public class CuartelData {
                 bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
                 bombero.setTelefono(rs.getLong("celular"));
-                bombero.setCodigoBrigada(rs.getInt("codigoBrigada"));
+                bombero.setBrigada(brigada);
                 bombero.setEstado(rs.getBoolean("estado"));
                 bomberos.add(bombero);
             }
