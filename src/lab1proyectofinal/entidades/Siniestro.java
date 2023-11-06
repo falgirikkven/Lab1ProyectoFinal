@@ -14,54 +14,72 @@ public class Siniestro {
     public static final int PUNTUACION_NIL = -1;
     public static final int PUNTUACION_MIN = 1;
     public static final int PUNTUACION_MAX = 10;
-
+    private static final Cuartel cuartelFalso = new Cuartel(-1, "cuartel inexistente", "", 0, 0, 0, "", false);
+    private static final Brigada brigadaFalsa  = new Brigada(-1, "brigada inexistente", "", false, cuartelFalso, false);
+    
     private int codigoSiniestro;
     private String tipo;
-    private LocalDateTime fechaSiniestro;
+    private LocalDateTime fechaHoraInicio;
     private int coordenadaX;
     private int coordenadaY;
     private String detalles;
-    private LocalDateTime fechaResolucion;
+    private LocalDateTime fechaHoraResolucion;
     private int puntuacion;
-    private int codigoBrigada;
+    private Brigada brigada;
 
     public Siniestro() {
     }
 
-    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
+    // usuario inicializa todo menos 'codigoSiniestro', 'fechaHoraResolucion', 'puntuacion' Y 'brigada'
+    public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles) {
         this.codigoSiniestro = -1;
         this.tipo = tipo;
-        this.fechaSiniestro = fechaSiniestro;
+        this.fechaHoraInicio = fechaHoraInicio;
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;
         this.detalles = detalles;
-        this.fechaResolucion = null;
+        this.fechaHoraResolucion = null;
         this.puntuacion = PUNTUACION_NIL;
-        this.codigoBrigada = codigoBrigada;
+        this.brigada = brigadaFalsa;
     }
 
-    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada, LocalDateTime fechaResolucion, int puntuacion) {
+    // usuario inicializa todo menos 'codigoSiniestro', 'fechaHoraResolucion' y 'puntuacion'
+    public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, Brigada brigada) {
         this.codigoSiniestro = -1;
         this.tipo = tipo;
-        this.fechaSiniestro = fechaSiniestro;
+        this.fechaHoraInicio = fechaHoraInicio;
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;
         this.detalles = detalles;
-        this.fechaResolucion = fechaResolucion;
+        this.fechaHoraResolucion = null;
+        this.puntuacion = PUNTUACION_NIL;
+        this.brigada = brigada;        
+    }
+    
+    // usuario inicializa todo menos 'codigoSiniestro'
+    public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion, Brigada brigada) {
+        this.codigoSiniestro = -1;
+        this.tipo = tipo;
+        this.fechaHoraInicio = fechaHoraInicio;
+        this.coordenadaX = coordenadaX;
+        this.coordenadaY = coordenadaY;
+        this.detalles = detalles;
+        this.fechaHoraResolucion = fechaHoraResolucion;
         this.puntuacion = puntuacion;
-        this.codigoBrigada = codigoBrigada;
+        this.brigada = brigada;
     }
 
-    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada, LocalDateTime fechaResolucion, int puntuacion, int codigoSiniestro) {
+    // usuario inicializa todo 
+    public Siniestro(int codigoSiniestro, String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion, Brigada brigada) {
         this.codigoSiniestro = codigoSiniestro;
         this.tipo = tipo;
-        this.fechaSiniestro = fechaSiniestro;
+        this.fechaHoraInicio = fechaHoraInicio;
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;
         this.detalles = detalles;
-        this.fechaResolucion = fechaResolucion;
+        this.fechaHoraResolucion = fechaHoraResolucion;
         this.puntuacion = puntuacion;
-        this.codigoBrigada = codigoBrigada;
+        this.brigada = brigada;
     }
 
     public int getCodigoSiniestro() {
@@ -80,12 +98,12 @@ public class Siniestro {
         this.tipo = tipo;
     }
 
-    public LocalDateTime getFechaSiniestro() {
-        return fechaSiniestro;
+    public LocalDateTime getFechaHoraInicio() {
+        return fechaHoraInicio;
     }
 
-    public void setFechaSiniestro(LocalDateTime fechaSiniestro) {
-        this.fechaSiniestro = fechaSiniestro;
+    public void setFechaHoraInicio(LocalDateTime fechaHoraInicio) {
+        this.fechaHoraInicio = fechaHoraInicio;
     }
 
     public int getCoordenadaX() {
@@ -112,12 +130,12 @@ public class Siniestro {
         this.detalles = detalles;
     }
 
-    public LocalDateTime getFechaResolucion() {
-        return fechaResolucion;
+    public LocalDateTime getFechaHoraResolucion() {
+        return fechaHoraResolucion;
     }
 
-    public void setFechaResolucion(LocalDateTime fechaResolucion) {
-        this.fechaResolucion = fechaResolucion;
+    public void setFechaHoraResolucion(LocalDateTime fechaHoraResolucion) {
+        this.fechaHoraResolucion = fechaHoraResolucion;
     }
 
     public int getPuntuacion() {
@@ -128,17 +146,17 @@ public class Siniestro {
         this.puntuacion = puntuacion;
     }
 
-    public int getCodigoBrigada() {
-        return codigoBrigada;
+    public Brigada getBrigada() {
+        return brigada;
     }
 
-    public void setCodigoBrigada(int codigoBrigada) {
-        this.codigoBrigada = codigoBrigada;
+    public void setBrigada(Brigada brigada) {
+        this.brigada = brigada;
     }
 
     @Override
     public String toString() {
-        return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaSiniestro=" + fechaSiniestro + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", codigoBrigada=" + codigoBrigada + ", fechaResolucion=" + fechaResolucion + ", puntuacion=" + puntuacion + '}';
-    }
-
+        return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaHoraInicio=" + fechaHoraInicio + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", fechaHoraResolucion=" + fechaHoraResolucion + ", puntuacion=" + puntuacion + ", brigada=" + brigada + '}';
+    }        
+        
 }

@@ -30,7 +30,7 @@ public class Cuartel {
         this.coordenadaY = coordenadaY;
         this.telefono = telefono;
         this.correo = correo;
-        this.estado = true;         // no parece tener sentido poder crear un registro ya dado de baja
+        this.estado = true;         
     }
 
     

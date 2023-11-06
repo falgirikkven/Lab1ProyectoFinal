@@ -17,31 +17,31 @@ public class Bombero {
     private String grupoSanguineo;
     private LocalDate fechaNacimiento;
     private long telefono;
-    private int codigoBrigada;
+    private Brigada brigada;
     private boolean estado;
 
     public Bombero() {
     }
 
-    public Bombero(int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, int codigoBrigada) {
+    public Bombero(int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, Brigada brigada) {
         this.idBombero = -1;
         this.dni = dni;
         this.nombreApellido = nombreApellido;
         this.grupoSanguineo = grupoSanguineo;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
-        this.codigoBrigada = codigoBrigada;
+        this.brigada = brigada;
         this.estado = true;
     }
 
-    public Bombero(int idBombero, int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, int codigoBrigada, boolean estado) {
+    public Bombero(int idBombero, int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, Brigada brigada, boolean estado) {
         this.idBombero = idBombero;
         this.dni = dni;
         this.nombreApellido = nombreApellido;
         this.grupoSanguineo = grupoSanguineo;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
-        this.codigoBrigada = codigoBrigada;
+        this.brigada = brigada;
         this.estado = estado;
     }
 
@@ -93,12 +93,12 @@ public class Bombero {
         this.telefono = telefono;
     }
 
-    public int getCodigoBrigada() {
-        return codigoBrigada;
+    public Brigada getBrigada() {
+        return brigada;
     }
 
-    public void setCodigoBrigada(int codigoBrigada) {
-        this.codigoBrigada = codigoBrigada;
+    public void setBrigada(Brigada brigada) {
+        this.brigada = brigada;
     }
 
     public boolean isEstado() {
@@ -110,8 +110,12 @@ public class Bombero {
     }
 
     @Override
-    public String toString() {
-        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", codigoBrigada=" + codigoBrigada + ", estado=" + estado + '}';
+    public String toString() {  // potencialmente prescindible
+        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", brigada=" + brigada + ", estado=" + estado + '}';
+    }
+
+    public String mostrarDatos() {
+        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", brigada=" + brigada + ", estado=" + estado + '}';
     }
 
 }
