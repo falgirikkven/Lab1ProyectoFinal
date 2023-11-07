@@ -23,14 +23,14 @@ public class CuartelData {
 
     public CuartelData() {
         this.connection = Conexion.getInstance();
-
     }
-    
-    public boolean crearFalsoCuartel(){
+
+    public boolean crearFalsoCuartel() {
         boolean resultado = false;
         try {
-            String sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) VALUES ('cuartel inexistente', '' , 0, 0, 0, '', false,-1)";
-            PreparedStatement ps = connection.prepareStatement(sql);            
+            String sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) "
+                    + "VALUES ('cuartel inexistente', '' , 0, 0, 0, '', false,-1)";
+            PreparedStatement ps = connection.prepareStatement(sql);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[CuartelData] Cuartel falso agregado");
@@ -53,19 +53,21 @@ public class CuartelData {
         try {
             String sql;
             if (cuartel.getCodigoCuartel() == -1) {
-                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?)";
             } else {
-                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";       // si en el futuro dejamos la idea de que el usuario ingrese un id/código, entonces considero que esto va a quedar obsoleto
+                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, cuartel.getNombreCuartel());
             ps.setString(2, cuartel.getDireccion());
             ps.setInt(3, cuartel.getCoordenadaX());
             ps.setInt(4, cuartel.getCoordenadaY());
-            ps.setLong(5, cuartel.getTelefono());
+            ps.setString(5, cuartel.getTelefono());
             ps.setString(6, cuartel.getCorreo());
-            ps.setBoolean(7, cuartel.isEstado());       // en la práctica, siempre debería de ser true
-            if (cuartel.getCodigoCuartel() != -1) {         // (comentario copiado) si en el futuro dejamos la idea de que el usuario ingrese un id/código, entonces considero que esto va a quedar obsoleto
+            ps.setBoolean(7, cuartel.isEstado());
+            if (cuartel.getCodigoCuartel() != -1) {
                 ps.setInt(8, cuartel.getCodigoCuartel());
             }
             if (ps.executeUpdate() > 0) {
@@ -100,7 +102,7 @@ public class CuartelData {
                 cuartel.setDireccion(rs.getString("direccion"));
                 cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
                 cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getInt("telefono"));
+                cuartel.setTelefono(rs.getString("telefono"));
                 cuartel.setCorreo(rs.getString("correo"));
                 cuartel.setEstado(rs.getBoolean("estado"));
                 System.out.println("[CuartelData] Cuartel con id=" + codigoCuartel + " encontrado");
@@ -129,7 +131,7 @@ public class CuartelData {
                 cuartel.setDireccion(rs.getString("direccion"));
                 cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
                 cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getInt("telefono"));
+                cuartel.setTelefono(rs.getString("telefono"));
                 cuartel.setCorreo(rs.getString("correo"));
                 cuartel.setEstado(rs.getBoolean("estado"));
                 System.out.println("[CuartelData] Cuartel con nombre=" + nombreCuartel + " encontrado");
@@ -158,7 +160,7 @@ public class CuartelData {
                 cuartel.setDireccion(rs.getString("direccion"));
                 cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
                 cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getInt("telefono"));
+                cuartel.setTelefono(rs.getString("telefono"));
                 cuartel.setCorreo(rs.getString("correo"));
                 cuartel.setEstado(rs.getBoolean("estado"));
                 cuarteles.add(cuartel);
@@ -171,22 +173,23 @@ public class CuartelData {
         return cuarteles;
     }
 
-    public List<Brigada> listarBrigadasEnCuartel(Cuartel cuartel) {
+    public List<Brigada> listarBrigadasDelCuartel(Cuartel cuartel) {
         List<Brigada> brigadas = new ArrayList();
         try {
-            String sql = "SELECT * FROM brigada WHERE codigoCuartel=? AND estado=true";  
+            String sql = "SELECT * FROM brigada WHERE codigoCuartel=? AND estado=true";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cuartel.getCodigoCuartel());
             ResultSet rs = ps.executeQuery();
-            Brigada brigada;            
-            while (rs.next()) {                
+            Brigada brigada;
+            while (rs.next()) {
                 brigada = new Brigada();
                 brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                brigada.setCuartel(cuartel);
-                brigada.setEspecialidad(rs.getString("especialidad"));
                 brigada.setNombreBrigada(rs.getString("nombreBrigada"));
-                brigada.setDisponible(rs.getBoolean("disponible"));
-                brigada.setEstado(rs.getBoolean("bri.estado"));
+                brigada.setEspecialidad(rs.getString("especialidad"));
+                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
+                brigada.setCantBomberos(rs.getInt("cantBomberos"));
+                brigada.setCuartel(cuartel);
+                brigada.setEstado(rs.getBoolean("estado"));
                 brigadas.add(brigada);
             }
             ps.close();
@@ -197,35 +200,38 @@ public class CuartelData {
         return brigadas;
     }
 
-    public List<Bombero> listarBomberosEnCuartel(Cuartel cuartel) {
+    public List<Bombero> listarBomberosDelCuartel(Cuartel cuartel) {
         List<Bombero> bomberos = new ArrayList();
         try {
             String sql = "SELECT * FROM bombero bom, brigada bri "
-                    + "WHERE bom.codigoBrigada IN (SELECT codigoBrigada FROM brigada WHERE bri.codigoCuartel = ? "
-                    + "AND bri.estado = true) AND bom.estado = true AND bri.codigoBrigada = bom.codigoBrigada ";    // con el objetivo de llevar a cabo este método haciendo solo una consulta, no se hace uso del método buscarBrigada()
+                    + "WHERE bom.codigoBrigada IN "
+                    + "(SELECT codigoBrigada FROM brigada WHERE bri.codigoCuartel = ? AND bri.estado = true) "
+                    + "AND bom.estado = true "
+                    + "AND bri.codigoBrigada = bom.codigoBrigada ";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cuartel.getCodigoCuartel());
             ResultSet rs = ps.executeQuery();
             Brigada brigada;
             Bombero bombero;
-            while (rs.next()) {                
+            while (rs.next()) {
                 brigada = new Brigada();
                 brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
                 brigada.setNombreBrigada(rs.getString("nombreBrigada"));
                 brigada.setEspecialidad(rs.getString("especialidad"));
-                brigada.setDisponible(rs.getBoolean("disponible"));
+                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
+                brigada.setCantBomberos(rs.getInt("cantBomberos"));
                 brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("estado"));
-                
+                brigada.setEstado(rs.getBoolean("bri.estado"));
+
                 bombero = new Bombero();
                 bombero.setIdBombero(rs.getInt("idBombero"));
                 bombero.setDni(rs.getInt("dni"));
-                bombero.setNombreApellido(rs.getString("nombreApellido"));
+                bombero.setNombreCompleto(rs.getString("nombreCompleto"));
                 bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("celular"));
+                bombero.setCelular(rs.getString("celular"));
                 bombero.setBrigada(brigada);
-                bombero.setEstado(rs.getBoolean("estado"));
+                bombero.setEstado(rs.getBoolean("bom.estado"));
                 bomberos.add(bombero);
             }
             ps.close();
@@ -239,13 +245,15 @@ public class CuartelData {
     public boolean modificarCuartel(Cuartel cuartel) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE cuartel SET nombreCuartel=? , direccion=? , coordenadaX=? , coordenadaY=? , telefono=? , correo=? WHERE codigoCuartel=? AND estado=true";
+            String sql = "UPDATE cuartel SET nombreCuartel=? , direccion=? , coordenadaX=? , coordenadaY=? , telefono=? , correo=? "
+                    + "WHERE codigoCuartel=? "
+                    + "AND estado=true";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, cuartel.getNombreCuartel());
             ps.setString(2, cuartel.getDireccion());
             ps.setInt(3, cuartel.getCoordenadaX());
             ps.setInt(4, cuartel.getCoordenadaY());
-            ps.setLong(5, cuartel.getTelefono());
+            ps.setString(5, cuartel.getTelefono());
             ps.setString(6, cuartel.getCorreo());
             ps.setBoolean(7, cuartel.isEstado());
             ps.setInt(8, cuartel.getCodigoCuartel());
@@ -265,7 +273,10 @@ public class CuartelData {
     public boolean eliminarCuartel(int codigoCuartel) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE cuartel SET estado=false WHERE codigoCuartel=? AND estado=true AND (SELECT COUNT(codigoBrigada) FROM brigada WHERE codigoCuartel=? AND estado=true)=0;";
+            String sql = "UPDATE cuartel SET estado=false "
+                    + "WHERE codigoCuartel=? "
+                    + "AND estado=true "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM brigada WHERE codigoCuartel=? AND estado=true)=0;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoCuartel);
             ps.setInt(2, codigoCuartel);
@@ -285,7 +296,11 @@ public class CuartelData {
     public boolean eliminarCuartelPorNombre(String nombreCuartel) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE cuartel SET estado=false WHERE nombreCuartel=? AND estado=true AND (SELECT COUNT(codigoBrigada) FROM brigada WHERE codigoCuartel=(SELECT codigoCuartel FROM cuartel WHERE nombreCuartel=?) AND estado=true)=0";
+            String sql = "UPDATE cuartel SET estado=false "
+                    + "WHERE nombreCuartel=? "
+                    + "AND estado=true "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM brigada "
+                    + "WHERE codigoCuartel=(SELECT codigoCuartel FROM cuartel WHERE nombreCuartel=?) AND estado=true)=0";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, nombreCuartel);
             ps.setString(2, nombreCuartel);
@@ -298,7 +313,7 @@ public class CuartelData {
         } catch (SQLException e) {
             System.out.println("[CuartelData Error " + e.getErrorCode() + "] " + e.getMessage());
             e.printStackTrace();
-        } 
+        }
         return resultado;
     }
 

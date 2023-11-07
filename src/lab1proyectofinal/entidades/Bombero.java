@@ -13,34 +13,48 @@ public class Bombero {
      */
     private int idBombero;
     private int dni;
-    private String nombreApellido;
+    private String nombreCompleto;
     private String grupoSanguineo;
     private LocalDate fechaNacimiento;
-    private long telefono;
+    private String celular;
     private Brigada brigada;
     private boolean estado;
 
     public Bombero() {
     }
 
-    public Bombero(int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, Brigada brigada) {
+    // usuario inicializa todo menos 'idBombero' y 'estado'
+    public Bombero(int dni, String nombreCompleto, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada) {
         this.idBombero = -1;
         this.dni = dni;
-        this.nombreApellido = nombreApellido;
+        this.nombreCompleto = nombreCompleto;
         this.grupoSanguineo = grupoSanguineo;
         this.fechaNacimiento = fechaNacimiento;
-        this.telefono = telefono;
+        this.celular = celular;
         this.brigada = brigada;
         this.estado = true;
     }
-
-    public Bombero(int idBombero, int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, Brigada brigada, boolean estado) {
-        this.idBombero = idBombero;
+    
+    // usuario inicializa todo menos 'idBombero'
+    public Bombero(int dni, String nombreCompleto, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada, boolean estado) {
         this.dni = dni;
-        this.nombreApellido = nombreApellido;
+        this.nombreCompleto = nombreCompleto;
         this.grupoSanguineo = grupoSanguineo;
         this.fechaNacimiento = fechaNacimiento;
-        this.telefono = telefono;
+        this.celular = celular;
+        this.brigada = brigada;
+        this.estado = estado;
+    }
+    
+
+    // usuario inicializa todo 
+    public Bombero(int idBombero, int dni, String nombreCompleto, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada, boolean estado) {
+        this.idBombero = idBombero;
+        this.dni = dni;
+        this.nombreCompleto = nombreCompleto;
+        this.grupoSanguineo = grupoSanguineo;
+        this.fechaNacimiento = fechaNacimiento;
+        this.celular = celular;
         this.brigada = brigada;
         this.estado = estado;
     }
@@ -61,12 +75,12 @@ public class Bombero {
         this.dni = dni;
     }
 
-    public String getNombreApellido() {
-        return nombreApellido;
+    public String getNombreCompleto() {
+        return nombreCompleto;
     }
 
-    public void setNombreApellido(String nombreApellido) {
-        this.nombreApellido = nombreApellido;
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 
     public String getGrupoSanguineo() {
@@ -85,12 +99,12 @@ public class Bombero {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public long getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setTelefono(long telefono) {
-        this.telefono = telefono;
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public Brigada getBrigada() {
@@ -110,12 +124,8 @@ public class Bombero {
     }
 
     @Override
-    public String toString() {  // potencialmente prescindible
-        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", brigada=" + brigada + ", estado=" + estado + '}';
-    }
-
-    public String mostrarDatos() {
-        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", brigada=" + brigada + ", estado=" + estado + '}';
+    public String toString() {
+        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreCompleto=" + nombreCompleto + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", celular=" + celular + ", brigada=" + brigada + ", estado=" + estado + '}';
     }
 
 }

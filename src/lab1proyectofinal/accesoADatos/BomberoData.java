@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import lab1proyectofinal.entidades.Bombero;
+import lab1proyectofinal.entidades.*;
 
 /**
  *
@@ -27,27 +27,36 @@ public class BomberoData {
     public boolean guardarBombero(Bombero bombero) {
         boolean resultado = false;
         try {
-            //String sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
             String sql;
             if (bombero.getIdBombero() == -1) {
-                sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                sql = "INSERT INTO bombero(dni, nombreCompleto, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
             } else {
-                sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado, idBombero) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                sql = "INSERT INTO bombero(dni, nombreCompleto, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado, idBombero) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
-            ps.setString(2, bombero.getNombreApellido());
+            ps.setString(2, bombero.getNombreCompleto());
             ps.setString(3, bombero.getGrupoSanguineo());
             ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
-            ps.setLong(5, bombero.getTelefono());
-            ps.setInt(6, bombero.getCodigoBrigada());
+            ps.setString(5, bombero.getCelular());
+            ps.setInt(6, bombero.getBrigada().getCodigoBrigada());
             ps.setBoolean(7, true);
             if (bombero.getIdBombero() != -1) {
                 ps.setInt(8, bombero.getIdBombero());
             }
             if (ps.executeUpdate() > 0) {
-                resultado = true;
                 System.out.println("[BomberoData] Bombero agregado");
+                
+                // actualizando 'cantBomberos' en la brigada en la que ingresó al bombero
+                sql = "UPDATE brigada SET cantBomberos=cantBomberos+1 WHERE codigoBrigada=?";
+                ps.setInt(1, bombero.getBrigada().getCodigoBrigada());
+                ps = connection.prepareStatement(sql);
+                if (ps.executeUpdate() > 0) {
+                    resultado = true;
+                    System.out.println("[BomberoData] Brigada actualizada");
+                } else {                    
+                    System.out.println("[BomberoData] No se pudo actualizar la brigada");
+                }
             } else {
                 System.out.println("[BomberoData] No se pudo agregar al bombero");
             }
@@ -67,20 +76,43 @@ public class BomberoData {
     public Bombero buscarBombero(int idBombero) {
         Bombero bombero = null;
         try {
-            String sql = "SELECT * FROM bombero WHERE idBombero=? AND estado=true;";
+            String sql = "SELECT * FROM bombero bom, brigada bri, cuartel cuar "
+                    + "WHERE idBombero=? AND bom.estado=true AND bom.codigoBrigada=bri.codigoBrigada "
+                    + "AND bri.codigoCuartel=cuar.codigoCuartel";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, idBombero);
             ResultSet rs = ps.executeQuery();
+            Cuartel cuartel;
+            Brigada brigada;
             if (rs.next()) {
+                cuartel = new Cuartel();
+                cuartel.setCodigoCuartel(rs.getInt("cuar.codigoCuartel"));
+                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
+                cuartel.setDireccion(rs.getString("direccion"));
+                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
+                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
+                cuartel.setTelefono(rs.getString("telefono"));
+                cuartel.setCorreo(rs.getString("correo"));
+                cuartel.setEstado(rs.getBoolean("cuar.estado"));
+
+                brigada = new Brigada();
+                brigada.setCodigoBrigada(rs.getInt("bri.codigoBrigada"));
+                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
+                brigada.setEspecialidad(rs.getString("especialidad"));
+                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
+                brigada.setCantBomberos(rs.getInt("cantBomberos"));
+                brigada.setCuartel(cuartel);
+                brigada.setEstado(rs.getBoolean("bri.estado"));
+
                 bombero = new Bombero();
                 bombero.setIdBombero(rs.getInt("idBombero"));
                 bombero.setDni(rs.getInt("dni"));
-                bombero.setNombreApellido(rs.getString("nombreApellido"));
+                bombero.setNombreCompleto(rs.getString("nombreCompleto"));
                 bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("celular"));
-                bombero.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                bombero.setEstado(rs.getBoolean("estado"));
+                bombero.setCelular(rs.getString("celular"));
+                bombero.setBrigada(brigada);
+                bombero.setEstado(rs.getBoolean("bom.estado"));
                 System.out.println("[BomberoData] Bombero con id=" + idBombero + " encontrado");
             } else {
                 System.out.println("[BomberoData] No se ha encontrado al bombero con id=" + idBombero);
@@ -96,20 +128,43 @@ public class BomberoData {
     public Bombero buscarBomberoPorDni(int dni) {
         Bombero bombero = null;
         try {
-            String sql = "SELECT * FROM bombero WHERE dni=? AND estado=true;";
+            String sql = "SELECT * FROM bombero bom, brigada bri, cuartel cuar "
+                    + "WHERE dni=? AND bom.estado=true AND bom.codigoBrigada=bri.codigoBrigada "
+                    + "AND bri.codigoCuartel=cuar.codigoCuartel";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, dni);
             ResultSet rs = ps.executeQuery();
+            Cuartel cuartel;
+            Brigada brigada;
             if (rs.next()) {
+                cuartel = new Cuartel();
+                cuartel.setCodigoCuartel(rs.getInt("cuar.codigoCuartel"));
+                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
+                cuartel.setDireccion(rs.getString("direccion"));
+                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
+                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
+                cuartel.setTelefono(rs.getString("telefono"));
+                cuartel.setCorreo(rs.getString("correo"));
+                cuartel.setEstado(rs.getBoolean("cuar.estado"));
+
+                brigada = new Brigada();
+                brigada.setCodigoBrigada(rs.getInt("bri.codigoBrigada"));
+                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
+                brigada.setEspecialidad(rs.getString("especialidad"));
+                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
+                brigada.setCantBomberos(rs.getInt("cantBomberos"));
+                brigada.setCuartel(cuartel);
+                brigada.setEstado(rs.getBoolean("bri.estado"));
+
                 bombero = new Bombero();
                 bombero.setIdBombero(rs.getInt("idBombero"));
                 bombero.setDni(rs.getInt("dni"));
-                bombero.setNombreApellido(rs.getString("nombreApellido"));
+                bombero.setNombreCompleto(rs.getString("nombreCompleto"));
                 bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("celular"));
-                bombero.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                bombero.setEstado(rs.getBoolean("estado"));
+                bombero.setCelular(rs.getString("celular"));
+                bombero.setBrigada(brigada);
+                bombero.setEstado(rs.getBoolean("bom.estado"));
                 System.out.println("[BomberoData] Bombero con dni=" + dni + " encontrado");
             } else {
                 System.out.println("[BomberoData] No se ha encontrado al bombero con dni=" + dni);
@@ -125,20 +180,43 @@ public class BomberoData {
     public List<Bombero> listarBomberos() {
         List<Bombero> bomberos = new ArrayList();
         try {
-            String sql = "SELECT * FROM bombero WHERE estado=true;";
+            String sql = "SELECT * FROM bombero bom, brigada bri, cuartel cuar "
+                    + "WHERE bom.estado=true AND bom.codigoBrigada=bri.codigoBrigada "
+                    + "AND bri.codigoCuartel=cuar.codigoCuartel";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
+            Cuartel cuartel;
+            Brigada brigada;
             Bombero bombero;
-            while (rs.next()) {
+            if (rs.next()) {
+                cuartel = new Cuartel();
+                cuartel.setCodigoCuartel(rs.getInt("cuar.codigoCuartel"));
+                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
+                cuartel.setDireccion(rs.getString("direccion"));
+                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
+                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
+                cuartel.setTelefono(rs.getString("telefono"));
+                cuartel.setCorreo(rs.getString("correo"));
+                cuartel.setEstado(rs.getBoolean("cuar.estado"));
+
+                brigada = new Brigada();
+                brigada.setCodigoBrigada(rs.getInt("bri.codigoBrigada"));
+                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
+                brigada.setEspecialidad(rs.getString("especialidad"));
+                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
+                brigada.setCantBomberos(rs.getInt("cantBomberos"));
+                brigada.setCuartel(cuartel);
+                brigada.setEstado(rs.getBoolean("bri.estado"));
+
                 bombero = new Bombero();
                 bombero.setIdBombero(rs.getInt("idBombero"));
                 bombero.setDni(rs.getInt("dni"));
-                bombero.setNombreApellido(rs.getString("nombreApellido"));
+                bombero.setNombreCompleto(rs.getString("nombreCompleto"));
                 bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
                 bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("celular"));
-                bombero.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                bombero.setEstado(rs.getBoolean("estado"));
+                bombero.setCelular(rs.getString("celular"));
+                bombero.setBrigada(brigada);
+                bombero.setEstado(rs.getBoolean("bom.estado"));
                 bomberos.add(bombero);
             }
             ps.close();
@@ -152,13 +230,13 @@ public class BomberoData {
     public boolean modificarBombero(Bombero bombero) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE bombero SET dni=?, nombreApellido=?, grupoSanguineo=?, fechaNacimiento=?, celular=? WHERE idBombero=? AND estado=true";
+            String sql = "UPDATE bombero SET dni=?, nombreCompleto=?, grupoSanguineo=?, fechaNacimiento=?, celular=? WHERE idBombero=? AND estado=true";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
-            ps.setString(2, bombero.getNombreApellido());
+            ps.setString(2, bombero.getNombreCompleto());
             ps.setString(3, bombero.getGrupoSanguineo());
             ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
-            ps.setLong(5, bombero.getTelefono());
+            ps.setString(5, bombero.getCelular());
             ps.setInt(6, bombero.getIdBombero());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
@@ -181,8 +259,19 @@ public class BomberoData {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, idBombero);
             if (ps.executeUpdate() > 0) {
-                resultado = true;
                 System.out.println("[BomberoData] Bombero eliminado");
+                
+                // actualizando 'cantBomberos' en la brigada en la cual se dió de baja al bombero
+                sql = "UPDATE brigada SET cantBomberos=cantBomberos-1 "
+                        + "WHERE codigoBrigada=(SELECT codigoBrigada FROM bombero WHERE idBombero=?);";     // hay que ver si esto funciona
+                ps.setInt(1, idBombero);
+                ps = connection.prepareStatement(sql);
+                if (ps.executeUpdate() > 0) {
+                    resultado = true;
+                    System.out.println("[BomberoData] Brigada actualizada");
+                } else {                    
+                    System.out.println("[BomberoData] No se pudo actualizar la brigada");
+                }
             } else {
                 System.out.println("[BomberoData] No se pudo eliminar al bombero");
             }
@@ -201,8 +290,19 @@ public class BomberoData {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, dni);
             if (ps.executeUpdate() > 0) {
-                resultado = true;
                 System.out.println("[BomberoData] Bombero eliminado");
+                
+                // actualizando 'cantBomberos' en la brigada en la cual se dió de baja al bombero
+                sql = "UPDATE brigada SET cantBomberos=cantBomberos-1 "
+                        + "WHERE codigoBrigada=(SELECT codigoBrigada FROM bombero WHERE dni=?);";     // hay que ver si esto funciona
+                ps.setInt(1, dni);
+                ps = connection.prepareStatement(sql);
+                if (ps.executeUpdate() > 0) {
+                    resultado = true;
+                    System.out.println("[BomberoData] Brigada actualizada");
+                } else {                    
+                    System.out.println("[BomberoData] No se pudo actualizar la brigada");
+                }
             } else {
                 System.out.println("[BomberoData] No se pudo eliminar al bombero");
             }

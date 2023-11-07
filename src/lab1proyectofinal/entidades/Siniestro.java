@@ -14,9 +14,9 @@ public class Siniestro {
     public static final int PUNTUACION_NIL = -1;
     public static final int PUNTUACION_MIN = 1;
     public static final int PUNTUACION_MAX = 10;
-    private static final Cuartel cuartelFalso = new Cuartel(-1, "cuartel inexistente", "", 0, 0, 0, "", false);
-    private static final Brigada brigadaFalsa  = new Brigada(-1, "brigada inexistente", "", false, cuartelFalso, false);
-    
+    private static final Cuartel cuartelFalso = new Cuartel(-1, "cuartel inexistente", "", 0, 0, "", "", false);
+    private static final Brigada brigadaFalsa = new Brigada(-1, "brigada inexistente", "", false, 0, cuartelFalso, false);
+
     private int codigoSiniestro;
     private String tipo;
     private LocalDateTime fechaHoraInicio;
@@ -53,9 +53,9 @@ public class Siniestro {
         this.detalles = detalles;
         this.fechaHoraResolucion = null;
         this.puntuacion = PUNTUACION_NIL;
-        this.brigada = brigada;        
+        this.brigada = brigada;
     }
-    
+
     // usuario inicializa todo menos 'codigoSiniestro'
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion, Brigada brigada) {
         this.codigoSiniestro = -1;
@@ -157,6 +157,6 @@ public class Siniestro {
     @Override
     public String toString() {
         return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaHoraInicio=" + fechaHoraInicio + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", fechaHoraResolucion=" + fechaHoraResolucion + ", puntuacion=" + puntuacion + ", brigada=" + brigada + '}';
-    }        
-        
+    }
+
 }
