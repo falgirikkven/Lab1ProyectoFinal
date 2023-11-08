@@ -15,17 +15,17 @@ import lab1proyectofinal.entidades.Brigada;
  */
 public class BrigadaData {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
     private final Connection connection;
 
     public BrigadaData() {
         this.connection = Conexion.getInstance();
     }
 
-
     public boolean guardarBrigada(Brigada brigada) {
+        if (!brigada.isEstado()) {
+            System.out.println("[BrigadaData.guardarBrigada] Error: no se puede guardar. Brigada dada de baja. " + brigada.toString());
+            return false;
+        }
         boolean resultado = false;
         try {
             String sql;
@@ -45,15 +45,15 @@ public class BrigadaData {
             }
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BrigadaData] Brigada agregada");
+                System.out.println("[BrigadaData.guardarBrigada] Agregada: " + brigada.toString());
             } else {
-                System.out.println("[BrigadaData] No se pudo agregar a la brigada");
+                System.out.println("[BrigadaData.guardarBrigada] No se agregó: " + brigada.toString());
             }
             ps.close();
         } catch (SQLException e) {
-            int errorCode = e.getErrorCode();
-            System.out.println("[BrigadaData Error " + errorCode + "] " + e.getMessage());
-            if (errorCode != 1062) { // Ignorar datos repetidos
+            if (e.getErrorCode() == 1062) { // Informar datos repetidos
+                System.out.println("[BrigadaData.guardarBrigada] Error: entrada duplicada para " + brigada.toString());
+            } else {
                 e.printStackTrace();
             }
         }
@@ -69,13 +69,13 @@ public class BrigadaData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 brigada = Utils.obtenerDeResultSetBrigada(rs);
-                System.out.println("[BrigadaData] Brigada con codigo=" + codigoBrigada + " encontrada");
+                System.out.println("[BrigadaData.buscarBrigada] Encontrada: " + brigada.toString());
             } else {
-                System.out.println("[BrigadaData] No se ha encontrado a la brigada con codigo=" + codigoBrigada);
+                System.out.println("[BrigadaData.buscarBrigada] No se ha encontrado con codigoBrigada=" + codigoBrigada);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.buscarBrigada] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return brigada;
@@ -90,101 +90,100 @@ public class BrigadaData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 brigada = Utils.obtenerDeResultSetBrigada(rs);
-                System.out.println("[BrigadaData] Brigada '" + nombreBrigada + "' encontrada");
+                System.out.println("[BrigadaData.buscarBrigadaPorNombre] Encontrada: " + brigada.toString());
             } else {
-                System.out.println("[BrigadaData] No se ha encontrado a la brigada '" + nombreBrigada + "'");
+                System.out.println("[BrigadaData.buscarBrigadaPorNombre] No se ha encontrado con nombreBrigada='" + nombreBrigada + "'");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.buscarBrigadaPorNombre] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return brigada;
     }
 
     public List<Brigada> listarBrigadas() {
-        List<Brigada> brigadas = new ArrayList();
+        List<Brigada> brigadas = null;
         try {
             String sql = "SELECT * FROM brigada JOIN cuartel ON (brigada.codigoCuartel=cuartel.codigoCuartel) WHERE brigada.estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
+            brigadas = new ArrayList();
             while (rs.next()) {
                 Brigada brigada = Utils.obtenerDeResultSetBrigada(rs);
                 brigadas.add(brigada);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.listarBrigadas] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return brigadas;
     }
 
     public List<Brigada> listarBrigadasDisponibles() {
-        List<Brigada> brigadas = new ArrayList();
+        List<Brigada> brigadas = null;
         try {
             String sql = "SELECT * FROM brigada JOIN cuartel ON (brigada.codigoCuartel=cuartel.codigoCuartel) WHERE disponible=true AND brigada.estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
+            brigadas = new ArrayList();
             while (rs.next()) {
                 Brigada brigada = Utils.obtenerDeResultSetBrigada(rs);
                 brigadas.add(brigada);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.listarBrigadasDisponibles] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return brigadas;
     }
 
     public List<Brigada> listarBrigadasOcupadas() {
-        List<Brigada> brigadas = new ArrayList();
+        List<Brigada> brigadas = null;
         try {
             String sql = "SELECT * FROM brigada JOIN cuartel ON (brigada.codigoCuartel=cuartel.codigoCuartel) WHERE disponible=false AND brigada.estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
+            brigadas = new ArrayList();
             while (rs.next()) {
                 Brigada brigada = Utils.obtenerDeResultSetBrigada(rs);
                 brigadas.add(brigada);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.listarBrigadasOcupadas] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return brigadas;
     }
 
     public List<Bombero> listarBomberosEnBrigada(Brigada brigada) {
-        // Corregir la sentencia SQL
-        List<Bombero> bomberos = new ArrayList();
+        List<Bombero> bomberos = null;
         try {
-            String sql = "SELECT * FROM bombero WHERE codigoBrigada IN (SELECT codigoBrigada From brigada WHERE codigoBrigada=? AND estado=true) AND bombero.estado=true;";
+            String sql = "SELECT * FROM bombero JOIN brigada JOIN cuartel ON (bombero.codigoBrigada=brigada.codigoBrigada AND brigada.codigoCuartel=cuartel.codigoCuartel) WHERE codigoBrigada=? AND bombero.estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, brigada.getCodigoBrigada());
             ResultSet rs = ps.executeQuery();
+            bomberos = new ArrayList();
             while (rs.next()) {
-                Bombero bombero = new Bombero();
-                bombero.setIdBombero(rs.getInt("idBombero"));
-                bombero.setDni(rs.getInt("dni"));
-                bombero.setNombreApellido(rs.getString("nombreApellido"));
-                bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
-                bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("celular"));
-                bombero.setBrigada(brigada);
-                bombero.setEstado(rs.getBoolean("estado"));
+                Bombero bombero = Utils.obtenerDeResultSetBombero(rs);
                 bomberos.add(bombero);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.listarBomberosEnBrigada] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return bomberos;
     }
 
     public boolean modificarBrigada(Brigada brigada) {
+        if (!brigada.isEstado()) {
+            System.out.println("[BrigadaData.modificarBrigada] Error: no se puede guardar. Brigada dada de baja. " + brigada.toString());
+            return false;
+        }
         boolean resultado = false;
         try {
             String sql = "UPDATE brigada SET nombreBrigada=?, especialidad=?, disponible=?, codigoCuartel=? WHERE codigoBrigada=? AND estado=true";
@@ -197,13 +196,13 @@ public class BrigadaData {
             ps.setInt(6, brigada.getCodigoBrigada());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BrigadaData] Brigada modificada");
+                System.out.println("[BrigadaData.modificarBrigada] Modificada: " + brigada.toString());
             } else {
-                System.out.println("[BrigadaData] No se pudo modificar a la brigada");
+                System.out.println("[BrigadaData.modificarBrigada] No se modificó: " + brigada.toString());
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.modificarBrigada] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
@@ -217,13 +216,13 @@ public class BrigadaData {
             ps.setInt(1, codigoBrigada);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BrigadaData] Brigada eliminada");
+                System.out.println("[BrigadaData.eliminarBrigada] Eliminada: codigoBrigada=" + codigoBrigada);
             } else {
-                System.out.println("[BrigadaData] No se pudo eliminar a la brigada");
+                System.out.println("[BrigadaData.eliminarBrigada] No se eliminó: codigoBrigada=" + codigoBrigada);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.eliminarBrigada] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
@@ -237,13 +236,13 @@ public class BrigadaData {
             ps.setString(1, nombreBrigada);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BrigadaData] Brigada eliminada");
+                System.out.println("[BrigadaData.eliminarBrigadaPorNombre] Eliminada: nombreBrigada='" + nombreBrigada + "'");
             } else {
-                System.out.println("[BrigadaData] No se pudo eliminar a la brigada");
+                System.out.println("[BrigadaData.eliminarBrigadaPorNombre] No se eliminó: nombreBrigada='" + nombreBrigada + "'");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.eliminarBrigadaPorNombre] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;

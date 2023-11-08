@@ -16,9 +16,6 @@ import lab1proyectofinal.entidades.Cuartel;
  */
 public class CuartelData {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
     private Connection connection;
 
     public CuartelData() {
@@ -27,6 +24,10 @@ public class CuartelData {
     }
 
     public boolean guardarCuartel(Cuartel cuartel) {
+        if (!cuartel.isEstado()) {
+            System.out.println("[CuartelData.guardarCuartel] Error: no se puede guardar. Cuartel dado de baja. " + cuartel.toString());
+            return false;
+        }
         boolean resultado = false;
         try {
             String sql;
@@ -74,7 +75,7 @@ public class CuartelData {
                 cuartel = Utils.obtenerDeResultSetCuartel(rs);
                 System.out.println("[CuartelData.buscarCuartel] Encontrado: " + cuartel.toString());
             } else {
-                System.out.println("[CuartelData.buscarCuartel] No se ha encontrado con id=" + codigoCuartel);
+                System.out.println("[CuartelData.buscarCuartel] No se ha encontrado con codigoCuartel=" + codigoCuartel);
             }
             ps.close();
         } catch (SQLException e) {
@@ -95,7 +96,7 @@ public class CuartelData {
                 cuartel = Utils.obtenerDeResultSetCuartel(rs);
                 System.out.println("[CuartelData.buscarCuartelPorNombre] Encontrado: " + cuartel.toString());
             } else {
-                System.out.println("[CuartelData.buscarCuartelPorNombre] No se ha encontrado con nombre='" + nombreCuartel + "'");
+                System.out.println("[CuartelData.buscarCuartelPorNombre] No se ha encontrado con nombreCuartel='" + nombreCuartel + "'");
             }
             ps.close();
         } catch (SQLException e) {
@@ -106,14 +107,14 @@ public class CuartelData {
     }
 
     public List<Cuartel> listarCuarteles() {
-        List<Cuartel> cuarteles = new ArrayList();
+        List<Cuartel> cuarteles = null;
         try {
             String sql = "SELECT * FROM cuartel WHERE estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            Cuartel cuartel;
+            cuarteles = new ArrayList();
             while (rs.next()) {
-                cuartel = Utils.obtenerDeResultSetCuartel(rs);
+                Cuartel cuartel = Utils.obtenerDeResultSetCuartel(rs);
                 cuarteles.add(cuartel);
             }
             ps.close();
@@ -125,13 +126,13 @@ public class CuartelData {
     }
 
     public List<Brigada> listarBrigadasEnCuartel(int codigoCuartel) {
-        // TODO: probar este metodo
-        List<Brigada> brigadas = new ArrayList();
+        List<Brigada> brigadas = null;
         try {
             String sql = "SELECT * FROM brigada JOIN cuartel ON (brigada.codigoCuartel=cuartel.codigoCuartel) WHERE cuartel.codigoCuartel=? AND brigada.estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoCuartel);
             ResultSet rs = ps.executeQuery();
+            brigadas = new ArrayList();
             while (rs.next()) {
                 Brigada brigada = Utils.obtenerDeResultSetBrigada(rs);
                 brigadas.add(brigada);
@@ -145,13 +146,13 @@ public class CuartelData {
     }
 
     public List<Bombero> listarBomberosEnCuartel(Cuartel cuartel) {
-        // TODO: probar este metodo
-        List<Bombero> bomberos = new ArrayList();
+        List<Bombero> bomberos = null;
         try {
             String sql = "SELECT * FROM bombero JOIN brigada JOIN cuartel ON (bombero.codigoBrigada=brigada.codigoBrigada AND brigada.codigoCuartel=cuartel.codigoCuartel) WHERE cuartel.codigoCuartel=? AND bombero.estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cuartel.getCodigoCuartel());
             ResultSet rs = ps.executeQuery();
+            bomberos = new ArrayList();
             while (rs.next()) {
                 Bombero bombero = Utils.obtenerDeResultSetBombero(rs);
                 bomberos.add(bombero);
@@ -165,6 +166,10 @@ public class CuartelData {
     }
 
     public boolean modificarCuartel(Cuartel cuartel) {
+        if (!cuartel.isEstado()) {
+            System.out.println("[CuartelData.modificarCuartel] Error: no se puede modificar. Cuartel dado de baja. " + cuartel.toString());
+            return false;
+        }
         boolean resultado = false;
         try {
             String sql = "UPDATE cuartel SET nombreCuartel=?, direccion=?, coordenadaX=?, coordenadaY=?, telefono=?, correo=? WHERE codigoCuartel=? AND estado=true";

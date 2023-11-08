@@ -33,8 +33,9 @@ public class Pruebas {
             return;
         }
 
-        //
         // ***** CUARTEL PRUEBAS *****
+        System.out.println("\n***** CUARTEL PRUEBAS *****");
+
         // CuartelData
         CuartelData cuartelData = new CuartelData();
 
@@ -45,24 +46,17 @@ public class Pruebas {
         Cuartel cuarteles[] = new Cuartel[]{cuartel1, cuartel2, cuartel3};
 
         // Guardar Cuartel
-        System.out.println("----- Guardar Cuartel -----");
+        System.out.println("\n----- Guardar Cuartel -----");
         for (Cuartel cuartel : cuarteles) {
             cuartelData.guardarCuartel(cuartel);
         }
 
-        // Listar Cuartel
-        System.out.println("\n----- Listar Cuartel -----");
-        List<Cuartel> listaCuartel = cuartelData.listarCuarteles();
-        for (Cuartel cuartel : listaCuartel) {
-            System.out.println(cuartel.toString());
-        }
-
-        // Buscar Cuartel (ids 1 y 2)
+        // Buscar Cuartel
         System.out.println("\n----- Buscar Cuartel -----");
-        cuartelData.buscarCuartel(1);
-        cuartelData.buscarCuartel(2);
+        cuartelData.buscarCuartel(cuartel1.getCodigoCuartel()); // No deberia fallar
+        cuartelData.buscarCuartel(-2); // Deberia fallar
 
-        // Editar Cuartel (codigo 1)
+        // Modificar Cuartel (codigo 1)
         Cuartel cuartelModificado = new Cuartel(1, "central1Nueva", "Bolivar 341", 3, 1, "26641323", "cuartelnue@gmail.com", true);
         System.out.println("\n----- Modificar cuartel (con codigo " + Integer.toString(cuartelModificado.getCodigoCuartel()) + ")-----");
         cuartelData.modificarCuartel(cuartelModificado);
@@ -71,11 +65,18 @@ public class Pruebas {
         int cualEliminar = 3;
         System.out.println("\n----- Eliminar Cuartel (con codigo " + cualEliminar + ") -----");
         cuartelData.eliminarCuartel(cualEliminar);
-        // ***** FIN CUARTEL PRUEBAS *****
-        //
 
-        //
+        // Listar Cuartel
+        System.out.println("\n----- Listar Cuartel -----");
+        List<Cuartel> listaCuartel = cuartelData.listarCuarteles();
+        for (Cuartel cuartel : listaCuartel) {
+            System.out.println(cuartel.toString());
+        }
+        // ***** FIN CUARTEL PRUEBAS *****
+
         // ***** BRIGADA PRUEBAS *****
+        System.out.println("\n***** BRIGADA PRUEBAS *****");
+
         // Brigada Data
         BrigadaData brigadaData = new BrigadaData();
 
@@ -95,57 +96,32 @@ public class Pruebas {
             brigadaData.guardarBrigada(brigada);
         }
 
+        // Buscar Brigadas
+        System.out.println("\n----- Buscar Brigada -----");
+        brigadaData.buscarBrigada(brigada3.getCodigoBrigada()); // No deberia fallar
+        brigadaData.buscarBrigada(-2); // Deberia fallar
+
+        // Modificar Brigada (codigo 6)
+        Brigada brigadaModificada = new Brigada(6, "Infernal", "Traer caos y corrupcion", true, cuartel1, true);
+        System.out.println("\n----- Modificar Brigada (con codigo=" + Integer.toString(brigadaModificada.getCodigoBrigada()) + ")-----");
+        brigadaData.modificarBrigada(brigadaModificada);
+
+        // Eliminar Brigada
+        int cualBrigadaEliminar = brigada2.getCodigoBrigada();
+        System.out.println("\n----- Eliminar brigada (con codigo=" + cualBrigadaEliminar + ") -----");
+        brigadaData.eliminarBrigada(cualBrigadaEliminar);
+
         // Listar Brigadas
         System.out.println("\n----- Listar Brigadas -----");
         List<Brigada> listaBrigadas = brigadaData.listarBrigadas();
         for (Brigada brigada : listaBrigadas) {
             System.out.println(brigada.toString());
         }
-
-        // Buscar Brigadas
-        int cualBrigadaBuscar;
-        Brigada brigadaEncontrada;
-        System.out.println("\n----- Buscar Brigada -----");
-        //
-        cualBrigadaBuscar = brigada2.getCodigoBrigada();
-        brigadaEncontrada = brigadaData.buscarBrigada(cualBrigadaBuscar);
-        System.out.println("Datos de la brigada " + cualBrigadaBuscar + ":");
-        if (brigadaEncontrada != null) { // Deberia funcionar
-            System.out.println(brigadaEncontrada.toString());
-        } else {
-            System.out.println("No encontrada");
-        }
-        cualBrigadaBuscar = -666;
-        brigadaEncontrada = brigadaData.buscarBrigada(cualBrigadaBuscar);
-        System.out.println("Datos de la brigada " + cualBrigadaBuscar + ":");
-        if (brigadaEncontrada != null) { // No deberia funcionar
-            System.out.println(brigadaEncontrada.toString());
-        } else {
-            System.out.println("No encontrada");
-        }
-
-        // Editar Brigada
-        int cualBrigadaEditar = brigada5.getCodigoBrigada();
-        Brigada brigadaModificada;
-        System.out.println("\n----- Modificar Brigada (con codigo=" + cualBrigadaEditar + ")-----");
-        brigadaModificada = new Brigada(cualBrigadaEditar, "Grupo 5", "Abandonar", false, cuartel1, false);
-        brigadaData.modificarBrigada(brigadaModificada);
-        // Eliminar Brigada
-        int cualBrigadaEliminar = brigada3.getCodigoBrigada();
-        System.out.println("\n----- Eliminar brigada (con codigo=" + cualBrigadaEliminar + ") -----");
-        brigadaData.eliminarBrigada(cualBrigadaEliminar);
-
-        // Listar Brigadas (post ediciones)
-        System.out.println("\n----- Listar Brigadas (post ediciones) -----");
-        listaBrigadas = brigadaData.listarBrigadas();
-        for (Brigada brigada : listaBrigadas) {
-            System.out.println(brigada.toString());
-        }
         // ***** FIN BRIGADA PRUEBAS *****
-        //
 
-        //
         // ***** BOMBERO PRUEBAS *****
+        System.out.println("\n***** BOMBERO PRUEBAS *****");
+
         // Bombero Data
         BomberoData bomberoData = new BomberoData();
 
@@ -161,41 +137,14 @@ public class Pruebas {
             bomberoData.guardarBombero(bombero);
         }
 
-        // Listar Bomberos
-        System.out.println("\n----- Listar Bomberos -----");
-        List<Bombero> listaBomberos = bomberoData.listarBomberos();
-        for (Bombero bombero : listaBomberos) {
-            System.out.println(bombero.toString());
-        }
-
         // Buscar Bombero
-        int cualBomberoBuscar;
-        Bombero bomberoEncontrado;
         System.out.println("\n----- Buscar Bombero -----");
-        //
-        cualBomberoBuscar = bombero1.getIdBombero();
-        bomberoEncontrado = bomberoData.buscarBombero(cualBomberoBuscar);
-        System.out.println("Datos del bombero " + cualBomberoBuscar + ":");
-        if (bomberoEncontrado != null) { // Deberia funcionar
-            System.out.println(bomberoEncontrado.toString());
-        } else {
-            System.out.println("No encontrado");
-        }
-        //
-        cualBomberoBuscar = -666;
-        bomberoEncontrado = bomberoData.buscarBombero(cualBomberoBuscar);
-        System.out.println("Datos del bombero " + cualBomberoBuscar + ":");
-        if (bomberoEncontrado != null) { // No deberia funcionar
-            System.out.println(bomberoEncontrado.toString());
-        } else {
-            System.out.println("No encontrado");
-        }
+        bomberoData.buscarBombero(bombero1.getIdBombero()); // No deberia fallar
+        bomberoData.buscarBombero(-2); // Deberia fallar
 
-        // Editar Bombero
-        int cualBomberoEditar = bombero2.getIdBombero();
-        Bombero bomberoModificado;
-        System.out.println("\n----- Modificar Bombero (con idBombero=" + cualBomberoEditar + ")-----");
-        bomberoModificado = new Bombero(cualBomberoEditar, 42897241, "Ramiro Moran", "O-", LocalDate.of(2000, Month.NOVEMBER, 13), 42897241, brigada3, true);
+        // Modificar Bombero (id 2)
+        Bombero bomberoModificado = new Bombero(2, 42897241, "Ramiro Moran", "O-", LocalDate.of(2000, Month.NOVEMBER, 13), 42897241, brigada3, true);
+        System.out.println("\n----- Modificar Bombero (con idBombero=" + Integer.toString(bomberoModificado.getIdBombero()) + ")-----");
         bomberoData.modificarBombero(bomberoModificado);
 
         // Eliminar Bombero
@@ -203,29 +152,26 @@ public class Pruebas {
         System.out.println("\n----- Eliminar Bombero (con idBombero=" + cualBomberoEliminar + ") -----");
         bomberoData.eliminarBombero(cualBomberoEliminar);
 
-        // Listar Bomberos para ver los efectos de la edición
+        // Listar Bomberos
         System.out.println("\n----- Listar Bomberos -----");
-        listaBomberos = bomberoData.listarBomberos();
+        List<Bombero> listaBomberos = bomberoData.listarBomberos();
         for (Bombero bombero : listaBomberos) {
             System.out.println(bombero.toString());
         }
         // ***** FIN BOMBERO PRUEBAS *****
-        //
 
-        //
         // ***** SINIESTRO PRUEBAS *****
+        System.out.println("\n***** SINIESTRO PRUEBAS *****");
+
         // Siniestro data
         SiniestroData siniestroData = new SiniestroData();
 
         // Siniestros
-        Siniestro siniestro1 = new Siniestro("Incendio", LocalDateTime.of(2023, Month.NOVEMBER, 1, 12, 0), 10, 10, "Mucho humo", 3);
-        Siniestro siniestro2 = new Siniestro("Derrumbe", LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 0), 10, 10, "Mucho escombro", 3);
-        Siniestro siniestro3 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 0), 10, 10, "Al desarmadero", 3);
+        Siniestro siniestro1 = new Siniestro("Incendio", LocalDateTime.of(2023, Month.NOVEMBER, 1, 12, 0), 10, 10, "Mucho humo", 3, null, Siniestro.PUNTUACION_NIL, 1);
+        Siniestro siniestro2 = new Siniestro("Derrumbe", LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 0), 10, 10, "Mucho escombro", 3, null, Siniestro.PUNTUACION_NIL, 2);
+        Siniestro siniestro3 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 0), 10, 10, "Al desarmadero", 3, null, Siniestro.PUNTUACION_NIL, 3);
         Siniestro siniestro4 = new Siniestro("NADA", LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 0), 10, 10, "NADA", 3, LocalDateTime.of(2023, Month.NOVEMBER, 3, 17, 0), 10, 4);
         Siniestro siniestros[] = new Siniestro[]{siniestro1, siniestro2, siniestro3, siniestro4};
-        siniestro1.setCodigoSiniestro(1);
-        siniestro2.setCodigoSiniestro(2);
-        siniestro3.setCodigoSiniestro(3);
 
         // Guardar Siniestros
         System.out.println("\n----- Guardar Siniestros -----");
@@ -234,15 +180,19 @@ public class Pruebas {
         }
 
         // Buscar Siniestros
-        int cualBuscar = 1;
-        Siniestro siniestroEncontrado;
-        System.out.println("\n----- Busco Siniestro (con id=" + cualBuscar + ") -----");
-        siniestroEncontrado = siniestroData.buscarSiniestro(cualEliminar);
-        if (siniestroEncontrado != null) { // No deberia funcionar
-            System.out.println(siniestroEncontrado.toString());
-        } else {
-            System.out.println("No encontrado");
-        }
+        System.out.println("\n----- Buscar Siniestro -----");
+        siniestroData.buscarSiniestro(siniestro1.getCodigoSiniestro()); // No deberia fallar
+        siniestroData.buscarSiniestro(-2); // Deberia fallar
+
+        // Modificar Siniestro
+        Siniestro siniestroModificado = new Siniestro("Accidente FATAL", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 30), -666, -666, "Se ve al diablo", 3, null, Siniestro.PUNTUACION_NIL, 3);
+        System.out.println("\n----- Modificar Siniestro (con codigoSiniestro=" + Integer.toString(siniestroModificado.getCodigoSiniestro()) + " ) -----");
+        siniestroData.modificarSiniestro(siniestroModificado);
+
+        // Eliminar Siniestro
+        int cualSiniestroEliminar = siniestro3.getCodigoSiniestro();
+        System.out.println("\n----- Eliminar Siniestro (con codigoSiniestro=" + cualSiniestroEliminar + ") -----");
+        siniestroData.eliminarSiniestro(cualSiniestroEliminar);
 
         // Listar Siniestros
         System.out.println("\n----- Listar Siniestros -----");
@@ -250,48 +200,7 @@ public class Pruebas {
         for (Siniestro siniestro : listaSiniestros) {
             System.out.println(siniestro.toString());
         }
-
-        // Listar Siniestros Sin resolucion
-        System.out.println("\n----- Listar Siniestros Sin Resolucion -----");
-        listaSiniestros = siniestroData.listarSiniestrosSinResolucion();
-        for (Siniestro siniestro : listaSiniestros) {
-            System.out.println(siniestro.toString());
-        }
-
-        // Listar Siniestros Entre dos fechas
-        System.out.println("\n----- Listar Siniestros Entre 2023-11-3 y 2023-11-5 -----");
-        listaSiniestros = siniestroData.listarSiniestrosEntreFechas(LocalDateTime.of(2023, Month.NOVEMBER, 3, 0, 0), LocalDateTime.of(2023, Month.NOVEMBER, 5, 23, 59));
-        for (Siniestro siniestro : listaSiniestros) {
-            System.out.println(siniestro.toString());
-        }
-
-        // Modificar Siniestro
-        System.out.println("\n----- Modificar Siniestro (asigno brigada 2 a siniestro 1) -----");
-        siniestro1.setCodigoBrigada(2);
-        siniestroData.modificarSiniestro(siniestro1);
-        System.out.println(siniestro1.toString());
-        
-        System.out.println("\n----- Modificar Siniestro (Asigno resolucion a siniestro 2) -----");
-        // Esta forma comentada tambien funciona
-        // siniestro2.setFechaResolucion(LocalDateTime.now());
-        // siniestro2.setPuntuacion(4);
-        // siniestroData.modificarSiniestro(siniestro2);
-        siniestroData.asignarResolucion(siniestro2, LocalDateTime.now(), 4);
-        System.out.println(siniestro2.toString());
-
-        // Eliminar Bombero
-        int cualSiniestroEliminar = siniestro3.getCodigoSiniestro();
-        System.out.println("\n----- Eliminar Siniestro (con codigoSiniestro=" + cualSiniestroEliminar + ") -----");
-        siniestroData.eliminarSiniestro(cualSiniestroEliminar);
-
-        // Listar Siniestros (una vez mas)
-        System.out.println("\n----- Listar Siniestros (una vez mas) -----");
-        listaSiniestros = siniestroData.listarSiniestros();
-        for (Siniestro siniestro : listaSiniestros) {
-            System.out.println(siniestro.toString());
-        }
-
         // ***** FIN SINIESTRO PRUEBAS *****
-        //
+
     }
 }

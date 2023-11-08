@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.entidades.Cuartel;
+import lab1proyectofinal.entidades.Siniestro;
 
 /**
  *
@@ -112,6 +113,24 @@ public class Utils {
         bombero.setBrigada(brigada);
         bombero.setEstado(rs.getBoolean("bombero.estado"));
         return bombero;
+    }
+
+    public static Siniestro obtenerDeResultSetSiniestro(ResultSet rs) throws SQLException {
+        Siniestro siniestro = new Siniestro();
+        siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));
+        siniestro.setTipo(rs.getString("tipo"));
+        siniestro.setFechaSiniestro(rs.getTimestamp("fechaSiniestro").toLocalDateTime());
+        siniestro.setCoordenadaX(rs.getInt("coordenadaX"));
+        siniestro.setCoordenadaY(rs.getInt("coordenadaY"));
+        siniestro.setDetalles(rs.getString("detalles"));
+        siniestro.setCodigoBrigada(rs.getInt("codigoBrigada"));
+        if (rs.getInt("puntuacion") != Siniestro.PUNTUACION_NIL) {
+            siniestro.setFechaResolucion(rs.getTimestamp("fechaResolucion").toLocalDateTime());
+        } else {
+            siniestro.setFechaResolucion(null);
+        }
+        siniestro.setPuntuacion(rs.getInt("puntuacion"));
+        return siniestro;
     }
 
 }
