@@ -1,11 +1,8 @@
 package lab1proyectofinal;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Month;
 import java.util.List;
 import lab1proyectofinal.accesoADatos.BomberoData;
@@ -36,84 +33,46 @@ public class Pruebas {
             return;
         }
 
-        //------------------cuartel-------------------
-        //CuartelData
+        //
+        // ***** CUARTEL PRUEBAS *****
+        // CuartelData
         CuartelData cuartelData = new CuartelData();
 
-        //Cuarteles
-        Cuartel cuartel1 = new Cuartel(1, "central1", "Bolivar 123", 2, 3, 266498271, "cuartel1@gmail.com", true);
-        Cuartel cuartel2 = new Cuartel(2, "central2", "Maipu 345", 4, 1, 266421345, "cuartel2@gmail.com", true);
-        Cuartel cuartel3 = new Cuartel(3, "central3", "Pringles 678", 5, 7, 266456437, "cuartel3@gmail.com", true);
+        // Cuarteles
+        Cuartel cuartel1 = new Cuartel(1, "central1", "Bolivar 123", 2, 3, "266498271", "cuartel1@gmail.com", true);
+        Cuartel cuartel2 = new Cuartel(2, "central2", "Maipu 345", 4, 1, "266421345", "cuartel2@gmail.com", true);
+        Cuartel cuartel3 = new Cuartel(3, "central3", "Pringles 678", 5, 7, "266456437", "cuartel3@gmail.com", true);
         Cuartel cuarteles[] = new Cuartel[]{cuartel1, cuartel2, cuartel3};
 
-        //Guardar Cuartel
+        // Guardar Cuartel
         System.out.println("----- Guardar Cuartel -----");
         for (Cuartel cuartel : cuarteles) {
             cuartelData.guardarCuartel(cuartel);
         }
 
-        //Listar Cuartel
+        // Listar Cuartel
         System.out.println("\n----- Listar Cuartel -----");
         List<Cuartel> listaCuartel = cuartelData.listarCuarteles();
         for (Cuartel cuartel : listaCuartel) {
             System.out.println(cuartel.toString());
         }
 
-        //Buscar Cuartel
-        int cualcuartel;
-        Cuartel cuartelEncontrado;
+        // Buscar Cuartel (ids 1 y 2)
         System.out.println("\n----- Buscar Cuartel -----");
-        //
-        cualcuartel = 1;
-        cuartelEncontrado = cuartelData.buscarCuartel(cualcuartel);
-        System.out.println("Datos del cuartel " + cualcuartel + ":");
-        if (cuartelEncontrado != null) {
-            System.out.println(cuartelEncontrado.toString());
-        } else {
-            System.out.println("No encontrado");
-        }
-        //
-        cualcuartel = 2;
-        cuartelEncontrado = cuartelData.buscarCuartel(cualcuartel);
-        System.out.println("Datos del cuartel " + cualcuartel + ":");
-        if (cuartelEncontrado != null) {
-            System.out.println(cuartelEncontrado.toString());
-        } else {
-            System.out.println("No encontrado");
-        }
-        //Editar Cuartel
-        int cualcuartelEdi = 1;
-        Cuartel cuartelModificado;
-        System.out.println("\n----- Modificar cuartel (con id " + cualcuartelEdi + ")-----");
-        cuartelModificado = new Cuartel(cualcuartelEdi, "central1Nueva", "Bolivar 341", 3, 1, 26641323, "cuartelnue@gmail.com", true);
+        cuartelData.buscarCuartel(1);
+        cuartelData.buscarCuartel(2);
+
+        // Editar Cuartel (codigo 1)
+        Cuartel cuartelModificado = new Cuartel(1, "central1Nueva", "Bolivar 341", 3, 1, "26641323", "cuartelnue@gmail.com", true);
+        System.out.println("\n----- Modificar cuartel (con codigo " + Integer.toString(cuartelModificado.getCodigoCuartel()) + ")-----");
         cuartelData.modificarCuartel(cuartelModificado);
-        //Listar cuarteles
-        System.out.println("\n----- Listar Cuarteles -----");
-        listaCuartel = cuartelData.listarCuarteles();
-        for (Cuartel cuartel : listaCuartel) {
-            System.out.println(cuartel.toString());
-        }
-        //Listar Brigadas en cuartel
-        System.out.println("\n----- Listar Brigadas en Cuarteles -----");
-        List<Brigada> listaBrigada = cuartelData.listarBrigadasEnCuartel(1);
-        for (Brigada brigada : listaBrigada) {
-            System.out.println(brigada.toString());
-        }
-        //Listar Bomberos en el cuartel
-        System.out.println("\n----- Listar Bomberos en Cuarteles -----");
-        List<Bombero> listaBombero = cuartelData.listarBomberosEnCuartel(cuartel1);
-        for (Bombero bombero : listaBombero) {
-            System.out.println(bombero.toString());
-        }
-        //Eliminar Cuartel
+
+        //  Eliminar Cuartel
         int cualEliminar = 3;
-        System.out.println("\n----- Eliminar Cuartel (con id " + cualEliminar + ") -----");
+        System.out.println("\n----- Eliminar Cuartel (con codigo " + cualEliminar + ") -----");
         cuartelData.eliminarCuartel(cualEliminar);
-        //Eliminar por Nombre
-        //int cualEliminarNombre=2;
-        //System.out.println("\n----- Eliminar Bombero (con id " + cualEliminarNombre + ") -----");
-        //cuartelData.eliminarNombre(cualEliminarNombre);
-        //no se si esta bien
+        // ***** FIN CUARTEL PRUEBAS *****
+        //
 
         //
         // ***** BRIGADA PRUEBAS *****
@@ -121,13 +80,13 @@ public class Pruebas {
         BrigadaData brigadaData = new BrigadaData();
 
         // Brigadas
-        Brigada brigada1 = new Brigada(1, "Grupo 1", "Quien sabe", true, 1, true);
-        Brigada brigada2 = new Brigada(2, "Grupo 2", "Quien sabe", true, 1, true);
-        Brigada brigada3 = new Brigada(3, "Grupo 3", "Sabotear ejercitos", false, 1, true);
-        Brigada brigada4 = new Brigada(4, "Grupo 4", "Quien sabe", true, 1, true);
-        Brigada brigada5 = new Brigada(5, "Grupo 5", "Quien sabe", true, 1, false);
-        Brigada brigada6 = new Brigada(6, "Grupo 6", "Quien sabe", true, 1, true);
-        Brigada brigada7 = new Brigada(7, "Grupo 7", "Quien sabe", true, 1, true);
+        Brigada brigada1 = new Brigada(1, "Grupo 1", "Quien sabe", true, cuartel1, true);
+        Brigada brigada2 = new Brigada(2, "Grupo 2", "Quien sabe", true, cuartel1, true);
+        Brigada brigada3 = new Brigada(3, "Grupo 3", "Sabotear ejercitos", false, cuartel1, true);
+        Brigada brigada4 = new Brigada(4, "Grupo 4", "Quien sabe", true, cuartel1, true);
+        Brigada brigada5 = new Brigada(5, "Grupo 5", "Quien sabe", true, cuartel1, false);
+        Brigada brigada6 = new Brigada(6, "Grupo 6", "Quien sabe", true, cuartel1, true);
+        Brigada brigada7 = new Brigada(7, "Grupo 7", "Quien sabe", true, cuartel1, true);
         Brigada brigadas[] = new Brigada[]{brigada1, brigada2, brigada3, brigada4, brigada5, brigada6, brigada7};
 
         // Guardar Brigadas
@@ -169,7 +128,7 @@ public class Pruebas {
         int cualBrigadaEditar = brigada5.getCodigoBrigada();
         Brigada brigadaModificada;
         System.out.println("\n----- Modificar Brigada (con codigo=" + cualBrigadaEditar + ")-----");
-        brigadaModificada = new Brigada(cualBrigadaEditar, "Grupo 5", "Abandonar", false, 1, false);
+        brigadaModificada = new Brigada(cualBrigadaEditar, "Grupo 5", "Abandonar", false, cuartel1, false);
         brigadaData.modificarBrigada(brigadaModificada);
         // Eliminar Brigada
         int cualBrigadaEliminar = brigada3.getCodigoBrigada();
@@ -191,9 +150,9 @@ public class Pruebas {
         BomberoData bomberoData = new BomberoData();
 
         // Bomberos
-        Bombero bombero1 = new Bombero(1, 11000111, "Nahuel Lucero", "A+", LocalDate.of(1998, Month.AUGUST, 1), 11000111, 1, true);
-        Bombero bombero2 = new Bombero(2, 37666666, "Leonel Nievas", "A+", LocalDate.of(1993, Month.AUGUST, 7), 37666666, 1, true);
-        Bombero bombero3 = new Bombero(3, 40000444, "Nahuel Ochoa", "B+", LocalDate.of(1999, Month.OCTOBER, 18), 40000444, 1, true);
+        Bombero bombero1 = new Bombero(1, 11000111, "Nahuel Lucero", "A+", LocalDate.of(1998, Month.AUGUST, 1), 11000111, brigada3, true);
+        Bombero bombero2 = new Bombero(2, 37666666, "Leonel Nievas", "A+", LocalDate.of(1993, Month.AUGUST, 7), 37666666, brigada3, true);
+        Bombero bombero3 = new Bombero(3, 40000444, "Nahuel Ochoa", "B+", LocalDate.of(1999, Month.OCTOBER, 18), 40000444, brigada3, true);
         Bombero bomberos[] = new Bombero[]{bombero1, bombero2, bombero3};
 
         // Guardar Bomberos
@@ -214,7 +173,7 @@ public class Pruebas {
         Bombero bomberoEncontrado;
         System.out.println("\n----- Buscar Bombero -----");
         //
-        cualBomberoBuscar = bombero2.getIdBombero();
+        cualBomberoBuscar = bombero1.getIdBombero();
         bomberoEncontrado = bomberoData.buscarBombero(cualBomberoBuscar);
         System.out.println("Datos del bombero " + cualBomberoBuscar + ":");
         if (bomberoEncontrado != null) { // Deberia funcionar
@@ -236,7 +195,7 @@ public class Pruebas {
         int cualBomberoEditar = bombero2.getIdBombero();
         Bombero bomberoModificado;
         System.out.println("\n----- Modificar Bombero (con idBombero=" + cualBomberoEditar + ")-----");
-        bomberoModificado = new Bombero(cualBomberoEditar, 42897241, "Ramiro Moran", "O-", LocalDate.of(2000, Month.NOVEMBER, 13), 42897241, 1, true);
+        bomberoModificado = new Bombero(cualBomberoEditar, 42897241, "Ramiro Moran", "O-", LocalDate.of(2000, Month.NOVEMBER, 13), 42897241, brigada3, true);
         bomberoData.modificarBombero(bomberoModificado);
 
         // Eliminar Bombero
@@ -311,7 +270,7 @@ public class Pruebas {
         siniestro1.setCodigoBrigada(2);
         siniestroData.modificarSiniestro(siniestro1);
         System.out.println(siniestro1.toString());
-
+        
         System.out.println("\n----- Modificar Siniestro (Asigno resolucion a siniestro 2) -----");
         // Esta forma comentada tambien funciona
         // siniestro2.setFechaResolucion(LocalDateTime.now());

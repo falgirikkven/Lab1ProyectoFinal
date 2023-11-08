@@ -13,27 +13,27 @@ public class Brigada {
     private String nombreBrigada;
     private String especialidad;
     private boolean disponible;
-    private int codigoCuartel;
+    private Cuartel cuartel;
     private boolean estado;
 
     public Brigada() {
     }
 
-    public Brigada(String nombreBrigada, String especialidad, boolean disponible, int codigoCuartel) {
+    public Brigada(String nombreBrigada, String especialidad, boolean disponible, Cuartel cuartel) {
         this.codigoBrigada = -1;
         this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
         this.disponible = disponible;
-        this.codigoCuartel = codigoCuartel;
+        this.cuartel = cuartel;
         this.estado = true;
     }
 
-    public Brigada(int codigoBrigada, String nombreBrigada, String especialidad, boolean disponible, int codigoCuartel, boolean estado) {
+    public Brigada(int codigoBrigada, String nombreBrigada, String especialidad, boolean disponible, Cuartel cuartel, boolean estado) {
         this.codigoBrigada = codigoBrigada;
         this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
         this.disponible = disponible;
-        this.codigoCuartel = codigoCuartel;
+        this.cuartel = cuartel;
         this.estado = estado;
     }
 
@@ -69,12 +69,12 @@ public class Brigada {
         this.disponible = disponible;
     }
 
-    public int getCodigoCuartel() {
-        return codigoCuartel;
+    public Cuartel getCuartel() {
+        return cuartel;
     }
 
-    public void setCodigoCuartel(int codigoCuartel) {
-        this.codigoCuartel = codigoCuartel;
+    public void setCuartel(Cuartel cuartel) {
+        this.cuartel = cuartel;
     }
 
     public boolean isEstado() {
@@ -87,7 +87,7 @@ public class Brigada {
 
     @Override
     public String toString() {
-        return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", disponible=" + disponible + ", codigoCuartel=" + codigoCuartel + ", estado=" + estado + '}';
+        return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", disponible=" + disponible + ", cuartel=" + cuartel + ", estado=" + estado + '}';
     }
 
 }
