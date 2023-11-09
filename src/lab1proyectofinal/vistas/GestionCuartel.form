@@ -110,7 +110,7 @@
                   <Component id="direccionTF" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="direccionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="telefonoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="telefonoTF" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -132,11 +132,12 @@
                   <Component id="coordenadaYLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="coordenadaYTF" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace pref="24" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="BtnLimpiar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="BtnGuardar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="BtnSalir" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="BtnEliminar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="24" max="32767" attributes="0"/>
           </Group>
@@ -150,7 +151,7 @@
           <Font name="Segoe UI" size="14" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Gestionar Cuarteles"/>
+        <Property name="text" type="java.lang.String" value="Formulario Cuartel"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="codigoLabel">
@@ -242,14 +243,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnSalirActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="jlEstado">
+    <Component class="javax.swing.JButton" name="BtnEliminar">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Estado:"/>
+        <Property name="text" type="java.lang.String" value="Dar de Baja"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="jtfEstado">
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfEstadoActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnEliminarActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

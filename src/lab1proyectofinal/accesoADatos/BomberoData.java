@@ -15,9 +15,6 @@ import lab1proyectofinal.entidades.Bombero;
  */
 public class BomberoData {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
     private final Connection connection;
 
     public BomberoData() {
@@ -25,41 +22,42 @@ public class BomberoData {
     }
 
     public boolean guardarBombero(Bombero bombero) {
+        if (!bombero.isEstado()) {
+            System.out.println("[BomberoData.guardarBombero] Error: no se puede guardar. Bombero dado de baja. " + bombero.toString());
+            return false;
+        }
         boolean resultado = false;
         try {
-            String sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            /* String sql;
+            String sql;
             if (bombero.getIdBombero() == -1) {
                 sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
             } else {
                 sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado, idBombero) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            } */
+            }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
             ps.setString(2, bombero.getNombreApellido());
             ps.setString(3, bombero.getGrupoSanguineo());
             ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
             ps.setLong(5, bombero.getTelefono());
-            ps.setInt(6, bombero.getCodigoBrigada());
+            ps.setInt(6, bombero.getBrigada().getCodigoBrigada());
             ps.setBoolean(7, true);
-            /* if (bombero.getIdBombero() != -1) {
+            if (bombero.getIdBombero() != -1) {
                 ps.setInt(8, bombero.getIdBombero());
-            } */
+            }
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BomberoData] Bombero agregado");
+                System.out.println("[BomberoData.guardarBombero] Agregado: " + bombero.toString());
             } else {
-                System.out.println("[BomberoData] No se pudo agregar al bombero");
+                System.out.println("[BomberoData.guardarBombero] No se agregó: " + bombero.toString());
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
-            e.printStackTrace();
-            /* int errorCode = e.getErrorCode();
-            System.out.println("[BomberoData Error " + errorCode + "] " + e.getMessage());
-            if (errorCode != 1062) { // Ignorar datos repetidos
+            if (e.getErrorCode() == 1062) { // Informar datos repetidos
+                System.out.println("[BomberoData.guardarBombero] Error: entrada duplicada para " + bombero.toString());
+            } else {
                 e.printStackTrace();
-            } */
+            }
         }
         return resultado;
     }
@@ -67,27 +65,19 @@ public class BomberoData {
     public Bombero buscarBombero(int idBombero) {
         Bombero bombero = null;
         try {
-            String sql = "SELECT * FROM bombero WHERE idBombero=? AND estado=true;";
+            String sql = "SELECT * FROM bombero JOIN brigada JOIN cuartel ON (bombero.codigoBrigada=brigada.codigoBrigada AND brigada.codigoCuartel=cuartel.codigoCuartel) WHERE idBombero=? AND bombero.estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, idBombero);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                bombero = new Bombero();
-                bombero.setIdBombero(rs.getInt("idBombero"));
-                bombero.setDni(rs.getInt("dni"));
-                bombero.setNombreApellido(rs.getString("nombreApellido"));
-                bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
-                bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("celular"));
-                bombero.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                bombero.setEstado(rs.getBoolean("estado"));
-                System.out.println("[BomberoData] Bombero con id=" + idBombero + " encontrado");
+                bombero = Utils.obtenerDeResultSetBombero(rs);
+                System.out.println("[BomberoData.buscarBombero] Encontrado: " + bombero.toString());
             } else {
-                System.out.println("[BomberoData] No se ha encontrado al bombero con id=" + idBombero);
+                System.out.println("[BomberoData.buscarBombero] No se ha encontrado con idBombero=" + idBombero);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.buscarBombero] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return bombero;
@@ -96,79 +86,68 @@ public class BomberoData {
     public Bombero buscarBomberoPorDni(int dni) {
         Bombero bombero = null;
         try {
-            String sql = "SELECT * FROM bombero WHERE dni=? AND estado=true;";
+            String sql = "SELECT * FROM bombero JOIN brigada JOIN cuartel ON (bombero.codigoBrigada=brigada.codigoBrigada AND brigada.codigoCuartel=cuartel.codigoCuartel) WHERE dni=? AND bombero.estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, dni);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                bombero = new Bombero();
-                bombero.setIdBombero(rs.getInt("idBombero"));
-                bombero.setDni(rs.getInt("dni"));
-                bombero.setNombreApellido(rs.getString("nombreApellido"));
-                bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
-                bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("celular"));
-                bombero.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                bombero.setEstado(rs.getBoolean("estado"));
-                System.out.println("[BomberoData] Bombero con dni=" + dni + " encontrado");
+                bombero = Utils.obtenerDeResultSetBombero(rs);
+                System.out.println("[BomberoData.buscarBomberoPorDni] Encontrado: " + bombero.toString());
             } else {
-                System.out.println("[BomberoData] No se ha encontrado al bombero con dni=" + dni);
+                System.out.println("[BomberoData.buscarBomberoPorDni] No se ha encontrado con dni=" + dni);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.buscarBombero] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return bombero;
     }
 
     public List<Bombero> listarBomberos() {
-        List<Bombero> bomberos = new ArrayList();
+        List<Bombero> bomberos = null;
         try {
-            String sql = "SELECT * FROM bombero WHERE estado=true;";
+            String sql = "SELECT * FROM bombero JOIN brigada JOIN cuartel ON (bombero.codigoBrigada=brigada.codigoBrigada AND brigada.codigoCuartel=cuartel.codigoCuartel) WHERE bombero.estado=true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            Bombero bombero;
+            bomberos = new ArrayList();
             while (rs.next()) {
-                bombero = new Bombero();
-                bombero.setIdBombero(rs.getInt("idBombero"));
-                bombero.setDni(rs.getInt("dni"));
-                bombero.setNombreApellido(rs.getString("nombreApellido"));
-                bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
-                bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setTelefono(rs.getLong("celular"));
-                bombero.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                bombero.setEstado(rs.getBoolean("estado"));
+                Bombero bombero = Utils.obtenerDeResultSetBombero(rs);
                 bomberos.add(bombero);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.buscarBombero] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return bomberos;
     }
 
     public boolean modificarBombero(Bombero bombero) {
+        if (!bombero.isEstado()) {
+            System.out.println("[BomberoData.guardarBombero] Error: no se puede guardar. Bombero dado de baja. " + bombero.toString());
+            return false;
+        }
         boolean resultado = false;
         try {
-            String sql = "UPDATE bombero SET dni=?, nombreApellido=?, grupoSanguineo=?, fechaNacimiento=?, celular=? WHERE idBombero=? AND estado=true";
+            String sql = "UPDATE bombero SET dni=?, nombreApellido=?, grupoSanguineo=?, fechaNacimiento=?, celular=?, codigoBrigada=? WHERE idBombero=? AND estado=true";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
             ps.setString(2, bombero.getNombreApellido());
             ps.setString(3, bombero.getGrupoSanguineo());
             ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
             ps.setLong(5, bombero.getTelefono());
-            ps.setInt(6, bombero.getIdBombero());
+            ps.setInt(6, bombero.getBrigada().getCodigoBrigada());
+            ps.setInt(7, bombero.getIdBombero());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BomberoData] Bombero modificado");
+                System.out.println("[BomberoData.modificarBombero] Modificado: " + bombero.toString());
             } else {
-                System.out.println("[BomberoData] No se pudo modificar al bombero");
+                System.out.println("[BomberoData.modificarBombero] No se modificó: " + bombero.toString());
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.modificarBombero] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
@@ -182,13 +161,13 @@ public class BomberoData {
             ps.setInt(1, idBombero);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BomberoData] Bombero eliminado");
+                System.out.println("[BomberoData.eliminarBombero] Eliminado: idBombero=" + idBombero);
             } else {
-                System.out.println("[BomberoData] No se pudo eliminar al bombero");
+                System.out.println("[BomberoData.eliminarBombero] No se eliminó: idBombero=" + idBombero);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.eliminarBombero] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
@@ -202,13 +181,13 @@ public class BomberoData {
             ps.setInt(1, dni);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BomberoData] Bombero eliminado");
+                System.out.println("[BomberoData.eliminarBombero] Eliminado: dni=" + dni);
             } else {
-                System.out.println("[BomberoData] No se pudo eliminar al bombero");
+                System.out.println("[BomberoData.eliminarBombero] No se eliminó: dni=" + dni);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.eliminarBomberoPorDni] Error" + e.getErrorCode() + ": " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;

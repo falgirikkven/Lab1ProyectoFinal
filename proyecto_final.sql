@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-10-2023 a las 15:59:34
+-- Tiempo de generación: 08-11-2023 a las 03:29:11
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -33,7 +33,7 @@ CREATE TABLE `bombero` (
   `nombreApellido` varchar(50) NOT NULL,
   `grupoSanguineo` varchar(8) NOT NULL,
   `fechaNacimiento` date NOT NULL,
-  `celular` bigint(20) NOT NULL,
+  `celular` varchar(15) NOT NULL,
   `codigoBrigada` int(11) NOT NULL,
   `estado` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -65,7 +65,7 @@ CREATE TABLE `cuartel` (
   `direccion` varchar(30) NOT NULL,
   `coordenadaX` int(11) NOT NULL,
   `coordenadaY` int(11) NOT NULL,
-  `telefono` bigint(20) NOT NULL,
+  `telefono` varchar(15) NOT NULL,
   `correo` varchar(30) NOT NULL,
   `estado` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -84,8 +84,8 @@ CREATE TABLE `siniestro` (
   `coordenadaY` int(11) NOT NULL,
   `detalles` text NOT NULL,
   `fechaResolucion` date DEFAULT NULL,
-  `puntuacion` int(11) DEFAULT NULL,
-  `codigoBrigada` int(11) DEFAULT NULL
+  `puntuacion` int(11) NOT NULL,
+  `codigoBrigada` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

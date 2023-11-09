@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package lab1proyectofinal.vistas;
 
 import java.beans.PropertyVetoException;
@@ -10,7 +6,7 @@ import lab1proyectofinal.accesoADatos.BomberoData;
 
 /**
  *
- * @author Falic
+ * @author Grupo-3
  */
 public class MainFrame extends javax.swing.JFrame {
 
@@ -93,13 +89,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         cuartelMenu.setText("Cuartel");
 
-        formularioCuartel.setText("Formulario Cuartel");
-        formularioCuartel.addActionListener(new java.awt.event.ActionListener() {
+        gestionCuartelMI.setText("Gestión Cuartel");
+        gestionCuartelMI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                formularioCuartelActionPerformed(evt);
+                gestionCuartelMIActionPerformed(evt);
             }
         });
-        cuartelMenu.add(formularioCuartel);
+        cuartelMenu.add(gestionCuartelMI);
 
         MenuBar.add(cuartelMenu);
 
@@ -149,10 +145,13 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formularioCuartelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioCuartelActionPerformed
-        System.out.println("Hola");
+    private void gestionCuartelMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionCuartelMIActionPerformed
         focusIFrame(gestionCuartel);
-    }//GEN-LAST:event_formularioCuartelActionPerformed
+    }//GEN-LAST:event_gestionCuartelMIActionPerformed
+
+    private void gestionBrigadaMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionBrigadaMIActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_gestionBrigadaMIActionPerformed
 
     private void bomberoMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bomberoMenuActionPerformed
         
@@ -202,7 +201,9 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane DesktopPane;
     private javax.swing.JMenuBar MenuBar;
+    private javax.swing.JMenuItem asignacionBrigadaMI;
     private javax.swing.JMenu bomberoMenu;
+    private javax.swing.JMenu brigadaMenu;
     private javax.swing.JMenu cuartelMenu;
     private javax.swing.JMenuItem formularioBombero;
     private javax.swing.JMenuItem formularioCuartel;

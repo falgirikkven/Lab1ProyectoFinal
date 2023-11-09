@@ -14,24 +14,14 @@ public class Cuartel {
     private String direccion;
     private int coordenadaX;
     private int coordenadaY;
-    private long telefono;
+    private String telefono;
     private String correo;
     private boolean estado;
 
     public Cuartel() {
     }
 
-    //public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo) {
-        //this.codigoCuartel = -1;
-        //this.nombreCuartel = nombreCuartel;
-        //this.direccion = direccion;
-        //this.coordenadaX = coordenadaX;
-        //this.coordenadaY = coordenadaY;
-        //this.telefono = telefono;
-        //this.correo = correo;
-    //}
-
-    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo, boolean estado) {
+    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo) {
         this.codigoCuartel = -1;
         this.nombreCuartel = nombreCuartel;
         this.direccion = direccion;
@@ -39,20 +29,10 @@ public class Cuartel {
         this.coordenadaY = coordenadaY;
         this.telefono = telefono;
         this.correo = correo;
-        this.estado = estado;
+        this.estado = true;
     }
-    
-    //public Cuartel(int codigoCuartel, String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo) {
-        //this.codigoCuartel = codigoCuartel;
-        //this.nombreCuartel = nombreCuartel;
-        //this.direccion = direccion;
-        //this.coordenadaX = coordenadaX;
-        //this.coordenadaY = coordenadaY;
-        //this.telefono = telefono;
-        //this.correo = correo;
-    //}
 
-    public Cuartel(int codigoCuartel, String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, long telefono, String correo, boolean estado) {
+    public Cuartel(int codigoCuartel, String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo, boolean estado) {
         this.codigoCuartel = codigoCuartel;
         this.nombreCuartel = nombreCuartel;
         this.direccion = direccion;
@@ -103,11 +83,11 @@ public class Cuartel {
         this.coordenadaY = coordenadaY;
     }
 
-    public long getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(long telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
@@ -127,7 +107,6 @@ public class Cuartel {
         this.estado = estado;
     }
 
-    
     @Override
     public String toString() {
         return "Cuartel{" + "codigoCuartel=" + codigoCuartel + ", nombreCuartel=" + nombreCuartel + ", direccion=" + direccion + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", telefono=" + telefono + ", correo=" + correo + ", estado=" + estado + '}';

@@ -1,23 +1,37 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
 package lab1proyectofinal.vistas;
+
+import javax.swing.JOptionPane;
+import lab1proyectofinal.accesoADatos.CuartelData;
+import lab1proyectofinal.accesoADatos.Utils;
+import lab1proyectofinal.entidades.Cuartel;
 
 /**
  *
- * @author Falic
+ * @author Grupo-3
  */
 public class GestionCuartel extends javax.swing.JInternalFrame {
 
     /**
      * SUJETO A CAMBIOS
      */
+    private final CuartelData cuartelData;
+
     /**
      * Creates new form GestionCuartel
      */
-    public GestionCuartel() {
+    public GestionCuartel(CuartelData cuartelData) {
         initComponents();
+        this.cuartelData = cuartelData;
+    }
+
+    private void limpiarCampos() {
+        codigoTF.setText("");
+        nombreTF.setText("");
+        direccionTF.setText("");
+        telefonoTF.setText("");
+        correoTF.setText("");
+        coordenadaXTF.setText("");
+        coordenadaYTF.setText("");
     }
 
     /**
@@ -49,8 +63,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         BtnLimpiar = new javax.swing.JButton();
         BtnGuardar = new javax.swing.JButton();
         BtnSalir = new javax.swing.JButton();
-        jlEstado = new javax.swing.JLabel();
-        jtfEstado = new javax.swing.JTextField();
+        BtnEliminar = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -58,7 +71,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
 
         titulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titulo.setText("Gestionar Cuarteles");
+        titulo.setText("Formulario Cuartel");
 
         codigoLabel.setText("Código:");
 
@@ -109,11 +122,10 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             }
         });
 
-        jlEstado.setText("Estado:");
-
-        jtfEstado.addActionListener(new java.awt.event.ActionListener() {
+        BtnEliminar.setText("Dar de Baja");
+        BtnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtfEstadoActionPerformed(evt);
+                BtnEliminarActionPerformed(evt);
             }
         });
 
@@ -189,7 +201,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(direccionTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(direccionLabel))
-                .addGap(18, 18, 18)
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(telefonoLabel)
                     .addComponent(telefonoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -219,33 +231,159 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnBuscarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarCodigoActionPerformed
-        // TODO: implementar este metodo
+        int codigo;
+        try {
+            codigo = Integer.parseInt(codigoTF.getText().trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Se esperaba un numero entero en Código.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Cuartel cuartel = cuartelData.buscarCuartel(codigo);
+        if (cuartel != null) {
+            codigoTF.setText(Integer.toString(cuartel.getCodigoCuartel()));
+            nombreTF.setText(cuartel.getNombreCuartel());
+            direccionTF.setText(cuartel.getDireccion());
+            telefonoTF.setText(cuartel.getTelefono());
+            correoTF.setText(cuartel.getCorreo());
+            coordenadaXTF.setText(Integer.toString(cuartel.getCoordenadaX()));
+            coordenadaYTF.setText(Integer.toString(cuartel.getCoordenadaY()));
+        } else {
+            JOptionPane.showMessageDialog(this, "Cuartel no encontrado.\nEs posible que haya sido dado de baja o no exista.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_BtnBuscarCodigoActionPerformed
 
     private void BtnBuscarNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarNombreActionPerformed
-        // TODO: implementar este metodo
+        String nombreStr = nombreTF.getText().trim();
+        if (nombreStr.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Se esperaba un nombre en el campo.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Cuartel cuartel = cuartelData.buscarCuartelPorNombre(nombreStr);
+        if (cuartel != null) {
+            codigoTF.setText(Integer.toString(cuartel.getCodigoCuartel()));
+            nombreTF.setText(cuartel.getNombreCuartel());
+            direccionTF.setText(cuartel.getDireccion());
+            telefonoTF.setText(cuartel.getTelefono());
+            correoTF.setText(cuartel.getCorreo());
+            coordenadaXTF.setText(Integer.toString(cuartel.getCoordenadaX()));
+            coordenadaYTF.setText(Integer.toString(cuartel.getCoordenadaY()));
+        } else {
+            JOptionPane.showMessageDialog(this, "Cuartel no encontrado.\nEs posible que haya sido dado de baja o no exista.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_BtnBuscarNombreActionPerformed
 
     private void BtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLimpiarActionPerformed
-        // TODO: implementar este metodo
+        this.limpiarCampos();
     }//GEN-LAST:event_BtnLimpiarActionPerformed
 
     private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
-        // TODO: implementar este metodo
+        String codigoStr = codigoTF.getText().trim();
+        String nombreStr = nombreTF.getText().trim();
+        String direccionStr = direccionTF.getText().trim();
+        String telefonoStr = telefonoTF.getText().trim();
+        String correoStr = correoTF.getText().trim();
+        String coordenadaXStr = coordenadaXTF.getText().trim();
+        String coordenadaYStr = coordenadaYTF.getText().trim();
+
+        if (codigoStr.isBlank() || nombreStr.isBlank() || direccionStr.isBlank()
+                || telefonoStr.isBlank() || correoStr.isBlank()
+                || coordenadaXStr.isBlank() || coordenadaYStr.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int codigo;
+        try {
+            codigo = Integer.parseInt(codigoStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Se esperaba un numero entero en Código.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!Utils.esTelefonoValido(telefonoStr)) {
+            JOptionPane.showMessageDialog(this, "Se esperaba un numero entero en Teléfono", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int coordenadaX;
+        try {
+            coordenadaX = Integer.parseInt(coordenadaXStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Se esperaba un numero entero en Coordenada X.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int coordenadaY;
+        try {
+            coordenadaY = Integer.parseInt(coordenadaYStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Se esperaba un numero entero en Coordenada Y.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Cuartel cuartel = new Cuartel(codigo, nombreStr, direccionStr, coordenadaX, coordenadaY, telefonoStr, correoStr, true);
+        if (cuartelData.guardarCuartel(cuartel)) {
+            JOptionPane.showMessageDialog(this, "Cuartel guardado.", "Éxito", JOptionPane.PLAIN_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo guardar el cuartel.\nQuizás ya haya un cuartel guardado con este código o nombre.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        /*if (cuartelData.buscarCuartel(codigo) == null) {
+            if (cuartelData.guardarCuartel(cuartel)) {
+                JOptionPane.showMessageDialog(this, "Cuartel guardado.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo guardar el cuartel", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            if (JOptionPane.showConfirmDialog(this, "Ya se encuentra este cuartel registrado") == 1) {
+            }
+        }*/
     }//GEN-LAST:event_BtnGuardarActionPerformed
+
+    private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
+        String codigoStr = codigoTF.getText().trim();
+        String nombreStr = nombreTF.getText().trim();
+        boolean porCodigo = true;
+
+        if (codigoStr.isBlank() && nombreStr.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Debe especificar código o nombre del cuartel a eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int codigo = -1;
+        try {
+            codigo = Integer.parseInt(codigoStr);
+        } catch (NumberFormatException e) {
+            porCodigo = false;
+        }
+
+        if (porCodigo) {
+            if (cuartelData.eliminarCuartel(codigo)) {
+                this.limpiarCampos();
+                JOptionPane.showMessageDialog(this, "Cuartel dado de baja.", "Éxito", JOptionPane.PLAIN_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo dar de baja el cuartel.\nQuizás el cuartel ya haya sido dado de baja o no exista.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            if (cuartelData.eliminarCuartelPorNombre(nombreStr)) {
+                this.limpiarCampos();
+                JOptionPane.showMessageDialog(this, "Cuartel dado de baja.", "Éxito", JOptionPane.PLAIN_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo dar de baja el cuartel.\nQuizás el cuartel ya haya sido dado de baja o no exista.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_BtnEliminarActionPerformed
 
     private void BtnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSalirActionPerformed
         this.hide();
     }//GEN-LAST:event_BtnSalirActionPerformed
 
-    private void jtfEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfEstadoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtfEstadoActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnBuscarCodigo;
     private javax.swing.JButton BtnBuscarNombre;
+    private javax.swing.JButton BtnEliminar;
     private javax.swing.JButton BtnGuardar;
     private javax.swing.JButton BtnLimpiar;
     private javax.swing.JButton BtnSalir;
@@ -259,8 +397,6 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     private javax.swing.JTextField correoTF;
     private javax.swing.JLabel direccionLabel;
     private javax.swing.JTextField direccionTF;
-    private javax.swing.JLabel jlEstado;
-    private javax.swing.JTextField jtfEstado;
     private javax.swing.JLabel nombreLabel;
     private javax.swing.JTextField nombreTF;
     private javax.swing.JLabel telefonoLabel;
