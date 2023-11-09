@@ -17,7 +17,7 @@ import lab1proyectofinal.entidades.Siniestro;
 
 /**
  *
- * @author Grupo-3
+ * @author Grupo-3 (Nahuel Ochoa, en realidad)
  */
 public class Pruebas {
 
