@@ -6,6 +6,7 @@ package lab1proyectofinal.vistas;
 
 import java.beans.PropertyVetoException;
 import javax.swing.JInternalFrame;
+import lab1proyectofinal.accesoADatos.BomberoData;
 
 /**
  *
@@ -18,16 +19,23 @@ public class MainFrame extends javax.swing.JFrame {
      */
     JInternalFrame focusedFrame = null;
     GestionCuartel gestionCuartel;
+    GestionBombero gestionBombero;
+    
+    BomberoData bomberoData;
 
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
-
+        
+        this.bomberoData=new BomberoData();
         // Cuarteles
         this.gestionCuartel = new GestionCuartel();
         DesktopPane.add(this.gestionCuartel);
+        //Bomberos
+        gestionBombero = new GestionBombero(bomberoData);
+        DesktopPane.add(gestionBombero);
     }
 
     private void focusIFrame(JInternalFrame iFrame) {
@@ -62,11 +70,12 @@ public class MainFrame extends javax.swing.JFrame {
         MenuBar = new javax.swing.JMenuBar();
         cuartelMenu = new javax.swing.JMenu();
         formularioCuartel = new javax.swing.JMenuItem();
-        bomberoMenu = new javax.swing.JMenu();
-        formularioBombero = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        bomberoMenu = new javax.swing.JMenu();
+        formularioBombero = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestión Bomberos");
@@ -79,7 +88,7 @@ public class MainFrame extends javax.swing.JFrame {
         );
         DesktopPaneLayout.setVerticalGroup(
             DesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 457, Short.MAX_VALUE)
+            .addGap(0, 459, Short.MAX_VALUE)
         );
 
         cuartelMenu.setText("Cuartel");
@@ -94,13 +103,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         MenuBar.add(cuartelMenu);
 
-        bomberoMenu.setText("Bombero");
-
-        formularioBombero.setText("Formulario Bombero");
-        bomberoMenu.add(formularioBombero);
-
-        MenuBar.add(bomberoMenu);
-
         jMenu1.setText("Brigada");
 
         jMenuItem1.setText("Formulario Brigada");
@@ -111,13 +113,33 @@ public class MainFrame extends javax.swing.JFrame {
 
         MenuBar.add(jMenu1);
 
+        bomberoMenu.setText("Bombero");
+        bomberoMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bomberoMenuActionPerformed(evt);
+            }
+        });
+
+        formularioBombero.setText("Formulario Bombero");
+        formularioBombero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formularioBomberoActionPerformed(evt);
+            }
+        });
+        bomberoMenu.add(formularioBombero);
+
+        MenuBar.add(bomberoMenu);
+
+        jMenu2.setText("Sinientro");
+        MenuBar.add(jMenu2);
+
         setJMenuBar(MenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(DesktopPane, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(DesktopPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,6 +153,16 @@ public class MainFrame extends javax.swing.JFrame {
         System.out.println("Hola");
         focusIFrame(gestionCuartel);
     }//GEN-LAST:event_formularioCuartelActionPerformed
+
+    private void bomberoMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bomberoMenuActionPerformed
+        
+    }//GEN-LAST:event_bomberoMenuActionPerformed
+
+    private void formularioBomberoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioBomberoActionPerformed
+        // TODO add your handling code here:
+        System.out.println("Hola");
+        focusIFrame(gestionBombero);
+    }//GEN-LAST:event_formularioBomberoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,6 +207,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem formularioBombero;
     private javax.swing.JMenuItem formularioCuartel;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     // End of variables declaration//GEN-END:variables

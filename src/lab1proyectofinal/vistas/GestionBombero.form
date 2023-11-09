@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="IdjLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="DnijLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="NombrejLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="GrupojLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="FechajLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="CelularjLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="CodigojLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="85" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="IdjTextField" max="32767" attributes="0"/>
+                                  <Component id="DnijTextField" max="32767" attributes="0"/>
+                                  <Component id="NombrejTextField" max="32767" attributes="0"/>
+                                  <Component id="GrupojTextField" max="32767" attributes="0"/>
+                                  <Component id="CelularjTextField" max="32767" attributes="0"/>
+                                  <Component id="FechajTextField" min="-2" pref="128" max="-2" attributes="0"/>
+                                  <Component id="CodigojTextField" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="EstadojLabel" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="LimpiarjButton" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                                      <Component id="GuardarjButton" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="SalirjButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="IDjButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="DNIjButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="172" max="-2" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="IdjLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="IdjTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="IDjButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="DnijLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="DnijTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="DNIjButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="NombrejLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="NombrejTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="GrupojLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="GrupojTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="FechajLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="FechajTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="CelularjLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="CelularjTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="CodigojLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="CodigojTextField" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="EstadojLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="25" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="LimpiarjButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="GuardarjButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="SalirjButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Gestion de bomberos"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="IdjLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="ID Bombero:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="DnijLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="DNI:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="NombrejLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nombres:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="GrupojLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Grupo Sanguinio:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="FechajLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Fecha de Nacimiento:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="CelularjLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Celular:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="CodigojLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Codigo de Brigada:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="IdjTextField">
+    </Component>
+    <Component class="javax.swing.JTextField" name="DnijTextField">
+    </Component>
+    <Component class="javax.swing.JTextField" name="NombrejTextField">
+    </Component>
+    <Component class="javax.swing.JTextField" name="GrupojTextField">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="GrupojTextFieldActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="FechajTextField">
+    </Component>
+    <Component class="javax.swing.JTextField" name="CelularjTextField">
+    </Component>
+    <Component class="javax.swing.JButton" name="IDjButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Buscar"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="DNIjButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Buscar"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="LimpiarjButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Limpiar Campos"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="GuardarjButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Guardar"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="SalirjButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Salir"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="EstadojLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Estado:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="CodigojTextField">
+    </Component>
+  </SubComponents>
+</Form>
