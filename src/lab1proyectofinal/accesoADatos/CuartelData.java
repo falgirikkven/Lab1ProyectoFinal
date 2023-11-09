@@ -29,7 +29,7 @@ public class CuartelData {
         boolean resultado = false;
         try {
             String sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) "
-                    + "VALUES ('cuartel inexistente', '' , 0, 0, 0, '', false,-1)";
+                    + "VALUES ('cuartel inexistente', '---' , 0, 0, 0, '---', false, -1)";
             PreparedStatement ps = connection.prepareStatement(sql);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
@@ -59,7 +59,7 @@ public class CuartelData {
                 sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) "
                         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             }
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, cuartel.getNombreCuartel());
             ps.setString(2, cuartel.getDireccion());
             ps.setInt(3, cuartel.getCoordenadaX());
@@ -70,7 +70,10 @@ public class CuartelData {
             if (cuartel.getCodigoCuartel() != -1) {
                 ps.setInt(8, cuartel.getCodigoCuartel());
             }
-            if (ps.executeUpdate() > 0) {
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                cuartel.setCodigoCuartel(rs.getInt(1));
                 resultado = true;
                 System.out.println("[CuartelData] Cuartel agregado");
             } else {
@@ -96,15 +99,7 @@ public class CuartelData {
             ps.setInt(1, codigoCuartel);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                cuartel = new Cuartel();
-                cuartel.setCodigoCuartel(rs.getInt("codigoCuartel"));
-                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
-                cuartel.setDireccion(rs.getString("direccion"));
-                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
-                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getString("telefono"));
-                cuartel.setCorreo(rs.getString("correo"));
-                cuartel.setEstado(rs.getBoolean("estado"));
+                cuartel = Utils.obtenerDeResultSetCuartel(rs);
                 System.out.println("[CuartelData] Cuartel con id=" + codigoCuartel + " encontrado");
             } else {
                 System.out.println("[CuartelData] No se ha encontrado al cuartel con id=" + codigoCuartel);
@@ -125,15 +120,7 @@ public class CuartelData {
             ps.setString(1, nombreCuartel);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                cuartel = new Cuartel();
-                cuartel.setCodigoCuartel(rs.getInt("codigoCuartel"));
-                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
-                cuartel.setDireccion(rs.getString("direccion"));
-                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
-                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getString("telefono"));
-                cuartel.setCorreo(rs.getString("correo"));
-                cuartel.setEstado(rs.getBoolean("estado"));
+                cuartel = Utils.obtenerDeResultSetCuartel(rs);
                 System.out.println("[CuartelData] Cuartel con nombre=" + nombreCuartel + " encontrado");
             } else {
                 System.out.println("[CuartelData] No se ha encontrado al cuartel con nombre=" + nombreCuartel);
@@ -154,15 +141,7 @@ public class CuartelData {
             ResultSet rs = ps.executeQuery();
             Cuartel cuartel;
             while (rs.next()) {
-                cuartel = new Cuartel();
-                cuartel.setCodigoCuartel(rs.getInt("codigoCuartel"));
-                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
-                cuartel.setDireccion(rs.getString("direccion"));
-                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
-                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getString("telefono"));
-                cuartel.setCorreo(rs.getString("correo"));
-                cuartel.setEstado(rs.getBoolean("estado"));
+                cuartel = Utils.obtenerDeResultSetCuartel(rs);
                 cuarteles.add(cuartel);
             }
             ps.close();
@@ -182,14 +161,7 @@ public class CuartelData {
             ResultSet rs = ps.executeQuery();
             Brigada brigada;
             while (rs.next()) {
-                brigada = new Brigada();
-                brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
-                brigada.setEspecialidad(rs.getString("especialidad"));
-                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
-                brigada.setCantBomberos(rs.getInt("cantBomberos"));
-                brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("estado"));
+                brigada = Utils.obtenerDeResultSetBrigada(rs, cuartel);
                 brigadas.add(brigada);
             }
             ps.close();
@@ -203,35 +175,19 @@ public class CuartelData {
     public List<Bombero> listarBomberosDelCuartel(Cuartel cuartel) {
         List<Bombero> bomberos = new ArrayList();
         try {
-            String sql = "SELECT * FROM bombero bom, brigada bri "
-                    + "WHERE bom.codigoBrigada IN "
-                    + "(SELECT codigoBrigada FROM brigada WHERE bri.codigoCuartel = ? AND bri.estado = true) "
-                    + "AND bom.estado = true "
-                    + "AND bri.codigoBrigada = bom.codigoBrigada ";
+            String sql = "SELECT * FROM bombero, brigada "
+                    + "WHERE bombero.codigoBrigada IN "
+                    + "(SELECT codigoBrigada FROM brigada WHERE bri.codigoCuartel = ? AND brigada.estado = true) "
+                    + "AND bombero.estado = true "
+                    + "AND brigada.codigoBrigada = bombero.codigoBrigada ";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cuartel.getCodigoCuartel());
             ResultSet rs = ps.executeQuery();
             Brigada brigada;
             Bombero bombero;
-            while (rs.next()) {
-                brigada = new Brigada();
-                brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
-                brigada.setEspecialidad(rs.getString("especialidad"));
-                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
-                brigada.setCantBomberos(rs.getInt("cantBomberos"));
-                brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("bri.estado"));
-
-                bombero = new Bombero();
-                bombero.setIdBombero(rs.getInt("idBombero"));
-                bombero.setDni(rs.getInt("dni"));
-                bombero.setNombreCompleto(rs.getString("nombreCompleto"));
-                bombero.setGrupoSanguineo(rs.getString("grupoSanguineo"));
-                bombero.setFechaNacimiento(rs.getDate("fechaNacimiento").toLocalDate());
-                bombero.setCelular(rs.getString("celular"));
-                bombero.setBrigada(brigada);
-                bombero.setEstado(rs.getBoolean("bom.estado"));
+            while (rs.next()) {                
+                brigada = Utils.obtenerDeResultSetBrigada(rs, cuartel);
+                bombero = Utils.obtenerDeResultSetBombero(rs, brigada);
                 bomberos.add(bombero);
             }
             ps.close();

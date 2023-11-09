@@ -14,8 +14,8 @@ public class Siniestro {
     public static final int PUNTUACION_NIL = -1;
     public static final int PUNTUACION_MIN = 1;
     public static final int PUNTUACION_MAX = 10;
-    private static final Cuartel cuartelFalso = new Cuartel(-1, "cuartel inexistente", "", 0, 0, "", "", false);
-    private static final Brigada brigadaFalsa = new Brigada(-1, "brigada inexistente", "", false, 0, cuartelFalso, false);
+    private static final Cuartel cuartelFalso = new Cuartel("cuartel inexistente", "---", 0, 0, "---", "---", -1, false);
+    private static final Brigada brigadaFalsa = new Brigada("brigada inexistente", "---", false, cuartelFalso, -1, false);
 
     private int codigoSiniestro;
     private String tipo;
@@ -55,6 +55,19 @@ public class Siniestro {
         this.puntuacion = PUNTUACION_NIL;
         this.brigada = brigada;
     }
+    
+    // usuario inicializa todo menos 'codigoSiniestro' Y 'brigada'
+    public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion) {
+        this.codigoSiniestro = -1;
+        this.tipo = tipo;
+        this.fechaHoraInicio = fechaHoraInicio;
+        this.coordenadaX = coordenadaX;
+        this.coordenadaY = coordenadaY;
+        this.detalles = detalles;
+        this.fechaHoraResolucion = fechaHoraResolucion;
+        this.puntuacion = puntuacion;
+        this.brigada = brigadaFalsa;
+    }
 
     // usuario inicializa todo menos 'codigoSiniestro'
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion, Brigada brigada) {
@@ -70,7 +83,7 @@ public class Siniestro {
     }
 
     // usuario inicializa todo 
-    public Siniestro(int codigoSiniestro, String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion, Brigada brigada) {
+    public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion, Brigada brigada, int codigoSiniestro) {
         this.codigoSiniestro = codigoSiniestro;
         this.tipo = tipo;
         this.fechaHoraInicio = fechaHoraInicio;

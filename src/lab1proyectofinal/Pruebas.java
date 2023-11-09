@@ -1,11 +1,8 @@
 package lab1proyectofinal;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Month;
 import java.util.List;
 import lab1proyectofinal.accesoADatos.BomberoData;
@@ -98,27 +95,27 @@ public class Pruebas {
         if (cuartelEncontrado != null) {
             System.out.println(cuartelEncontrado.toString());
         }
-        // buscar cuartel activo, por nombre
-        System.out.println("\n----- Buscar cuartel (nombreCuartel=" + cuartelActivoConBrigNom + " (cuartel activo)) -----");
-        cuartelEncontrado = cuartelData.buscarCuartelPorNombre(cuartelActivoConBrigNom);
-        System.out.println("Datos del cuartel con nombreCuartel=" + cuartelActivoConBrigNom + ":");
-        if (cuartelEncontrado != null) {
-            System.out.println(cuartelEncontrado.toString());
-        }
-        // buscar cuartel inactivo, por nombre    
-        System.out.println("\n----- Buscar cuartel (nombreCuartel=" + cuartelInactivoNom + " (cuartel activo)) -----");
-        cuartelEncontrado = cuartelData.buscarCuartelPorNombre(cuartelInactivoNom);
-        System.out.println("Datos del cuartel con nombreCuartel=" + cuartelInactivoNom + ":");
-        if (cuartelEncontrado != null) {
-            System.out.println(cuartelEncontrado.toString());
-        }
-        // buscar cuartel inexistente en la BD, por nombre
-        System.out.println("\n----- Buscar cuartel (nombreCuartel=" + cuartelInexistenteNom + " (cuartel activo)) -----");
-        cuartelEncontrado = cuartelData.buscarCuartelPorNombre(cuartelInexistenteNom);
-        System.out.println("Datos del cuartel con nombreCuartel=" + cuartelInexistenteNom + ":");
-        if (cuartelEncontrado != null) {
-            System.out.println(cuartelEncontrado.toString());
-        }
+//        // buscar cuartel activo, por nombre
+//        System.out.println("\n----- Buscar cuartel (nombreCuartel=" + cuartelActivoConBrigNom + " (cuartel activo)) -----");
+//        cuartelEncontrado = cuartelData.buscarCuartelPorNombre(cuartelActivoConBrigNom);
+//        System.out.println("Datos del cuartel con nombreCuartel=" + cuartelActivoConBrigNom + ":");
+//        if (cuartelEncontrado != null) {
+//            System.out.println(cuartelEncontrado.toString());
+//        }
+//        // buscar cuartel inactivo, por nombre    
+//        System.out.println("\n----- Buscar cuartel (nombreCuartel=" + cuartelInactivoNom + " (cuartel activo)) -----");
+//        cuartelEncontrado = cuartelData.buscarCuartelPorNombre(cuartelInactivoNom);
+//        System.out.println("Datos del cuartel con nombreCuartel=" + cuartelInactivoNom + ":");
+//        if (cuartelEncontrado != null) {
+//            System.out.println(cuartelEncontrado.toString());
+//        }
+//        // buscar cuartel inexistente en la BD, por nombre
+//        System.out.println("\n----- Buscar cuartel (nombreCuartel=" + cuartelInexistenteNom + " (cuartel activo)) -----");
+//        cuartelEncontrado = cuartelData.buscarCuartelPorNombre(cuartelInexistenteNom);
+//        System.out.println("Datos del cuartel con nombreCuartel=" + cuartelInexistenteNom + ":");
+//        if (cuartelEncontrado != null) {
+//            System.out.println(cuartelEncontrado.toString());
+//        }
         //
         // Fin Buscar Cuartel
         //
@@ -371,12 +368,12 @@ public class Pruebas {
         // modificar brigada activa
         System.out.println("\n----- Modificar brigada (codigoBrigada=" + brigadaActivaConBomCod + " (brigada activa)) -----");
         brigadaActivaConBom = new Brigada(brigadaActivaConBom.getNombreBrigada()+" mod", 
-                brigadaActivaConBom.getEspecialidad()+" mod", brigadaActivaConBom.isEnCuartel(), brigadaActivaConBom.getCuartel());
+                brigadaActivaConBom.getEspecialidad()+" mod", brigadaActivaConBom.isTratandoSiniestro(), brigadaActivaConBom.getCuartel());
         brigadaData.modificarBrigada(brigadaActivaConBom);
         // modificar brigada inactiva
         System.out.println("\n----- Modificar brigada (codigoBrigada=" + brigadaInactivaCod + " (brigada inactiva)) -----");
         brigadaInactiva = new Brigada(brigadaInactiva.getNombreBrigada()+" mod", 
-                brigadaInactiva.getEspecialidad()+" mod", brigadaInactiva.isEnCuartel(), brigadaInactiva.getCuartel());
+                brigadaInactiva.getEspecialidad()+" mod", brigadaInactiva.isTratandoSiniestro(), brigadaInactiva.getCuartel());
         brigadaData.modificarBrigada(brigadaInactiva);
         //
         // Fin Modificar Brigadas
@@ -563,46 +560,51 @@ public class Pruebas {
 
         // Buscar Siniestros
         Siniestro siniestroEncontrado;
-        System.out.println("\n----- Busco Siniestro (con id=" + 1 + ") -----");
+        System.out.println("\n----- Busco siniestro (codigoSiniestro=" + 1 + ") -----");
         siniestroEncontrado = siniestroData.buscarSiniestro(1);
-        if (siniestroEncontrado != null) { // No deberia funcionar
+        if (siniestroEncontrado != null) { 
             System.out.println(siniestroEncontrado.toString());
         } 
 
         // Listar Siniestros
-        System.out.println("\n----- Listar Siniestros -----");
+        System.out.println("\n----- Listar siniestros -----");
         List<Siniestro> listaSiniestros = siniestroData.listarSiniestros();
         for (Siniestro siniestro : listaSiniestros) {
             System.out.println(siniestro.toString());
         }
-
+        
+        // Listar siniestros con resolución
+        System.out.println("\n----- Listar siniestros resueltos -----");
+        listaSiniestros = siniestroData.listarSiniestrosResueltos();
+        for (Siniestro siniestro : listaSiniestros) {
+            System.out.println(siniestro.toString());
+        }
         // Listar Siniestros Sin resolucion
-        System.out.println("\n----- Listar Siniestros Sin Resolucion -----");
+        System.out.println("\n----- Listar siniestros sin resolucion -----");
         listaSiniestros = siniestroData.listarSiniestrosSinResolucion();
         for (Siniestro siniestro : listaSiniestros) {
             System.out.println(siniestro.toString());
         }
-
         // Listar Siniestros Entre dos fechas
-        System.out.println("\n----- Listar Siniestros Entre 2023-11-3 y 2023-11-5 -----");
+        System.out.println("\n----- Listar siniestros entre 2023-11-3 y 2023-11-5 -----");
         listaSiniestros = siniestroData.listarSiniestrosEntreFechas(LocalDateTime.of(2023, Month.NOVEMBER, 3, 0, 0), LocalDateTime.of(2023, Month.NOVEMBER, 5, 23, 59));
         for (Siniestro siniestro : listaSiniestros) {
             System.out.println(siniestro.toString());
         }
 
         // Modificar Siniestro
-        System.out.println("\n----- Modificar Siniestro (asigno brigada 2 a siniestro 1) -----");
-        siniestro1.setCodigoBrigada(2);
+        System.out.println("\n----- Modificar siniestro (codigoSiniestro=1) -----");
+        siniestro1.setDetalles("Mucho fuego");
         siniestroData.modificarSiniestro(siniestro1);
         System.out.println(siniestro1.toString());
 
-        System.out.println("\n----- Modificar Siniestro (Asigno resolucion a siniestro 2) -----");
-        // Esta forma comentada tambien funciona
-        // siniestro2.setFechaResolucion(LocalDateTime.now());
-        // siniestro2.setPuntuacion(4);
-        // siniestroData.modificarSiniestro(siniestro2);
-        siniestroData.asignarResolucion(siniestro2, LocalDateTime.now(), 4);
-        System.out.println(siniestro2.toString());
+//        System.out.println("\n----- Modificar Siniestro (Asigno resolucion a siniestro 2) -----");
+//        // Esta forma comentada tambien funciona
+//        // siniestro2.setFechaResolucion(LocalDateTime.now());
+//        // siniestro2.setPuntuacion(4);
+//        // siniestroData.modificarSiniestro(siniestro2);
+//        siniestroData.asignarResolucion(siniestro2, LocalDateTime.now(), 4);
+//        System.out.println(siniestro2.toString());
 
         // Eliminar Bombero
         int cualSiniestroEliminar = siniestro3.getCodigoSiniestro();

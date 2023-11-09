@@ -29,44 +29,59 @@ public class SiniestroData {
     public boolean guardarSiniestro(Siniestro siniestro) {
         boolean resultado = false;
         try {
+            // corroborando la validez de los datos ingresados
+            int puntuacion = siniestro.getPuntuacion();
+            LocalDateTime fecHorIni = siniestro.getFechaHoraInicio();
+            LocalDateTime fecHorRes = siniestro.getFechaHoraResolucion();
+            if (fecHorIni.isAfter(LocalDateTime.now())) {
+                    System.out.println("[SiniestroData] Error al agregar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora actual");
+                    return resultado;
+            } 
+            if (fecHorRes != null && puntuacion != Siniestro.PUNTUACION_NIL) {
+                if (fecHorIni.isAfter(fecHorRes)) {
+                    System.out.println("[SiniestroData] Error al agregar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora de resolución de la misma");
+                    return resultado;
+                } else if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
+                    System.out.println("[SiniestroData] Error al agregar. Puntuacion fuera de rango");
+                    return resultado;
+                }  
+            }
+            
             String sql;
             if (siniestro.getCodigoSiniestro() != -1) {
                 sql = "INSERT INTO siniestro(tipo, fechaHoraInicio, coordenadaX, coordenadaY, detalles, codigoBrigada, fechaHoraResolucion, puntuacion, codigoSiniestro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             } else {
                 sql = "INSERT INTO siniestro(tipo, fechaHoraInicio, coordenadaX, coordenadaY, detalles, codigoBrigada, fechaHoraResolucion, puntuacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             }
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, siniestro.getTipo());
-            ps.setTimestamp(2, Timestamp.valueOf(siniestro.getFechaHoraInicio()));
+            ps.setTimestamp(2, Timestamp.valueOf(fecHorIni));
             ps.setInt(3, siniestro.getCoordenadaX());
             ps.setInt(4, siniestro.getCoordenadaY());
             ps.setString(5, siniestro.getDetalles());
             ps.setInt(6, siniestro.getBrigada().getCodigoBrigada());
-            int puntuacion = siniestro.getPuntuacion();
-            if (siniestro.getFechaHoraResolucion() == null && puntuacion == Siniestro.PUNTUACION_NIL) {
+            if (fecHorRes == null && puntuacion == Siniestro.PUNTUACION_NIL) {
                 ps.setNull(7, Types.TIMESTAMP);
                 ps.setInt(8, puntuacion);
-            } else if (siniestro.getFechaHoraResolucion() != null && puntuacion != Siniestro.PUNTUACION_NIL) {
-                if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
-                    ps.close();
-                    System.out.println("[SiniestroData] Error al agregar. Puntuacion fuera de rango");
-                    return false;
-                }
-                ps.setTimestamp(7, Timestamp.valueOf(siniestro.getFechaHoraResolucion()));
+            } else if (fecHorRes != null && puntuacion != Siniestro.PUNTUACION_NIL) {
+                ps.setTimestamp(7, Timestamp.valueOf(fecHorRes));
                 ps.setInt(8, puntuacion);
             } else {
                 ps.close();
-                System.out.println("[SiniestroData] Error al agregar. Los datos de la resolucion son inconsistentes");
-                return false;
+                System.out.println("[SiniestroData] Error al agregar. No puede establecer la puntuación sin establecer la fecha de resolución, ni viceversa");
+                return resultado;
             }
             if (siniestro.getCodigoSiniestro() != -1) {
                 ps.setInt(9, siniestro.getCodigoSiniestro());
             }
-            if (ps.executeUpdate() > 0) {
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                siniestro.setCodigoSiniestro(rs.getInt(1));
                 resultado = true;
                 System.out.println("[SiniestroData] Siniestro agregado");
             } else {
-                System.out.println("[SiniestroData] No se pudo agregado el siniestro");
+                System.out.println("[SiniestroData] No ha podido agregar el siniestro");
             }
             ps.close();
         } catch (SQLException e) {
@@ -84,51 +99,15 @@ public class SiniestroData {
     public Siniestro buscarSiniestro(int codigoSiniestro) {
         Siniestro siniestro = null;
         try {
-            String sql = "SELECT * FROM siniestro si, brigada bri, cuartel cuar "
+            String sql = "SELECT * FROM siniestro, brigada, cuartel "
                     + "WHERE codigoSiniestro=? "
-                    + "AND si.codigoBrigada=bri.codigoBrigada "
-                    + "AND bri.codigoCuartel=cuar.codigoCuartel;";
+                    + "AND siniestro.codigoBrigada=brigada.codigoBrigada "
+                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoSiniestro);
             ResultSet rs = ps.executeQuery();
-            Cuartel cuartel;
-            Brigada brigada;
             if (rs.next()) {
-                cuartel = new Cuartel();
-                cuartel.setCodigoCuartel(rs.getInt("cuar.codigoCuartel"));
-                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
-                cuartel.setDireccion(rs.getString("direccion"));
-                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
-                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getString("telefono"));
-                cuartel.setCorreo(rs.getString("correo"));
-                cuartel.setEstado(rs.getBoolean("cuar.estado"));
-
-                brigada = new Brigada();
-                brigada.setCodigoBrigada(rs.getInt("bri.codigoBrigada"));
-                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
-                brigada.setEspecialidad(rs.getString("especialidad"));
-                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
-                brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("bri.estado"));
-
-                siniestro = new Siniestro();
-                siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));
-                siniestro.setTipo(rs.getString("tipo"));
-                siniestro.setFechaHoraInicio(rs.getTimestamp("fechaHoraInicio").toLocalDateTime());
-                siniestro.setCoordenadaX(rs.getInt("coordenadaX"));
-                siniestro.setCoordenadaY(rs.getInt("coordenadaY"));
-                siniestro.setDetalles(rs.getString("detalles"));
-                siniestro.setBrigada(brigada);
-                // siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
-                // siniestro.setPuntuacion(rs.getInt("puntuacion"));
-                int puntuacion = rs.getInt("puntuacion");
-                if (puntuacion != -1) {
-                    siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
-                } else {
-                    siniestro.setFechaHoraResolucion(null);
-                }
-                siniestro.setPuntuacion(puntuacion);
+                siniestro = Utils.obtenerDeResultSetSiniestro(rs);
                 System.out.println("[SiniestroData] Siniestro con codigo '" + codigoSiniestro + "' encontrado");
             } else {
                 System.out.println("[SiniestroData] No se ha encontrado el siniestro con código '" + codigoSiniestro + "'");
@@ -144,51 +123,14 @@ public class SiniestroData {
     public List<Siniestro> listarSiniestros() {
         List<Siniestro> siniestros = new ArrayList();
         try {
-            String sql = "SELECT * FROM siniestro si, brigada bri, cuartel cuar "
-                    + "WHERE si.codigoBrigada=bri.codigoBrigada "
-                    + "AND bri.codigoCuartel=cuar.codigoCuartel;";
+            String sql = "SELECT * FROM siniestro, brigada, cuartel "
+                    + "WHERE siniestro.codigoBrigada=brigada.codigoBrigada "
+                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            Cuartel cuartel;
-            Brigada brigada;
             Siniestro siniestro;
             if (rs.next()) {
-                cuartel = new Cuartel();
-                cuartel.setCodigoCuartel(rs.getInt("cuar.codigoCuartel"));
-                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
-                cuartel.setDireccion(rs.getString("direccion"));
-                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
-                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getString("telefono"));
-                cuartel.setCorreo(rs.getString("correo"));
-                cuartel.setEstado(rs.getBoolean("cuar.estado"));
-
-                brigada = new Brigada();
-                brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
-                brigada.setEspecialidad(rs.getString("especialidad"));
-                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
-                brigada.setCantBomberos(rs.getInt("cantBomberos"));
-                brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("bri.estado"));
-
-                siniestro = new Siniestro();
-                siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));
-                siniestro.setTipo(rs.getString("tipo"));
-                siniestro.setFechaHoraInicio(rs.getTimestamp("fechaHoraInicio").toLocalDateTime());
-                siniestro.setCoordenadaX(rs.getInt("coordenadaX"));
-                siniestro.setCoordenadaY(rs.getInt("coordenadaY"));
-                siniestro.setDetalles(rs.getString("detalles"));
-                siniestro.setBrigada(brigada);
-                // siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
-                // siniestro.setPuntuacion(rs.getInt("puntuacion"));
-                int puntuacion = rs.getInt("puntuacion");
-                if (puntuacion != -1) {
-                    siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
-                } else {
-                    siniestro.setFechaHoraResolucion(null);
-                }
-                siniestro.setPuntuacion(puntuacion);
+                siniestro = Utils.obtenerDeResultSetSiniestro(rs);
                 siniestros.add(siniestro);
             }
             ps.close();
@@ -202,51 +144,14 @@ public class SiniestroData {
     public List<Siniestro> listarSiniestrosResueltos() {
         List<Siniestro> siniestros = new ArrayList();
         try {
-            String sql = "SELECT * FROM siniestro si, brigada bri, cuartel cuar "
-                    + "WHERE si.puntuacion!=-1 AND si.codigoBrigada=bri.codigoBrigada "
-                    + "AND bri.codigoCuartel=cuar.codigoCuartel;";
+            String sql = "SELECT * FROM siniestro, brigada, cuartel "
+                    + "WHERE siniestro.puntuacion!=-1 AND siniestro.codigoBrigada=brigada.codigoBrigada "
+                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            Cuartel cuartel;
-            Brigada brigada;
             Siniestro siniestro;
             if (rs.next()) {
-                cuartel = new Cuartel();
-                cuartel.setCodigoCuartel(rs.getInt("cuar.codigoCuartel"));
-                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
-                cuartel.setDireccion(rs.getString("direccion"));
-                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
-                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getString("telefono"));
-                cuartel.setCorreo(rs.getString("correo"));
-                cuartel.setEstado(rs.getBoolean("cuar.estado"));
-
-                brigada = new Brigada();
-                brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
-                brigada.setEspecialidad(rs.getString("especialidad"));
-                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
-                brigada.setCantBomberos(rs.getInt("cantBomberos"));
-                brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("bri.estado"));
-
-                siniestro = new Siniestro();
-                siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));
-                siniestro.setTipo(rs.getString("tipo"));
-                siniestro.setFechaHoraInicio(rs.getTimestamp("fechaHoraInicio").toLocalDateTime());
-                siniestro.setCoordenadaX(rs.getInt("coordenadaX"));
-                siniestro.setCoordenadaY(rs.getInt("coordenadaY"));
-                siniestro.setDetalles(rs.getString("detalles"));
-                siniestro.setBrigada(brigada);
-                // siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
-                // siniestro.setPuntuacion(rs.getInt("puntuacion"));
-                int puntuacion = rs.getInt("puntuacion");
-                if (puntuacion != -1) {
-                    siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
-                } else {
-                    siniestro.setFechaHoraResolucion(null);
-                }
-                siniestro.setPuntuacion(puntuacion);
+                siniestro = Utils.obtenerDeResultSetSiniestro(rs);
                 siniestros.add(siniestro);
             }
             ps.close();
@@ -260,51 +165,14 @@ public class SiniestroData {
     public List<Siniestro> listarSiniestrosSinResolucion() {
         List<Siniestro> siniestros = new ArrayList();
         try {
-            String sql = "SELECT * FROM siniestro si, brigada bri, cuartel cuar "
-                    + "WHERE si.puntuacion=-1 AND si.codigoBrigada=bri.codigoBrigada "
-                    + "AND bri.codigoCuartel=cuar.codigoCuartel;";
+            String sql = "SELECT * FROM siniestro, brigada, cuartel "
+                    + "WHERE siniestro.puntuacion=-1 AND siniestro.codigoBrigada=brigada.codigoBrigada "
+                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            Cuartel cuartel;
-            Brigada brigada;
             Siniestro siniestro;
             if (rs.next()) {
-                cuartel = new Cuartel();
-                cuartel.setCodigoCuartel(rs.getInt("cuar.codigoCuartel"));
-                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
-                cuartel.setDireccion(rs.getString("direccion"));
-                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
-                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getString("telefono"));
-                cuartel.setCorreo(rs.getString("correo"));
-                cuartel.setEstado(rs.getBoolean("cuar.estado"));
-
-                brigada = new Brigada();
-                brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
-                brigada.setEspecialidad(rs.getString("especialidad"));
-                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
-                brigada.setCantBomberos(rs.getInt("cantBomberos"));
-                brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("bri.estado"));
-
-                siniestro = new Siniestro();
-                siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));
-                siniestro.setTipo(rs.getString("tipo"));
-                siniestro.setFechaHoraInicio(rs.getTimestamp("fechaHoraInicio").toLocalDateTime());
-                siniestro.setCoordenadaX(rs.getInt("coordenadaX"));
-                siniestro.setCoordenadaY(rs.getInt("coordenadaY"));
-                siniestro.setDetalles(rs.getString("detalles"));
-                siniestro.setBrigada(brigada);
-                // siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
-                // siniestro.setPuntuacion(rs.getInt("puntuacion"));
-                int puntuacion = rs.getInt("puntuacion");
-                if (puntuacion != -1) {
-                    siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
-                } else {
-                    siniestro.setFechaHoraResolucion(null);
-                }
-                siniestro.setPuntuacion(puntuacion);
+                siniestro = Utils.obtenerDeResultSetSiniestro(rs);
                 siniestros.add(siniestro);
             }
             ps.close();
@@ -318,53 +186,41 @@ public class SiniestroData {
     public List<Siniestro> listarSiniestrosEntreFechas(LocalDateTime fecha1, LocalDateTime fecha2) {
         List<Siniestro> siniestros = new ArrayList();
         try {
-            String sql = "SELECT * FROM siniestro si, brigada bri, cuartel cuar "
-                    + "WHERE (fechaHoraInicio BETWEEN ? AND ?) AND si.codigoBrigada=bri.codigoBrigada "
-                    + "AND bri.codigoCuartel=cuar.codigoCuartel;";
+            String sql = "SELECT * FROM siniestro, brigada, cuartel "
+                    + "WHERE (fechaHoraInicio>=? AND fechaHoraResolucion<=?) "      // comparar NULL con algo podría ser fuente de errores
+                    + "AND siniestro.codigoBrigada=brigada.codigoBrigada "
+                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setTimestamp(1, Timestamp.valueOf(fecha1));
             ps.setTimestamp(2, Timestamp.valueOf(fecha2));
             ResultSet rs = ps.executeQuery();
-            Cuartel cuartel;
-            Brigada brigada;
             Siniestro siniestro;
             if (rs.next()) {
-                cuartel = new Cuartel();
-                cuartel.setCodigoCuartel(rs.getInt("cuar.codigoCuartel"));
-                cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
-                cuartel.setDireccion(rs.getString("direccion"));
-                cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
-                cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
-                cuartel.setTelefono(rs.getString("telefono"));
-                cuartel.setCorreo(rs.getString("correo"));
-                cuartel.setEstado(rs.getBoolean("cuar.estado"));
-
-                brigada = new Brigada();
-                brigada.setCodigoBrigada(rs.getInt("codigoBrigada"));
-                brigada.setNombreBrigada(rs.getString("nombreBrigada"));
-                brigada.setEspecialidad(rs.getString("especialidad"));
-                brigada.setEnCuartel(rs.getBoolean("enCuartel"));
-                brigada.setCantBomberos(rs.getInt("cantBomberos"));
-                brigada.setCuartel(cuartel);
-                brigada.setEstado(rs.getBoolean("bri.estado"));
-
-                siniestro = new Siniestro();
-                siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));
-                siniestro.setTipo(rs.getString("tipo"));
-                siniestro.setFechaHoraInicio(rs.getTimestamp("fechaHoraInicio").toLocalDateTime());
-                siniestro.setCoordenadaX(rs.getInt("coordenadaX"));
-                siniestro.setCoordenadaY(rs.getInt("coordenadaY"));
-                siniestro.setDetalles(rs.getString("detalles"));
-                siniestro.setBrigada(brigada);
-                // siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
-                // siniestro.setPuntuacion(rs.getInt("puntuacion"));
-                int puntuacion = rs.getInt("puntuacion");
-                if (puntuacion != -1) {
-                    siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
-                } else {
-                    siniestro.setFechaHoraResolucion(null);
-                }
-                siniestro.setPuntuacion(puntuacion);
+                siniestro = Utils.obtenerDeResultSetSiniestro(rs);
+                siniestros.add(siniestro);
+            }
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("[SiniestroData Error " + e.getErrorCode() + "] " + e.getMessage());
+            e.printStackTrace();
+        }
+        return siniestros;
+    }
+    
+    public List<Siniestro> listarSiniestrosInicioEntreFechas(LocalDateTime fecha1, LocalDateTime fecha2) {
+        List<Siniestro> siniestros = new ArrayList();
+        try {
+            String sql = "SELECT * FROM siniestro, brigada, cuartel "
+                    + "WHERE (fechaHoraInicio>=? AND fechaHoraInicio<=?) "      
+                    + "AND siniestro.codigoBrigada=brigada.codigoBrigada "
+                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setTimestamp(1, Timestamp.valueOf(fecha1));
+            ps.setTimestamp(2, Timestamp.valueOf(fecha2));
+            ResultSet rs = ps.executeQuery();
+            Siniestro siniestro;
+            if (rs.next()) {
+                siniestro = Utils.obtenerDeResultSetSiniestro(rs);
                 siniestros.add(siniestro);
             }
             ps.close();
@@ -444,7 +300,7 @@ public class SiniestroData {
                 System.out.println("[SiniestroData] Resolucion asignada");
 
                 // actualizar la brigada que trató la emergencia
-                sql = "UPDATE brigada SET enCuartel=true WHERE codigoBrigada=?;";
+                sql = "UPDATE brigada SET tratandoSiniestro=true WHERE codigoBrigada=?;";
                 ps = connection.prepareStatement(sql);
                 ps.setInt(1, siniestro.getBrigada().getCodigoBrigada());
                 if (ps.executeUpdate() > 0) {

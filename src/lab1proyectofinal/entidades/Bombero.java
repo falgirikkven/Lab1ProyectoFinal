@@ -33,22 +33,10 @@ public class Bombero {
         this.celular = celular;
         this.brigada = brigada;
         this.estado = true;
-    }
+    }    
     
-    // usuario inicializa todo menos 'idBombero'
-    public Bombero(int dni, String nombreCompleto, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada, boolean estado) {
-        this.dni = dni;
-        this.nombreCompleto = nombreCompleto;
-        this.grupoSanguineo = grupoSanguineo;
-        this.fechaNacimiento = fechaNacimiento;
-        this.celular = celular;
-        this.brigada = brigada;
-        this.estado = estado;
-    }
-    
-
     // usuario inicializa todo 
-    public Bombero(int idBombero, int dni, String nombreCompleto, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada, boolean estado) {
+    public Bombero(int dni, String nombreCompleto, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada, int idBombero, boolean estado) {
         this.idBombero = idBombero;
         this.dni = dni;
         this.nombreCompleto = nombreCompleto;

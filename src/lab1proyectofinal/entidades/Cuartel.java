@@ -33,31 +33,8 @@ public class Cuartel {
         this.estado = true;
     }
     
-    // usuario inicializa todo menos 'estado'
-    public Cuartel(int codigoCuartel, String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo) {
-        this.codigoCuartel = codigoCuartel;
-        this.nombreCuartel = nombreCuartel;
-        this.direccion = direccion;
-        this.coordenadaX = coordenadaX;
-        this.coordenadaY = coordenadaY;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.estado = true;
-    }
-    
-    // usuario inicializa todo menos 'codigoCuartel'
-    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo, boolean estado) {
-        this.nombreCuartel = nombreCuartel;
-        this.direccion = direccion;
-        this.coordenadaX = coordenadaX;
-        this.coordenadaY = coordenadaY;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.estado = estado;
-    }
-    
     // usuario inicializa todo 
-    public Cuartel(int codigoCuartel, String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo, boolean estado) {
+    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo, int codigoCuartel, boolean estado) {
         this.codigoCuartel = codigoCuartel;
         this.nombreCuartel = nombreCuartel;
         this.direccion = direccion;

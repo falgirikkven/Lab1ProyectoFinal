@@ -12,43 +12,29 @@ public class Brigada {
     private int codigoBrigada;
     private String nombreBrigada;
     private String especialidad;
-    private boolean enCuartel;
-    private int cantBomberos;
+    private boolean tratandoSiniestro;
     private Cuartel cuartel;
     private boolean estado;
 
     public Brigada() {
     }
 
-    // el usuario inicializa todo menos 'codigoBrigada', 'cantBomberos' y 'estado'
-    public Brigada(String nombreBrigada, String especialidad, boolean enCuartel, Cuartel cuartel) {
+    // el usuario inicializa todo menos 'codigoBrigada' y 'estado'
+    public Brigada(String nombreBrigada, String especialidad, boolean tratandoSiniestro, Cuartel cuartel) {
         this.codigoBrigada = -1;
         this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
-        this.enCuartel = enCuartel;
-        this.cantBomberos = 0;
+        this.tratandoSiniestro = tratandoSiniestro;
         this.cuartel = cuartel;
         this.estado = true;
     }
     
-    // el usuario inicializa todo menos 'codigoBrigada'
-    public Brigada(String nombreBrigada, String especialidad, boolean enCuartel, int cantBomberos, Cuartel cuartel, boolean estado) {
-        this.nombreBrigada = nombreBrigada;
-        this.especialidad = especialidad;
-        this.enCuartel = enCuartel;
-        this.cantBomberos = cantBomberos;
-        this.cuartel = cuartel;
-        this.estado = estado;
-    }
-    
-
-    // el usuario inicializa todo 
-    public Brigada(int codigoBrigada, String nombreBrigada, String especialidad, boolean enCuartel, int cantBomberos, Cuartel cuartel, boolean estado) {
+    // el usuario inicializa todo     
+    public Brigada(String nombreBrigada, String especialidad, boolean tratandoSiniestro, Cuartel cuartel, int codigoBrigada, boolean estado) {
         this.codigoBrigada = codigoBrigada;
         this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
-        this.enCuartel = enCuartel;
-        this.cantBomberos = cantBomberos;
+        this.tratandoSiniestro = tratandoSiniestro;
         this.cuartel = cuartel;
         this.estado = estado;
     }
@@ -77,20 +63,12 @@ public class Brigada {
         this.especialidad = especialidad;
     }
 
-    public boolean isEnCuartel() {
-        return enCuartel;
+    public boolean isTratandoSiniestro() {
+        return tratandoSiniestro;
     }
 
-    public void setEnCuartel(boolean enCuartel) {
-        this.enCuartel = enCuartel;
-    }
-
-    public int getCantBomberos() {
-        return cantBomberos;
-    }
-
-    public void setCantBomberos(int cantBomberos) {
-        this.cantBomberos = cantBomberos;
+    public void setTratandoSiniestro(boolean tratandoSiniestro) {
+        this.tratandoSiniestro = tratandoSiniestro;
     }
 
     public Cuartel getCuartel() {
@@ -111,7 +89,6 @@ public class Brigada {
 
     @Override
     public String toString() {
-        return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", enCuartel=" + enCuartel + ", cantBomberos=" + cantBomberos + ", cuartel=" + cuartel + ", estado=" + estado + '}';
+        return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", tratandoSiniestro=" + tratandoSiniestro + ", cuartel=" + cuartel + ", estado=" + estado + '}';
     }
-
 }
