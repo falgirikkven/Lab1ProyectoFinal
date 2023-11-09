@@ -10,6 +10,7 @@ import lab1proyectofinal.vistas.MainFrame;
  * @author Grupo-3
  */
 public class Lab1ProyectoFinal {
+//comentario
 
     /**
      * @param args the command line arguments
