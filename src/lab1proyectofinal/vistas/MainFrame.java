@@ -2,6 +2,7 @@ package lab1proyectofinal.vistas;
 
 import java.beans.PropertyVetoException;
 import javax.swing.JInternalFrame;
+import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.CuartelData;
 
 /**
@@ -14,9 +15,11 @@ public class MainFrame extends javax.swing.JFrame {
      * SUJETO A CAMBIOS
      */
     private JInternalFrame focusedFrame = null;
-    private GestionCuartel gestionCuartel;
+    private final GestionCuartel gestionCuartel;
+    private final GestionBrigada gestionBrigada;
 
-    private CuartelData cuartelData;
+    private final CuartelData cuartelData;
+    private final BrigadaData brigadaData;
 
     /**
      * Creates new form MainFrame
@@ -25,10 +28,15 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
 
         this.cuartelData = new CuartelData();
+        this.brigadaData = new BrigadaData();
 
         // Gestion Cuartel
         this.gestionCuartel = new GestionCuartel(cuartelData);
         DesktopPane.add(this.gestionCuartel);
+
+        // Gestion Brigada
+        this.gestionBrigada = new GestionBrigada(cuartelData, brigadaData);
+        DesktopPane.add(this.gestionBrigada);
     }
 
     private void focusIFrame(JInternalFrame iFrame) {
@@ -138,7 +146,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_gestionCuartelMIActionPerformed
 
     private void gestionBrigadaMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionBrigadaMIActionPerformed
-        // TODO add your handling code here:
+        focusIFrame(gestionBrigada);
     }//GEN-LAST:event_gestionBrigadaMIActionPerformed
 
     /**

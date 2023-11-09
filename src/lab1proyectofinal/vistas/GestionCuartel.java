@@ -62,8 +62,8 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         BtnBuscarNombre = new javax.swing.JButton();
         BtnLimpiar = new javax.swing.JButton();
         BtnGuardar = new javax.swing.JButton();
-        BtnSalir = new javax.swing.JButton();
         BtnEliminar = new javax.swing.JButton();
+        BtnSalir = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -115,17 +115,17 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             }
         });
 
-        BtnSalir.setText("Salir");
-        BtnSalir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnSalirActionPerformed(evt);
-            }
-        });
-
         BtnEliminar.setText("Dar de Baja");
         BtnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnEliminarActionPerformed(evt);
+            }
+        });
+
+        BtnSalir.setText("Salir");
+        BtnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnSalirActionPerformed(evt);
             }
         });
 
@@ -240,7 +240,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             coordenadaXTF.setText(Integer.toString(cuartel.getCoordenadaX()));
             coordenadaYTF.setText(Integer.toString(cuartel.getCoordenadaY()));
         } else {
-            JOptionPane.showMessageDialog(this, "Cuartel no encontrado.\nEs posible que haya sido dado de baja o no exista.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Cuartel no encontrado.\nEs posible que haya sido dado de baja o no exista.", "Información", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_BtnBuscarCodigoActionPerformed
 
@@ -261,7 +261,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             coordenadaXTF.setText(Integer.toString(cuartel.getCoordenadaX()));
             coordenadaYTF.setText(Integer.toString(cuartel.getCoordenadaY()));
         } else {
-            JOptionPane.showMessageDialog(this, "Cuartel no encontrado.\nEs posible que haya sido dado de baja o no exista.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Cuartel no encontrado.\nEs posible que haya sido dado de baja o no exista.", "Información", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_BtnBuscarNombreActionPerformed
 
@@ -316,26 +316,15 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
 
         Cuartel cuartel = new Cuartel(codigo, nombreStr, direccionStr, coordenadaX, coordenadaY, telefonoStr, correoStr, true);
         if (cuartelData.guardarCuartel(cuartel)) {
-            JOptionPane.showMessageDialog(this, "Cuartel guardado.", "Éxito", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Cuartel guardado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "No se pudo guardar el cuartel.\nQuizás ya haya un cuartel guardado con este código o nombre.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        /*if (cuartelData.buscarCuartel(codigo) == null) {
-            if (cuartelData.guardarCuartel(cuartel)) {
-                JOptionPane.showMessageDialog(this, "Cuartel guardado.", "Información", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo guardar el cuartel", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            if (JOptionPane.showConfirmDialog(this, "Ya se encuentra este cuartel registrado") == 1) {
-            }
-        }*/
     }//GEN-LAST:event_BtnGuardarActionPerformed
 
     private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
         String codigoStr = codigoTF.getText().trim();
         String nombreStr = nombreTF.getText().trim();
-        boolean porCodigo = true;
 
         if (codigoStr.isBlank() && nombreStr.isBlank()) {
             JOptionPane.showMessageDialog(this, "Debe especificar código o nombre del cuartel a eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -346,23 +335,19 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         try {
             codigo = Integer.parseInt(codigoStr);
         } catch (NumberFormatException e) {
-            porCodigo = false;
         }
 
-        if (porCodigo) {
-            if (cuartelData.eliminarCuartel(codigo)) {
-                this.limpiarCampos();
-                JOptionPane.showMessageDialog(this, "Cuartel dado de baja.", "Éxito", JOptionPane.PLAIN_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo dar de baja el cuartel.\nQuizás el cuartel ya haya sido dado de baja o no exista.", "Información", JOptionPane.INFORMATION_MESSAGE);
-            }
+        boolean resultado = false;
+        if (codigo != -1) {
+            resultado = cuartelData.eliminarCuartel(codigo);
         } else {
-            if (cuartelData.eliminarCuartelPorNombre(nombreStr)) {
-                this.limpiarCampos();
-                JOptionPane.showMessageDialog(this, "Cuartel dado de baja.", "Éxito", JOptionPane.PLAIN_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo dar de baja el cuartel.\nQuizás el cuartel ya haya sido dado de baja o no exista.", "Información", JOptionPane.INFORMATION_MESSAGE);
-            }
+            resultado = cuartelData.eliminarCuartelPorNombre(nombreStr);
+        }
+        if (resultado) {
+            this.limpiarCampos();
+            JOptionPane.showMessageDialog(this, "Cuartel dado de baja.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo dar de baja el cuartel.\nQuizás el cuartel ya haya sido dado de baja o no exista.", "Información", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_BtnEliminarActionPerformed
 

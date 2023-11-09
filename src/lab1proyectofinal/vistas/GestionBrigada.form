@@ -4,11 +4,14 @@
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
     <Property name="defaultCloseOperation" type="int" value="1"/>
-    <Property name="title" type="java.lang.String" value="Cuarteles"/>
+    <Property name="title" type="java.lang.String" value="Brigadas"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="internalFrameActivated" listener="javax.swing.event.InternalFrameListener" parameters="javax.swing.event.InternalFrameEvent" handler="formInternalFrameActivated"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -25,56 +28,40 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="titulo" alignment="1" max="32767" attributes="0"/>
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="nombreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="direccionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="telefonoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="codigoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="correoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="coordenadaXLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="nombreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="especialidadLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cuartelLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="nombreTF" max="32767" attributes="0"/>
+                          <Component id="especialidadCB" max="32767" attributes="0"/>
+                          <Component id="cuartelCB" max="32767" attributes="0"/>
+                          <Component id="codigoTF" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="coordenadaXTF" min="-2" pref="75" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="coordenadaYLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="coordenadaYTF" min="-2" pref="75" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="correoTF" pref="226" max="32767" attributes="0"/>
-                                  <Component id="nombreTF" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="direccionTF" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="telefonoTF" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="codigoTF" alignment="0" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="BtnBuscarNombre" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="BtnBuscarCodigo" alignment="1" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="BtnBuscarCodigo" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="BtnBuscarNombre" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <Component id="BtnLimpiar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="BtnGuardar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="BtnEliminar" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="40" max="32767" attributes="0"/>
                       <Component id="BtnSalir" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -97,34 +84,22 @@
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="direccionTF" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="direccionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="telefonoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="telefonoTF" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="especialidadLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="especialidadCB" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="correoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="correoTF" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cuartelLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cuartelCB" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="coordenadaXLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="coordenadaXTF" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="coordenadaYLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="coordenadaYTF" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="24" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="BtnLimpiar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="BtnGuardar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="BtnSalir" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="BtnEliminar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="BtnSalir" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -136,7 +111,7 @@
           <Font name="Segoe UI" size="14" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Formulario Cuartel"/>
+        <Property name="text" type="java.lang.String" value="Formulario Brigada"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="codigoLabel">
@@ -153,40 +128,35 @@
     </Component>
     <Component class="javax.swing.JTextField" name="nombreTF">
     </Component>
-    <Component class="javax.swing.JLabel" name="direccionLabel">
+    <Component class="javax.swing.JLabel" name="especialidadLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Direcci&#xf3;n:"/>
+        <Property name="text" type="java.lang.String" value="Especialidad:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="direccionTF">
-    </Component>
-    <Component class="javax.swing.JLabel" name="telefonoLabel">
+    <Component class="javax.swing.JComboBox" name="especialidadCB">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Tel&#xe9;fono:"/>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(Utils.obtenerEspecialidades())" type="code"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cuartelLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cuartel:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="telefonoTF">
-    </Component>
-    <Component class="javax.swing.JLabel" name="correoLabel">
+    <Component class="javax.swing.JComboBox" name="cuartelCB">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Correo Electr&#xf3;nico:"/>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="correoTF">
-    </Component>
-    <Component class="javax.swing.JLabel" name="coordenadaXLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Coordenada X:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="coordenadaXTF">
-    </Component>
-    <Component class="javax.swing.JLabel" name="coordenadaYLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Coordenada Y:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="coordenadaYTF">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Cuartel&gt;"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="BtnBuscarCodigo">
       <Properties>
