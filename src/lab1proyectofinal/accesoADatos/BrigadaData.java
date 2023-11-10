@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import lab1proyectofinal.entidades.Bombero;
@@ -22,37 +23,33 @@ public class BrigadaData {
     }
 
     public boolean guardarBrigada(Brigada brigada) {
-        if (!brigada.isEstado()) {
-            System.out.println("[BrigadaData.guardarBrigada] Error: no se puede guardar. Brigada dada de baja. " + brigada.toString());
+        if (brigada.getCodigoBrigada() != Utils.NIL || !brigada.isEstado()) {
+            System.out.println("[BrigadaData.guardarBrigada] Error: no se puede guardar. Brigada dada de baja o tiene codigoBrigada definido. " + brigada.DebugToString());
             return false;
         }
+
         boolean resultado = false;
         try {
-            String sql;
-            if (brigada.getCodigoBrigada() != -1) {
-                sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado, codigoBrigada) VALUES (?, ?, ?, ?, ?, ?);";
-            } else {
-                sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado) VALUES (?, ?, ?, ?, ?);";
-            }
-            PreparedStatement ps = connection.prepareStatement(sql);
+            String sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado) VALUES (?, ?, ?, ?, ?);";
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, brigada.getNombreBrigada());
             ps.setString(2, brigada.getEspecialidad());
             ps.setBoolean(3, brigada.isDisponible());
             ps.setInt(4, brigada.getCuartel().getCodigoCuartel());
             ps.setBoolean(5, brigada.isEstado());
-            if (brigada.getCodigoBrigada() != -1) {
-                ps.setInt(6, brigada.getCodigoBrigada());
-            }
-            if (ps.executeUpdate() > 0) {
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                brigada.setCodigoBrigada(rs.getInt(1));
                 resultado = true;
-                System.out.println("[BrigadaData.guardarBrigada] Agregada: " + brigada.toString());
+                System.out.println("[BrigadaData.guardarBrigada] Agregada: " + brigada.DebugToString());
             } else {
-                System.out.println("[BrigadaData.guardarBrigada] No se agregó: " + brigada.toString());
+                System.out.println("[BrigadaData.guardarBrigada] No se agregó: " + brigada.DebugToString());
             }
             ps.close();
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) { // Informar datos repetidos
-                System.out.println("[BrigadaData.guardarBrigada] Error: entrada duplicada para " + brigada.toString());
+                System.out.println("[BrigadaData.guardarBrigada] Error: entrada duplicada para " + brigada.DebugToString());
             } else {
                 e.printStackTrace();
             }
@@ -69,7 +66,7 @@ public class BrigadaData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 brigada = Utils.obtenerDeResultSetBrigada(rs);
-                System.out.println("[BrigadaData.buscarBrigada] Encontrada: " + brigada.toString());
+                System.out.println("[BrigadaData.buscarBrigada] Encontrada: " + brigada.DebugToString());
             } else {
                 System.out.println("[BrigadaData.buscarBrigada] No se ha encontrado con codigoBrigada=" + codigoBrigada);
             }
@@ -90,7 +87,7 @@ public class BrigadaData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 brigada = Utils.obtenerDeResultSetBrigada(rs);
-                System.out.println("[BrigadaData.buscarBrigadaPorNombre] Encontrada: " + brigada.toString());
+                System.out.println("[BrigadaData.buscarBrigadaPorNombre] Encontrada: " + brigada.DebugToString());
             } else {
                 System.out.println("[BrigadaData.buscarBrigadaPorNombre] No se ha encontrado con nombreBrigada='" + nombreBrigada + "'");
             }
@@ -180,10 +177,11 @@ public class BrigadaData {
     }
 
     public boolean modificarBrigada(Brigada brigada) {
-        if (!brigada.isEstado()) {
-            System.out.println("[BrigadaData.modificarBrigada] Error: no se puede guardar. Brigada dada de baja. " + brigada.toString());
+        if (brigada.getCodigoBrigada() == Utils.NIL || !brigada.isEstado()) {
+            System.out.println("[BrigadaData.modificarBrigada] Error: no se puede modificar. Brigada dada de baja o no tiene codigoBrigada definido. " + brigada.DebugToString());
             return false;
         }
+
         boolean resultado = false;
         try {
             String sql = "UPDATE brigada SET nombreBrigada=?, especialidad=?, disponible=?, codigoCuartel=? WHERE codigoBrigada=? AND estado=true";
@@ -196,9 +194,9 @@ public class BrigadaData {
             ps.setInt(6, brigada.getCodigoBrigada());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BrigadaData.modificarBrigada] Modificada: " + brigada.toString());
+                System.out.println("[BrigadaData.modificarBrigada] Modificada: " + brigada.DebugToString());
             } else {
-                System.out.println("[BrigadaData.modificarBrigada] No se modificó: " + brigada.toString());
+                System.out.println("[BrigadaData.modificarBrigada] No se modificó: " + brigada.DebugToString());
             }
             ps.close();
         } catch (SQLException e) {

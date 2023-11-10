@@ -2,9 +2,10 @@ package lab1proyectofinal.accesoADatos;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import lab1proyectofinal.entidades.Bombero;
@@ -22,39 +23,35 @@ public class BomberoData {
     }
 
     public boolean guardarBombero(Bombero bombero) {
-        if (!bombero.isEstado()) {
-            System.out.println("[BomberoData.guardarBombero] Error: no se puede guardar. Bombero dado de baja. " + bombero.toString());
+        if (bombero.getIdBombero() != Utils.NIL || !bombero.isEstado()) {
+            System.out.println("[BomberoData.guardarBombero] Error: no se puede guardar. Bombero dado de baja o tiene idBombero definido. " + bombero.DebugToString());
             return false;
         }
+
         boolean resultado = false;
         try {
-            String sql;
-            if (bombero.getIdBombero() == -1) {
-                sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            } else {
-                sql = "INSERT INTO bombero(dni, nombreApellido, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado, idBombero) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            }
-            PreparedStatement ps = connection.prepareStatement(sql);
+            String sql = "INSERT INTO bombero(dni, nombreCompleto, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, bombero.getDni());
             ps.setString(2, bombero.getNombreApellido());
             ps.setString(3, bombero.getGrupoSanguineo());
             ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
-            ps.setLong(5, bombero.getTelefono());
+            ps.setString(5, bombero.getCelular());
             ps.setInt(6, bombero.getBrigada().getCodigoBrigada());
-            ps.setBoolean(7, true);
-            if (bombero.getIdBombero() != -1) {
-                ps.setInt(8, bombero.getIdBombero());
-            }
-            if (ps.executeUpdate() > 0) {
+            ps.setBoolean(7, bombero.isEstado());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                bombero.setIdBombero(rs.getInt(1));
                 resultado = true;
-                System.out.println("[BomberoData.guardarBombero] Agregado: " + bombero.toString());
+                System.out.println("[BomberoData.guardarBombero] Agregado: " + bombero.DebugToString());
             } else {
-                System.out.println("[BomberoData.guardarBombero] No se agregó: " + bombero.toString());
+                System.out.println("[BomberoData.guardarBombero] No se agregó: " + bombero.DebugToString());
             }
             ps.close();
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) { // Informar datos repetidos
-                System.out.println("[BomberoData.guardarBombero] Error: entrada duplicada para " + bombero.toString());
+                System.out.println("[BomberoData.guardarBombero] Error: entrada duplicada para " + bombero.DebugToString());
             } else {
                 e.printStackTrace();
             }
@@ -71,7 +68,7 @@ public class BomberoData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 bombero = Utils.obtenerDeResultSetBombero(rs);
-                System.out.println("[BomberoData.buscarBombero] Encontrado: " + bombero.toString());
+                System.out.println("[BomberoData.buscarBombero] Encontrado: " + bombero.DebugToString());
             } else {
                 System.out.println("[BomberoData.buscarBombero] No se ha encontrado con idBombero=" + idBombero);
             }
@@ -92,7 +89,7 @@ public class BomberoData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 bombero = Utils.obtenerDeResultSetBombero(rs);
-                System.out.println("[BomberoData.buscarBomberoPorDni] Encontrado: " + bombero.toString());
+                System.out.println("[BomberoData.buscarBomberoPorDni] Encontrado: " + bombero.DebugToString());
             } else {
                 System.out.println("[BomberoData.buscarBomberoPorDni] No se ha encontrado con dni=" + dni);
             }
@@ -124,26 +121,27 @@ public class BomberoData {
     }
 
     public boolean modificarBombero(Bombero bombero) {
-        if (!bombero.isEstado()) {
-            System.out.println("[BomberoData.guardarBombero] Error: no se puede guardar. Bombero dado de baja. " + bombero.toString());
+        if (bombero.getIdBombero() == Utils.NIL || !bombero.isEstado()) {
+            System.out.println("[BomberoData.modificarBombero] Error: no se puede modificar. Bombero dado de baja o no tiene idBombero definido. " + bombero.DebugToString());
             return false;
         }
+
         boolean resultado = false;
         try {
-            String sql = "UPDATE bombero SET dni=?, nombreApellido=?, grupoSanguineo=?, fechaNacimiento=?, celular=?, codigoBrigada=? WHERE idBombero=? AND estado=true";
+            String sql = "UPDATE bombero SET dni=?, nombreCompleto=?, grupoSanguineo=?, fechaNacimiento=?, celular=?, codigoBrigada=? WHERE idBombero=? AND estado=true";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
             ps.setString(2, bombero.getNombreApellido());
             ps.setString(3, bombero.getGrupoSanguineo());
             ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
-            ps.setLong(5, bombero.getTelefono());
+            ps.setString(5, bombero.getCelular());
             ps.setInt(6, bombero.getBrigada().getCodigoBrigada());
             ps.setInt(7, bombero.getIdBombero());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BomberoData.modificarBombero] Modificado: " + bombero.toString());
+                System.out.println("[BomberoData.modificarBombero] Modificado: " + bombero.DebugToString());
             } else {
-                System.out.println("[BomberoData.modificarBombero] No se modificó: " + bombero.toString());
+                System.out.println("[BomberoData.modificarBombero] No se modificó: " + bombero.DebugToString());
             }
             ps.close();
         } catch (SQLException e) {

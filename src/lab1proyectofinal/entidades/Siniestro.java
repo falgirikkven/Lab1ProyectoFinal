@@ -1,6 +1,7 @@
 package lab1proyectofinal.entidades;
 
 import java.time.LocalDateTime;
+import lab1proyectofinal.accesoADatos.Utils;
 
 /**
  *
@@ -11,57 +12,50 @@ public class Siniestro {
     /**
      * SUJETO A CAMBIOS
      */
-    public static final int PUNTUACION_NIL = -1;
     public static final int PUNTUACION_MIN = 1;
     public static final int PUNTUACION_MAX = 10;
 
-    private int codigoSiniestro;
+    private int codigoSiniestro = Utils.NIL;
     private String tipo;
     private LocalDateTime fechaSiniestro;
     private int coordenadaX;
     private int coordenadaY;
     private String detalles;
+    private Brigada brigada;
     private LocalDateTime fechaResolucion;
     private int puntuacion;
-    private int codigoBrigada;
 
     public Siniestro() {
     }
 
-    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada) {
-        this.codigoSiniestro = -1;
+    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles) {
+        this.tipo = tipo;
+        this.fechaSiniestro = fechaSiniestro;
+        this.coordenadaX = coordenadaX;
+        this.coordenadaY = coordenadaY;
+        this.detalles = detalles;
+    }
+
+    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, Brigada brigada) {
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;
         this.detalles = detalles;
         this.fechaResolucion = null;
-        this.puntuacion = PUNTUACION_NIL;
-        this.codigoBrigada = codigoBrigada;
+        this.puntuacion = Utils.NIL;;
+        this.brigada = brigada;
     }
 
-    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada, LocalDateTime fechaResolucion, int puntuacion) {
-        this.codigoSiniestro = -1;
+    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, Brigada brigada, LocalDateTime fechaResolucion, int puntuacion) {
         this.tipo = tipo;
         this.fechaSiniestro = fechaSiniestro;
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;
         this.detalles = detalles;
+        this.brigada = brigada;
         this.fechaResolucion = fechaResolucion;
         this.puntuacion = puntuacion;
-        this.codigoBrigada = codigoBrigada;
-    }
-
-    public Siniestro(String tipo, LocalDateTime fechaSiniestro, int coordenadaX, int coordenadaY, String detalles, int codigoBrigada, LocalDateTime fechaResolucion, int puntuacion, int codigoSiniestro) {
-        this.codigoSiniestro = codigoSiniestro;
-        this.tipo = tipo;
-        this.fechaSiniestro = fechaSiniestro;
-        this.coordenadaX = coordenadaX;
-        this.coordenadaY = coordenadaY;
-        this.detalles = detalles;
-        this.fechaResolucion = fechaResolucion;
-        this.puntuacion = puntuacion;
-        this.codigoBrigada = codigoBrigada;
     }
 
     public int getCodigoSiniestro() {
@@ -112,6 +106,14 @@ public class Siniestro {
         this.detalles = detalles;
     }
 
+    public Brigada getBrigada() {
+        return brigada;
+    }
+
+    public void setBrigada(Brigada brigada) {
+        this.brigada = brigada;
+    }
+
     public LocalDateTime getFechaResolucion() {
         return fechaResolucion;
     }
@@ -128,17 +130,13 @@ public class Siniestro {
         this.puntuacion = puntuacion;
     }
 
-    public int getCodigoBrigada() {
-        return codigoBrigada;
-    }
-
-    public void setCodigoBrigada(int codigoBrigada) {
-        this.codigoBrigada = codigoBrigada;
-    }
-
-    @Override
-    public String toString() {
-        return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaSiniestro=" + fechaSiniestro + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", codigoBrigada=" + codigoBrigada + ", fechaResolucion=" + fechaResolucion + ", puntuacion=" + puntuacion + '}';
+    public String DebugToString() {
+        if (brigada == null) {
+            return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaSiniestro=" + fechaSiniestro + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + '}';
+        } else if (fechaResolucion == null) {
+            return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaSiniestro=" + fechaSiniestro + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", codigoBrigada=" + Integer.toString(brigada.getCodigoBrigada()) + '}';
+        }
+        return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaSiniestro=" + fechaSiniestro + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", codigoBrigada=" + Integer.toString(brigada.getCodigoBrigada()) + ", fechaResolucion=" + fechaResolucion + ", puntuacion=" + puntuacion + '}';
     }
 
 }

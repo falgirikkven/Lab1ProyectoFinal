@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
@@ -27,35 +28,35 @@ public class SiniestroData {
     }
 
     public boolean guardarSiniestro(Siniestro siniestro) {
+        if (siniestro.getCodigoSiniestro() != Utils.NIL) {
+            System.out.println("[SiniestroData.guardarSiniestro] Error: no se puede guardar. Siniestro dado de baja o tiene codigoSiniestro definido. " + siniestro.DebugToString());
+            return false;
+        }
 
+        // NOTA: Por principio de responsabilidad unica, creo que esta verificacion no deberia estar aca
         int puntuacion = siniestro.getPuntuacion();
         LocalDateTime fechaResolucion = siniestro.getFechaResolucion();
-        if (!(fechaResolucion == null && puntuacion == Siniestro.PUNTUACION_NIL) && !(fechaResolucion != null && puntuacion != Siniestro.PUNTUACION_NIL)) {
-            System.out.println("[SiniestroData.guardarSiniestro] Error: datos de resolucion inconsistentes. " + siniestro.toString());
+        if (!(fechaResolucion == null && puntuacion == Utils.NIL) && !(fechaResolucion != null && puntuacion != Utils.NIL)) {
+            System.out.println("[SiniestroData.guardarSiniestro] Error: datos de resolucion inconsistentes. " + siniestro.DebugToString());
             return false;
-        } else if (puntuacion != Siniestro.PUNTUACION_NIL && (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX)) {
-            System.out.println("[SiniestroData.guardarSiniestro] Error: puntuacion de resolucion fuera de rango. " + siniestro.toString());
+        } else if (puntuacion != Utils.NIL && (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX)) {
+            System.out.println("[SiniestroData.guardarSiniestro] Error: puntuacion de resolucion fuera de rango. " + siniestro.DebugToString());
             return false;
         } else if (fechaResolucion != null && siniestro.getFechaSiniestro().isAfter(fechaResolucion)) {
-            System.out.println("[SiniestroData.guardarSiniestro] Error: fecha de siniestro es posterior a la fecha de resolucion. " + siniestro.toString());
+            System.out.println("[SiniestroData.guardarSiniestro] Error: fecha de siniestro es posterior a la fecha de resolucion. " + siniestro.DebugToString());
             return false;
         }
 
         boolean resultado = false;
         try {
-            String sql;
-            if (siniestro.getCodigoSiniestro() != -1) {
-                sql = "INSERT INTO siniestro(tipo, fechaSiniestro, coordenadaX, coordenadaY, detalles, codigoBrigada, fechaResolucion, puntuacion, codigoSiniestro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            } else {
-                sql = "INSERT INTO siniestro(tipo, fechaSiniestro, coordenadaX, coordenadaY, detalles, codigoBrigada, fechaResolucion, puntuacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            }
-            PreparedStatement ps = connection.prepareStatement(sql);
+            String sql = "INSERT INTO siniestro(tipo, fechaHoraInicio, coordenadaX, coordenadaY, detalles, codigoBrigada, fechaHoraResolucion, puntuacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, siniestro.getTipo());
             ps.setTimestamp(2, Timestamp.valueOf(siniestro.getFechaSiniestro()));
             ps.setInt(3, siniestro.getCoordenadaX());
             ps.setInt(4, siniestro.getCoordenadaY());
             ps.setString(5, siniestro.getDetalles());
-            ps.setInt(6, siniestro.getCodigoBrigada());
+            ps.setInt(6, siniestro.getBrigada().getCodigoBrigada());
             if (fechaResolucion == null) {
                 ps.setNull(7, Types.TIMESTAMP);
                 ps.setInt(8, puntuacion);
@@ -63,19 +64,19 @@ public class SiniestroData {
                 ps.setTimestamp(7, Timestamp.valueOf(siniestro.getFechaResolucion()));
                 ps.setInt(8, puntuacion);
             }
-            if (siniestro.getCodigoSiniestro() != -1) {
-                ps.setInt(9, siniestro.getCodigoSiniestro());
-            }
-            if (ps.executeUpdate() > 0) {
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                siniestro.setCodigoSiniestro(rs.getInt(1));
                 resultado = true;
-                System.out.println("[SiniestroData.guardarSiniestro] Agregado: " + siniestro.toString());
+                System.out.println("[SiniestroData.guardarSiniestro] Agregado: " + siniestro.DebugToString());
             } else {
-                System.out.println("[SiniestroData.guardarSiniestro] No se agregó: " + siniestro.toString());
+                System.out.println("[SiniestroData.guardarSiniestro] No se agregó: " + siniestro.DebugToString());
             }
             ps.close();
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) { // Informar datos repetidos
-                System.out.println("[SiniestroData.guardarSiniestro] Error: entrada duplicada para " + siniestro.toString());
+                System.out.println("[SiniestroData.guardarSiniestro] Error: entrada duplicada para " + siniestro.DebugToString());
             } else {
                 e.printStackTrace();
             }
@@ -86,15 +87,15 @@ public class SiniestroData {
     public Siniestro buscarSiniestro(int codigoSiniestro) {
         Siniestro siniestro = null;
         try {
-            String sql = "SELECT * FROM siniestro WHERE codigoSiniestro=?;";
+            String sql = "SELECT * FROM siniestro JOIN brigada JOIN cuartel ON (siniestro.codigoBrigada=brigada.codigoBrigada AND brigada.codigoCuartel=cuartel.codigoCuartel) WHERE codigoSiniestro=?;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoSiniestro);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 siniestro = Utils.obtenerDeResultSetSiniestro(rs);
-                System.out.println("[SiniestroData.buscarSiniestro] Encontrado: " + siniestro.toString());
+                System.out.println("[SiniestroData.buscarSiniestro] Encontrado: " + siniestro.DebugToString());
             } else {
-                System.out.println("[CuartelData.buscarCuartel] No se ha encontrado con codigoSiniestro=" + codigoSiniestro);
+                System.out.println("[SiniestroData.buscarSiniestro] No se ha encontrado con codigoSiniestro=" + codigoSiniestro);
             }
             ps.close();
         } catch (SQLException e) {
@@ -107,7 +108,7 @@ public class SiniestroData {
     public List<Siniestro> listarSiniestros() {
         List<Siniestro> siniestros = null;
         try {
-            String sql = "SELECT * FROM siniestro";
+            String sql = "SELECT * FROM siniestro JOIN brigada JOIN cuartel ON (siniestro.codigoBrigada=brigada.codigoBrigada AND brigada.codigoCuartel=cuartel.codigoCuartel)";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             siniestros = new ArrayList();
@@ -126,7 +127,7 @@ public class SiniestroData {
     public List<Siniestro> listarSiniestrosSinResolucion() {
         List<Siniestro> siniestros = null;
         try {
-            String sql = "SELECT * FROM siniestro WHERE puntuacion=-1";
+            String sql = "SELECT * FROM siniestro JOIN brigada JOIN cuartel ON (siniestro.codigoBrigada=brigada.codigoBrigada AND brigada.codigoCuartel=cuartel.codigoCuartel) WHERE puntuacion=-1;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             siniestros = new ArrayList();
@@ -144,7 +145,7 @@ public class SiniestroData {
 
     public List<Siniestro> listarSiniestrosEntreFechas(LocalDateTime fecha1, LocalDateTime fecha2) {
         List<Siniestro> siniestros = null;
-        String sql = "SELECT * FROM siniestro WHERE fechaSiniestro BETWEEN ? AND ?";
+        String sql = "SELECT * FROM siniestro JOIN brigada JOIN cuartel ON (siniestro.codigoBrigada=brigada.codigoBrigada AND brigada.codigoCuartel=cuartel.codigoCuartel) WHERE fechaHoraInicio BETWEEN ? AND ?;";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setTimestamp(1, Timestamp.valueOf(fecha1));
@@ -164,31 +165,36 @@ public class SiniestroData {
     }
 
     public boolean modificarSiniestro(Siniestro siniestro) {
+        if (siniestro.getCodigoSiniestro() == Utils.NIL) {
+            System.out.println("[SiniestroData.modificarSiniestro] Error: no se puede modificar. Siniestro dado de baja o no tiene codigoSiniestro definido. " + siniestro.DebugToString());
+            return false;
+        }
 
+        // NOTA: Por principio de responsabilidad unica, creo que esta verificacion no deberia estar aca
         int puntuacion = siniestro.getPuntuacion();
         LocalDateTime fechaResolucion = siniestro.getFechaResolucion();
-        if (!(fechaResolucion == null && puntuacion == Siniestro.PUNTUACION_NIL) && !(fechaResolucion != null && puntuacion != Siniestro.PUNTUACION_NIL)) {
-            System.out.println("[SiniestroData.modificarSiniestro] Error: datos de resolucion inconsistentes. " + siniestro.toString());
+        if (!(fechaResolucion == null && puntuacion == Utils.NIL) && !(fechaResolucion != null && puntuacion != Utils.NIL)) {
+            System.out.println("[SiniestroData.modificarSiniestro] Error: datos de resolucion inconsistentes. " + siniestro.DebugToString());
             return false;
-        } else if (puntuacion != Siniestro.PUNTUACION_NIL && (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX)) {
-            System.out.println("[SiniestroData.modificarSiniestro] Error: puntuacion de resolucion fuera de rango. " + siniestro.toString());
+        } else if (puntuacion != Utils.NIL && (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX)) {
+            System.out.println("[SiniestroData.modificarSiniestro] Error: puntuacion de resolucion fuera de rango. " + siniestro.DebugToString());
             return false;
         } else if (fechaResolucion != null && siniestro.getFechaSiniestro().isAfter(fechaResolucion)) {
-            System.out.println("[SiniestroData.modificarSiniestro] Error: fecha de siniestro es posterior a la fecha de resolucion. " + siniestro.toString());
+            System.out.println("[SiniestroData.modificarSiniestro] Error: fecha de siniestro es posterior a la fecha de resolucion. " + siniestro.DebugToString());
             return false;
         }
 
         boolean resultado = false;
         try {
             String sql;
-            sql = "UPDATE siniestro SET tipo=?, fechaSiniestro=?, coordenadaX=?, coordenadaY=?, detalles=?, codigoBrigada=?, fechaResolucion=?, puntuacion=? WHERE codigoSiniestro=?";
+            sql = "UPDATE siniestro SET tipo=?, fechaHoraInicio=?, coordenadaX=?, coordenadaY=?, detalles=?, codigoBrigada=?, fechaHoraResolucion=?, puntuacion=? WHERE codigoSiniestro=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, siniestro.getTipo());
             ps.setTimestamp(2, Timestamp.valueOf(siniestro.getFechaSiniestro()));
             ps.setInt(3, siniestro.getCoordenadaX());
             ps.setInt(4, siniestro.getCoordenadaY());
             ps.setString(5, siniestro.getDetalles());
-            ps.setInt(6, siniestro.getCodigoBrigada());
+            ps.setInt(6, siniestro.getBrigada().getCodigoBrigada());
             if (fechaResolucion == null) {
                 ps.setNull(7, Types.TIMESTAMP);
                 ps.setInt(8, puntuacion);
@@ -196,14 +202,12 @@ public class SiniestroData {
                 ps.setTimestamp(7, Timestamp.valueOf(siniestro.getFechaResolucion()));
                 ps.setInt(8, puntuacion);
             }
-            if (siniestro.getCodigoSiniestro() != -1) {
-                ps.setInt(9, siniestro.getCodigoSiniestro());
-            }
+            ps.setInt(9, siniestro.getCodigoSiniestro());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[SiniestroData.modificarSiniestro] Modificado: " + siniestro.toString());
+                System.out.println("[SiniestroData.modificarSiniestro] Modificado: " + siniestro.DebugToString());
             } else {
-                System.out.println("[SiniestroData.modificarSiniestro] No se modificó: " + siniestro.toString());
+                System.out.println("[SiniestroData.modificarSiniestro] No se modificó: " + siniestro.DebugToString());
             }
             ps.close();
         } catch (SQLException e) {
@@ -214,7 +218,7 @@ public class SiniestroData {
     }
 
     public boolean asignarResolucion(Siniestro siniestro, LocalDateTime fechaResolucion, int puntuacion) {
-        if (fechaResolucion == null || puntuacion == Siniestro.PUNTUACION_NIL) {
+        if (fechaResolucion == null || puntuacion == Utils.NIL) {
             System.out.println("[SiniestroData.asignarResolucion] Error: datos de resolucion inconsistentes");
             return false;
         } else if ((puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX)) {
@@ -228,7 +232,7 @@ public class SiniestroData {
         boolean resultado = false;
         try {
             String sql;
-            sql = "UPDATE siniestro SET fechaResolucion=?, puntuacion=? WHERE codigoSiniestro=?";
+            sql = "UPDATE siniestro SET fechaHoraResolucion=?, puntuacion=? WHERE codigoSiniestro=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setNull(1, Types.TIMESTAMP);
             ps.setInt(2, puntuacion);

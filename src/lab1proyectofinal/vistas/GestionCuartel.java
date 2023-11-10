@@ -314,7 +314,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             return;
         }
 
-        Cuartel cuartel = new Cuartel(codigo, nombreStr, direccionStr, coordenadaX, coordenadaY, telefonoStr, correoStr, true);
+        Cuartel cuartel = new Cuartel(nombreStr, direccionStr, coordenadaX, coordenadaY, telefonoStr, correoStr);
         if (cuartelData.guardarCuartel(cuartel)) {
             JOptionPane.showMessageDialog(this, "Cuartel guardado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {

@@ -1,5 +1,7 @@
 package lab1proyectofinal.entidades;
 
+import lab1proyectofinal.accesoADatos.Utils;
+
 /**
  *
  * @author Grupo-3
@@ -9,38 +11,25 @@ public class Cuartel {
     /**
      * SUJETO A CAMBIOS
      */
-    private int codigoCuartel;
+    private int codigoCuartel = Utils.NIL;
     private String nombreCuartel;
     private String direccion;
     private int coordenadaX;
     private int coordenadaY;
     private String telefono;
     private String correo;
-    private boolean estado;
+    private boolean estado = true;
 
     public Cuartel() {
     }
 
     public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo) {
-        this.codigoCuartel = -1;
         this.nombreCuartel = nombreCuartel;
         this.direccion = direccion;
         this.coordenadaX = coordenadaX;
         this.coordenadaY = coordenadaY;
         this.telefono = telefono;
         this.correo = correo;
-        this.estado = true;
-    }
-
-    public Cuartel(int codigoCuartel, String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo, boolean estado) {
-        this.codigoCuartel = codigoCuartel;
-        this.nombreCuartel = nombreCuartel;
-        this.direccion = direccion;
-        this.coordenadaX = coordenadaX;
-        this.coordenadaY = coordenadaY;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.estado = estado;
     }
 
     public int getCodigoCuartel() {
@@ -107,8 +96,7 @@ public class Cuartel {
         this.estado = estado;
     }
 
-    @Override
-    public String toString() {
+    public String DebugToString() {
         return "Cuartel{" + "codigoCuartel=" + codigoCuartel + ", nombreCuartel=" + nombreCuartel + ", direccion=" + direccion + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", telefono=" + telefono + ", correo=" + correo + ", estado=" + estado + '}';
     }
 

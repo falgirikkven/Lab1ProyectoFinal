@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import lab1proyectofinal.entidades.Bombero;
@@ -24,19 +25,15 @@ public class CuartelData {
     }
 
     public boolean guardarCuartel(Cuartel cuartel) {
-        if (!cuartel.isEstado()) {
-            System.out.println("[CuartelData.guardarCuartel] Error: no se puede guardar. Cuartel dado de baja. " + cuartel.toString());
+        if (cuartel.getCodigoCuartel() != Utils.NIL || !cuartel.isEstado()) {
+            System.out.println("[CuartelData.guardarCuartel] Error: no se puede guardar. Cuartel dado de baja o tiene codigoCuartel definido. " + cuartel.DebugToString());
             return false;
         }
+
         boolean resultado = false;
         try {
-            String sql;
-            if (cuartel.getCodigoCuartel() == -1) {
-                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            } else {
-                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            }
-            PreparedStatement ps = connection.prepareStatement(sql);
+            String sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, cuartel.getNombreCuartel());
             ps.setString(2, cuartel.getDireccion());
             ps.setInt(3, cuartel.getCoordenadaX());
@@ -44,19 +41,19 @@ public class CuartelData {
             ps.setString(5, cuartel.getTelefono());
             ps.setString(6, cuartel.getCorreo());
             ps.setBoolean(7, cuartel.isEstado());
-            if (cuartel.getCodigoCuartel() != -1) {
-                ps.setInt(8, cuartel.getCodigoCuartel());
-            }
-            if (ps.executeUpdate() > 0) {
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                cuartel.setCodigoCuartel(rs.getInt(1));
                 resultado = true;
-                System.out.println("[CuartelData.guardarCuartel] Agregado: " + cuartel.toString());
+                System.out.println("[CuartelData.guardarCuartel] Agregado: " + cuartel.DebugToString());
             } else {
-                System.out.println("[CuartelData.guardarCuartel] No se agregó: " + cuartel.toString());
+                System.out.println("[CuartelData.guardarCuartel] No se agregó: " + cuartel.DebugToString());
             }
             ps.close();
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) { // Informar datos repetidos
-                System.out.println("[CuartelData.guardarCuartel] Error: entrada duplicada para " + cuartel.toString());
+                System.out.println("[CuartelData.guardarCuartel] Error: entrada duplicada para " + cuartel.DebugToString());
             } else {
                 e.printStackTrace();
             }
@@ -73,7 +70,7 @@ public class CuartelData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 cuartel = Utils.obtenerDeResultSetCuartel(rs);
-                System.out.println("[CuartelData.buscarCuartel] Encontrado: " + cuartel.toString());
+                System.out.println("[CuartelData.buscarCuartel] Encontrado: " + cuartel.DebugToString());
             } else {
                 System.out.println("[CuartelData.buscarCuartel] No se ha encontrado con codigoCuartel=" + codigoCuartel);
             }
@@ -94,7 +91,7 @@ public class CuartelData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 cuartel = Utils.obtenerDeResultSetCuartel(rs);
-                System.out.println("[CuartelData.buscarCuartelPorNombre] Encontrado: " + cuartel.toString());
+                System.out.println("[CuartelData.buscarCuartelPorNombre] Encontrado: " + cuartel.DebugToString());
             } else {
                 System.out.println("[CuartelData.buscarCuartelPorNombre] No se ha encontrado con nombreCuartel='" + nombreCuartel + "'");
             }
@@ -166,10 +163,11 @@ public class CuartelData {
     }
 
     public boolean modificarCuartel(Cuartel cuartel) {
-        if (!cuartel.isEstado()) {
-            System.out.println("[CuartelData.modificarCuartel] Error: no se puede modificar. Cuartel dado de baja. " + cuartel.toString());
+        if (cuartel.getCodigoCuartel() == Utils.NIL || !cuartel.isEstado()) {
+            System.out.println("[CuartelData.modificarCuartel] Error: no se puede modificar. Cuartel dado de baja o no tiene codigoCuartel definido. " + cuartel.DebugToString());
             return false;
         }
+
         boolean resultado = false;
         try {
             String sql = "UPDATE cuartel SET nombreCuartel=?, direccion=?, coordenadaX=?, coordenadaY=?, telefono=?, correo=? WHERE codigoCuartel=? AND estado=true";
@@ -183,9 +181,9 @@ public class CuartelData {
             ps.setInt(7, cuartel.getCodigoCuartel());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[CuartelData.modificarCuartel] Modificado: " + cuartel.toString());
+                System.out.println("[CuartelData.modificarCuartel] Modificado: " + cuartel.DebugToString());
             } else {
-                System.out.println("[CuartelData.modificarCuartel] No se modificó: " + cuartel.toString());
+                System.out.println("[CuartelData.modificarCuartel] No se modificó: " + cuartel.DebugToString());
             }
         } catch (SQLException e) {
             System.out.println("[CuartelData.modificarCuartel] Error" + e.getErrorCode() + ": " + e.getMessage());

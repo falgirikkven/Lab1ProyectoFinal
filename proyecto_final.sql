@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-11-2023 a las 03:29:11
+-- Tiempo de generación: 10-11-2023 a las 00:59:57
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `bombero` (
   `idBombero` int(11) NOT NULL,
   `dni` int(11) NOT NULL,
-  `nombreApellido` varchar(50) NOT NULL,
+  `nombreCompleto` varchar(50) NOT NULL,
   `grupoSanguineo` varchar(8) NOT NULL,
   `fechaNacimiento` date NOT NULL,
   `celular` varchar(15) NOT NULL,
@@ -79,11 +79,11 @@ CREATE TABLE `cuartel` (
 CREATE TABLE `siniestro` (
   `codigoSiniestro` int(11) NOT NULL,
   `tipo` varchar(30) NOT NULL,
-  `fechaSiniestro` date NOT NULL,
+  `fechaHoraInicio` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `coordenadaX` int(11) NOT NULL,
   `coordenadaY` int(11) NOT NULL,
   `detalles` text NOT NULL,
-  `fechaResolucion` date DEFAULT NULL,
+  `fechaHoraResolucion` datetime DEFAULT NULL,
   `puntuacion` int(11) NOT NULL,
   `codigoBrigada` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
