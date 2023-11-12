@@ -28,31 +28,33 @@ public class SiniestroData {
 
     public boolean guardarSiniestro(Siniestro siniestro) {
         boolean resultado = false;
+
+        // corroborando la validez de los datos ingresados
+        int puntuacion = siniestro.getPuntuacion();
+        LocalDateTime fecHorIni = siniestro.getFechaHoraInicio();
+        LocalDateTime fecHorRes = siniestro.getFechaHoraResolucion();
+        LocalDateTime fecActual = LocalDateTime.now();
+        if (fecHorIni.isAfter(fecActual)) {
+            System.out.println("[SiniestroData] Error al agregar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora actual");
+            return resultado;
+        }
+        if (fecHorRes != null && puntuacion != Siniestro.PUNTUACION_NIL) {
+            if (fecHorIni.isAfter(fecHorRes)) {
+                System.out.println("[SiniestroData] Error al agregar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora de resolución de la misma");
+                return resultado;
+            } else if (fecHorRes.isAfter(fecActual)) {
+                System.out.println("[SiniestroData] Error al agregar. La fecha y hora de resolución de la emergencia no puede ser posterior a la fecha y hora actual");
+                return resultado;
+            } else if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
+                System.out.println("[SiniestroData] Error al agregar. Puntuacion fuera de rango");
+                return resultado;
+            }
+        } else if (fecHorRes != null || puntuacion != Siniestro.PUNTUACION_NIL) {
+            System.out.println("[SiniestroData] Error al agregar. No se puede establecer una fecha de resolución sin establecer una puntuación, ni viceversa");
+            return false;
+        }
         try {
-            // corroborando la validez de los datos ingresados
-            int puntuacion = siniestro.getPuntuacion();
-            LocalDateTime fecHorIni = siniestro.getFechaHoraInicio();
-            LocalDateTime fecHorRes = siniestro.getFechaHoraResolucion();
-            if (fecHorIni.isAfter(LocalDateTime.now())) {
-                    System.out.println("[SiniestroData] Error al agregar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora actual");
-                    return resultado;
-            } 
-            if (fecHorRes != null && puntuacion != Siniestro.PUNTUACION_NIL) {
-                if (fecHorIni.isAfter(fecHorRes)) {
-                    System.out.println("[SiniestroData] Error al agregar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora de resolución de la misma");
-                    return resultado;
-                } else if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
-                    System.out.println("[SiniestroData] Error al agregar. Puntuacion fuera de rango");
-                    return resultado;
-                }  
-            }
-            
-            String sql;
-            if (siniestro.getCodigoSiniestro() != -1) {
-                sql = "INSERT INTO siniestro(tipo, fechaHoraInicio, coordenadaX, coordenadaY, detalles, codigoBrigada, fechaHoraResolucion, puntuacion, codigoSiniestro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            } else {
-                sql = "INSERT INTO siniestro(tipo, fechaHoraInicio, coordenadaX, coordenadaY, detalles, codigoBrigada, fechaHoraResolucion, puntuacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            }
+            String sql = "INSERT INTO siniestro(tipo, fechaHoraInicio, coordenadaX, coordenadaY, detalles, codigoBrigada, fechaHoraResolucion, puntuacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, siniestro.getTipo());
             ps.setTimestamp(2, Timestamp.valueOf(fecHorIni));
@@ -60,19 +62,13 @@ public class SiniestroData {
             ps.setInt(4, siniestro.getCoordenadaY());
             ps.setString(5, siniestro.getDetalles());
             ps.setInt(6, siniestro.getBrigada().getCodigoBrigada());
+            // llegados a este punto del código, respecto de 'fechaHoraResolucion' y 'puntuacion' podemos decir que o ambos están establecido, o ambos no están establecidos
             if (fecHorRes == null && puntuacion == Siniestro.PUNTUACION_NIL) {
                 ps.setNull(7, Types.TIMESTAMP);
                 ps.setInt(8, puntuacion);
             } else if (fecHorRes != null && puntuacion != Siniestro.PUNTUACION_NIL) {
                 ps.setTimestamp(7, Timestamp.valueOf(fecHorRes));
                 ps.setInt(8, puntuacion);
-            } else {
-                ps.close();
-                System.out.println("[SiniestroData] Error al agregar. No puede establecer la puntuación sin establecer la fecha de resolución, ni viceversa");
-                return resultado;
-            }
-            if (siniestro.getCodigoSiniestro() != -1) {
-                ps.setInt(9, siniestro.getCodigoSiniestro());
             }
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
@@ -85,8 +81,6 @@ public class SiniestroData {
             }
             ps.close();
         } catch (SQLException e) {
-            // System.out.println("[SiniestroData Error " + e.getErrorCode() + "] " + e.getMessage());
-            // e.printStackTrace();
             int errorCode = e.getErrorCode();
             System.out.println("[SiniestroData Error " + errorCode + "] " + e.getMessage());
             if (errorCode != 1062) { // Ignorar datos repetidos
@@ -129,7 +123,7 @@ public class SiniestroData {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             Siniestro siniestro;
-            if (rs.next()) {
+            while (rs.next()) {
                 siniestro = Utils.obtenerDeResultSetSiniestro(rs);
                 siniestros.add(siniestro);
             }
@@ -150,7 +144,7 @@ public class SiniestroData {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             Siniestro siniestro;
-            if (rs.next()) {
+            while (rs.next()) {
                 siniestro = Utils.obtenerDeResultSetSiniestro(rs);
                 siniestros.add(siniestro);
             }
@@ -171,7 +165,7 @@ public class SiniestroData {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             Siniestro siniestro;
-            if (rs.next()) {
+            while (rs.next()) {
                 siniestro = Utils.obtenerDeResultSetSiniestro(rs);
                 siniestros.add(siniestro);
             }
@@ -187,7 +181,7 @@ public class SiniestroData {
         List<Siniestro> siniestros = new ArrayList();
         try {
             String sql = "SELECT * FROM siniestro, brigada, cuartel "
-                    + "WHERE (fechaHoraInicio>=? AND fechaHoraResolucion<=?) "      // comparar NULL con algo podría ser fuente de errores
+                    + "WHERE (fechaHoraInicio>=? AND fechaHoraResolucion<=?) " // comparar NULL con algo podría ser fuente de errores
                     + "AND siniestro.codigoBrigada=brigada.codigoBrigada "
                     + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -195,7 +189,7 @@ public class SiniestroData {
             ps.setTimestamp(2, Timestamp.valueOf(fecha2));
             ResultSet rs = ps.executeQuery();
             Siniestro siniestro;
-            if (rs.next()) {
+            while (rs.next()) {
                 siniestro = Utils.obtenerDeResultSetSiniestro(rs);
                 siniestros.add(siniestro);
             }
@@ -206,12 +200,12 @@ public class SiniestroData {
         }
         return siniestros;
     }
-    
+
     public List<Siniestro> listarSiniestrosInicioEntreFechas(LocalDateTime fecha1, LocalDateTime fecha2) {
         List<Siniestro> siniestros = new ArrayList();
         try {
             String sql = "SELECT * FROM siniestro, brigada, cuartel "
-                    + "WHERE (fechaHoraInicio>=? AND fechaHoraInicio<=?) "      
+                    + "WHERE (fechaHoraInicio BETWEEN ? and ?) "
                     + "AND siniestro.codigoBrigada=brigada.codigoBrigada "
                     + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -219,7 +213,7 @@ public class SiniestroData {
             ps.setTimestamp(2, Timestamp.valueOf(fecha2));
             ResultSet rs = ps.executeQuery();
             Siniestro siniestro;
-            if (rs.next()) {
+            while (rs.next()) {
                 siniestro = Utils.obtenerDeResultSetSiniestro(rs);
                 siniestros.add(siniestro);
             }
@@ -233,6 +227,31 @@ public class SiniestroData {
 
     public boolean modificarSiniestro(Siniestro siniestro) {
         boolean resultado = false;
+
+        // corroborando la validez de los datos ingresados
+        int puntuacion = siniestro.getPuntuacion();
+        LocalDateTime fecHorIni = siniestro.getFechaHoraInicio();
+        LocalDateTime fecHorRes = siniestro.getFechaHoraResolucion();
+        LocalDateTime fecActual = LocalDateTime.now();
+        if (fecHorIni.isAfter(fecActual)) {
+            System.out.println("[SiniestroData] Error al modificar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora actual");
+            return resultado;
+        }
+        if (fecHorRes != null && puntuacion != Siniestro.PUNTUACION_NIL) {
+            if (fecHorIni.isAfter(fecHorRes)) {
+                System.out.println("[SiniestroData] Error al modificar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora de resolución de la misma");
+                return resultado;
+            } else if (fecHorRes.isAfter(fecActual)) {
+                System.out.println("[SiniestroData] Error al modificar. La fecha y hora de resolución de la emergencia no puede ser posterior a la fecha y hora actual");
+                return resultado;
+            } else if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
+                System.out.println("[SiniestroData] Error al modificar. Puntuacion fuera de rango");
+                return resultado;
+            }
+        } else if (fecHorRes != null || puntuacion != Siniestro.PUNTUACION_NIL) {
+            System.out.println("[SiniestroData] Error al modificar. No se puede establecer una fecha de resolución sin establecer una puntuación, ni viceversa");
+            return false;
+        }
         try {
             String sql;
             sql = "UPDATE siniestro SET tipo=?, fechaHoraInicio=?, coordenadaX=?, coordenadaY=?, detalles=?, "
@@ -245,22 +264,13 @@ public class SiniestroData {
             ps.setInt(4, siniestro.getCoordenadaY());
             ps.setString(5, siniestro.getDetalles());
             ps.setInt(6, siniestro.getBrigada().getCodigoBrigada());
-            int puntuacion = siniestro.getPuntuacion();
-            if (siniestro.getFechaHoraResolucion() == null && puntuacion == Siniestro.PUNTUACION_NIL) {
+            // llegados a este punto del código, respecto de 'fechaHoraResolucion' y 'puntuacion' podemos decir que o ambos están establecido, o ambos no están establecidos
+            if (fecHorRes == null && puntuacion == Siniestro.PUNTUACION_NIL) {
                 ps.setNull(7, Types.TIMESTAMP);
                 ps.setInt(8, puntuacion);
-            } else if (siniestro.getFechaHoraResolucion() != null && siniestro.getPuntuacion() != -1) {
-                if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
-                    ps.close();
-                    System.out.println("[SiniestroData] Error al modificar. Puntuacion fuera de rango");
-                    return false;
-                }
-                ps.setTimestamp(7, Timestamp.valueOf(siniestro.getFechaHoraResolucion()));
-                ps.setInt(8, siniestro.getPuntuacion());
             } else {
-                ps.close();
-                System.out.println("[SiniestroData] Error al modificar. Los datos de la resolucion son inconsistentes");
-                return false;
+                ps.setTimestamp(7, Timestamp.valueOf(fecHorRes));
+                ps.setInt(8, puntuacion);
             }
             ps.setInt(9, siniestro.getCodigoSiniestro());
             if (ps.executeUpdate() > 0) {
@@ -278,17 +288,21 @@ public class SiniestroData {
     }
 
     public boolean asignarResolucion(Siniestro siniestro, LocalDateTime fechaHoraResolucion, int puntuacion) {
+        boolean resultado = false;
+
         if (!(fechaHoraResolucion != null && puntuacion != Siniestro.PUNTUACION_NIL)) {
-            System.out.println("[SiniestroData] Error al asignar resolucion. Tanto la fecha de resolución como la puntuación deben ser establecidos");
+            System.out.println("[SiniestroData] Error al asignar resolución. Tanto la fecha y hora de la resolución como la puntuación deben ser establecidos");
             return false;
         } else if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
-            System.out.println("[SiniestroData] Error al asignar resolucion. Puntuacion fuera de rango");
+            System.out.println("[SiniestroData] Error al asignar resolución. Puntuacion fuera de rango");
             return false;
         } else if (siniestro.getFechaHoraInicio().isAfter(fechaHoraResolucion)) {
-            System.out.println("[SiniestroData] Error al asignar resolucion. La fecha de resolución es anterior a la fecha de inicio del siniestro");
+            System.out.println("[SiniestroData] Error al asignar resolución. La fecha y hora de resolución es anterior a la fecha y hora de inicio del siniestro");
+            return false;
+        } else if (siniestro.getFechaHoraResolucion().isAfter(LocalDateTime.now())) {
+            System.out.println("[SiniestroData] Error al asignar resolución. La fecha y hora de resolución de la emergencia no puede ser posterior a la fecha y hora actual");
             return false;
         }
-        boolean resultado = false;
         try {
             String sql;
             sql = "UPDATE siniestro SET fechaHoraResolucion=?, puntuacion=? WHERE codigoSiniestro=?";
@@ -297,19 +311,8 @@ public class SiniestroData {
             ps.setInt(2, puntuacion);
             ps.setInt(3, siniestro.getCodigoSiniestro());
             if (ps.executeUpdate() > 0) {
+                resultado = true;
                 System.out.println("[SiniestroData] Resolucion asignada");
-
-                // actualizar la brigada que trató la emergencia
-                sql = "UPDATE brigada SET tratandoSiniestro=true WHERE codigoBrigada=?;";
-                ps = connection.prepareStatement(sql);
-                ps.setInt(1, siniestro.getBrigada().getCodigoBrigada());
-                if (ps.executeUpdate() > 0) {
-                    resultado = true;
-                    System.out.println("[SiniestroData] Brigada actualizada");
-                } else {
-                    System.out.println("[SiniestroData] No se pudo actualizar la brigada");
-                }
-
             } else {
                 System.out.println("[SiniestroData] No se pudo asignar la resolucion");
             }

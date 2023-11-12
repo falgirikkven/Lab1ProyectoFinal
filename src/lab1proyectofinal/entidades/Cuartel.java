@@ -6,10 +6,10 @@ package lab1proyectofinal.entidades;
  */
 public class Cuartel {
 
-    /**
+    /*
      * SUJETO A CAMBIOS
      */
-    private int codigoCuartel;
+    private int codigoCuartel=-1;
     private String nombreCuartel;
     private String direccion;
     private int coordenadaX;
@@ -21,9 +21,8 @@ public class Cuartel {
     public Cuartel() {
     }
 
-    // usuario inicializa todo menos 'codigoCuartel' y 'estado'
+    // inicializa todo menos 'codigoCuartel' y 'estado'
     public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo) {
-        this.codigoCuartel = -1;
         this.nombreCuartel = nombreCuartel;
         this.direccion = direccion;
         this.coordenadaX = coordenadaX;
@@ -32,10 +31,9 @@ public class Cuartel {
         this.correo = correo;
         this.estado = true;
     }
-    
-    // usuario inicializa todo 
-    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo, int codigoCuartel, boolean estado) {
-        this.codigoCuartel = codigoCuartel;
+
+    // inicializa todo menos 'codigoCuartel'
+    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo, boolean estado) {
         this.nombreCuartel = nombreCuartel;
         this.direccion = direccion;
         this.coordenadaX = coordenadaX;
@@ -44,6 +42,7 @@ public class Cuartel {
         this.correo = correo;
         this.estado = estado;
     }
+    
 
     public int getCodigoCuartel() {
         return codigoCuartel;
@@ -112,6 +111,11 @@ public class Cuartel {
     @Override
     public String toString() {
         return "Cuartel{" + "codigoCuartel=" + codigoCuartel + ", nombreCuartel=" + nombreCuartel + ", direccion=" + direccion + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", telefono=" + telefono + ", correo=" + correo + ", estado=" + estado + '}';
+    }
+    
+    // no pasa estado
+    public String debugToString() {
+        return "Cuartel{" + "codigoCuartel=" + codigoCuartel + ", nombreCuartel=" + nombreCuartel + ", direccion=" + direccion + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", telefono=" + telefono + ", correo=" + correo + '}';
     }
 
 }

@@ -39,11 +39,7 @@ public class BomberoData {
                 }
             }
             ps.close();
-            if (bombero.getIdBombero() == -1) {
-                sql = "INSERT INTO bombero(dni, nombreCompleto, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            } else {
-                sql = "INSERT INTO bombero(dni, nombreCompleto, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado, idBombero) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            }
+            sql = "INSERT INTO bombero(dni, nombreCompleto, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, true)";            
             ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, bombero.getDni());
             ps.setString(2, bombero.getNombreCompleto());
@@ -51,10 +47,6 @@ public class BomberoData {
             ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
             ps.setString(5, bombero.getCelular());
             ps.setInt(6, bombero.getBrigada().getCodigoBrigada());
-            ps.setBoolean(7, true);
-            if (bombero.getIdBombero() != -1) {
-                ps.setInt(8, bombero.getIdBombero());
-            }
             ps.executeUpdate();
             rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -127,12 +119,13 @@ public class BomberoData {
         List<Bombero> bomberos = new ArrayList();
         try {
             String sql = "SELECT * FROM bombero, brigada, cuartel "
-                    + "WHERE bombero.estado=true AND bombero.codigoBrigada=brigada.codigoBrigada "
+                    + "WHERE bombero.estado=true "
+                    + "AND bombero.codigoBrigada=brigada.codigoBrigada "
                     + "AND brigada.codigoCuartel=cuartel.codigoCuartel";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             Bombero bombero;
-            if (rs.next()) {
+            while (rs.next()) {
                 bombero = Utils.obtenerDeResultSetBombero(rs);
                 bomberos.add(bombero);
             }
@@ -176,19 +169,8 @@ public class BomberoData {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, idBombero);
             if (ps.executeUpdate() > 0) {
-                System.out.println("[BomberoData] Bombero eliminado");
-                
-                // actualizando 'cantBomberos' en la brigada en la cual se dió de baja al bombero
-                sql = "UPDATE brigada SET cantBomberos=cantBomberos-1 "
-                        + "WHERE codigoBrigada=(SELECT codigoBrigada FROM bombero WHERE idBombero=?);";     // hay que ver si esto funciona
-                ps.setInt(1, idBombero);
-                ps = connection.prepareStatement(sql);
-                if (ps.executeUpdate() > 0) {
-                    resultado = true;
-                    System.out.println("[BomberoData] Brigada actualizada");
-                } else {                    
-                    System.out.println("[BomberoData] No se pudo actualizar la brigada");
-                }
+                resultado = true;
+                System.out.println("[BomberoData] Bombero eliminado");                                
             } else {
                 System.out.println("[BomberoData] No se pudo eliminar al bombero");
             }
@@ -207,19 +189,8 @@ public class BomberoData {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, dni);
             if (ps.executeUpdate() > 0) {
+                resultado = true;
                 System.out.println("[BomberoData] Bombero eliminado");
-                
-                // actualizando 'cantBomberos' en la brigada en la cual se dió de baja al bombero
-                sql = "UPDATE brigada SET cantBomberos=cantBomberos-1 "
-                        + "WHERE codigoBrigada=(SELECT codigoBrigada FROM bombero WHERE dni=?);";     // hay que ver si esto funciona
-                ps.setInt(1, dni);
-                ps = connection.prepareStatement(sql);
-                if (ps.executeUpdate() > 0) {
-                    resultado = true;
-                    System.out.println("[BomberoData] Brigada actualizada");
-                } else {                    
-                    System.out.println("[BomberoData] No se pudo actualizar la brigada");
-                }
             } else {
                 System.out.println("[BomberoData] No se pudo eliminar al bombero");
             }

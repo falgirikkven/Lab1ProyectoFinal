@@ -55,14 +55,14 @@ public class Utils {
 
     public static Cuartel obtenerDeResultSetCuartel(ResultSet rs) throws SQLException {
         Cuartel cuartel = new Cuartel();
-        cuartel.setCodigoCuartel(rs.getInt("codigo.codigoCuartel"));
+        cuartel.setCodigoCuartel(rs.getInt("cuartel.codigoCuartel"));
         cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
         cuartel.setDireccion(rs.getString("direccion"));
         cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
         cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
         cuartel.setTelefono(rs.getString("telefono"));
         cuartel.setCorreo(rs.getString("correo"));
-        cuartel.setEstado(rs.getBoolean("codigo.estado"));
+        cuartel.setEstado(rs.getBoolean("cuartel.estado"));
         return cuartel;
     }
 
@@ -81,7 +81,7 @@ public class Utils {
         brigada.setCodigoBrigada(rs.getInt("brigada.codigoBrigada"));
         brigada.setNombreBrigada(rs.getString("nombreBrigada"));
         brigada.setEspecialidad(rs.getString("especialidad"));
-        brigada.setTratandoSiniestro(rs.getBoolean("tratandoSiniestro"));
+        brigada.setDisponible(rs.getBoolean("disponible"));
         brigada.setCuartel(cuartel);
         brigada.setEstado(rs.getBoolean("brigada.estado"));
         return brigada;
@@ -92,7 +92,7 @@ public class Utils {
         brigada.setCodigoBrigada(rs.getInt("brigada.codigoBrigada"));
         brigada.setNombreBrigada(rs.getString("nombreBrigada"));
         brigada.setEspecialidad(rs.getString("especialidad"));
-        brigada.setTratandoSiniestro(rs.getBoolean("tratandoSiniestro"));
+        brigada.setDisponible(rs.getBoolean("disponible"));
         brigada.setCuartel(cuartel);
         brigada.setEstado(rs.getBoolean("brigada.estado"));
         return brigada;
@@ -113,7 +113,7 @@ public class Utils {
         brigada.setCodigoBrigada(rs.getInt("brigada.codigoBrigada"));
         brigada.setNombreBrigada(rs.getString("nombreBrigada"));
         brigada.setEspecialidad(rs.getString("especialidad"));
-        brigada.setTratandoSiniestro(rs.getBoolean("tratandoSiniestro"));
+        brigada.setDisponible(rs.getBoolean("disponible"));
         brigada.setCuartel(cuartel);
         brigada.setEstado(rs.getBoolean("brigada.estado"));
         
@@ -157,7 +157,7 @@ public class Utils {
         brigada.setCodigoBrigada(rs.getInt("brigada.codigoBrigada"));
         brigada.setNombreBrigada(rs.getString("nombreBrigada"));
         brigada.setEspecialidad(rs.getString("especialidad"));
-        brigada.setTratandoSiniestro(rs.getBoolean("tratandoSiniestro"));
+        brigada.setDisponible(rs.getBoolean("disponible"));
         brigada.setCuartel(cuartel);
         brigada.setEstado(rs.getBoolean("brigada.estado"));
         
@@ -170,7 +170,7 @@ public class Utils {
         siniestro.setDetalles(rs.getString("detalles"));
         siniestro.setBrigada(brigada);
         if (rs.getInt("puntuacion") != Siniestro.PUNTUACION_NIL) {
-            siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaResolucion").toLocalDateTime());
+            siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
         } else {
             siniestro.setFechaHoraResolucion(null);
         }
@@ -188,7 +188,7 @@ public class Utils {
         siniestro.setDetalles(rs.getString("detalles"));
         siniestro.setBrigada(brigada);
         if (rs.getInt("puntuacion") != Siniestro.PUNTUACION_NIL) {
-            siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaResolucion").toLocalDateTime());
+            siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
         } else {
             siniestro.setFechaHoraResolucion(null);
         }

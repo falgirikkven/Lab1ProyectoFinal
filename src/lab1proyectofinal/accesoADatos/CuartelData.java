@@ -20,45 +20,61 @@ public class CuartelData {
      * SUJETO A CAMBIOS
      */
     private Connection connection;
+    public static Cuartel cuartelNull = new Cuartel("cuartel null", "---", 0, 0, "---", "---", false);
 
     public CuartelData() {
         this.connection = Conexion.getInstance();
     }
 
-    public boolean crearFalsoCuartel() {
+    public boolean insertarCuartelNull() {
         boolean resultado = false;
         try {
-            String sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) "
-                    + "VALUES ('cuartel inexistente', '---' , 0, 0, 0, '---', false, -1)";
+            String sql = "SELECT COUNT(nombreCuartel) FROM cuartel WHERE nombreCuartel='cuartel null'";
             PreparedStatement ps = connection.prepareStatement(sql);
-            if (ps.executeUpdate() > 0) {
-                resultado = true;
-                System.out.println("[CuartelData] Cuartel falso agregado");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                if (rs.getInt(1) == 0) {
+                    ps.close();     // me parece que podría dar error (si así fuera, se podría crear otro PreparedStatement)
+                    sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado) "
+                            + "VALUES (?,?,?,?,?,?,?)";
+                    ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, cuartelNull.getNombreCuartel());
+                    ps.setString(2, cuartelNull.getDireccion());
+                    ps.setInt(3, cuartelNull.getCoordenadaX());
+                    ps.setInt(4, cuartelNull.getCoordenadaY());
+                    ps.setString(5, cuartelNull.getTelefono());
+                    ps.setString(6, cuartelNull.getCorreo());
+                    ps.setBoolean(7, cuartelNull.isEstado());
+                    ps.executeUpdate();
+                    rs = ps.getGeneratedKeys();
+                    if (rs.next()) {
+                        cuartelNull.setCodigoCuartel(rs.getInt(1));
+                        resultado = true;
+                        System.out.println("[CuartelData] Cuartel null agregado");
+                    } else {
+                        System.out.println("[CuartelData] No se pudo agregar el cuartel null");
+                    }
+                    ps.close();
+                } else {
+                    System.out.println("[CuartelData] No se ha podido agregar el cuartel null porque ya está agregado");
+                }
             } else {
-                System.out.println("[CuartelData] No se pudo agregar el cuartel falso");
+                System.out.println("[CuartelData] Error al buscar a cuartelNull en la BD");
             }
-            ps.close();
         } catch (SQLException e) {
             int errorCode = e.getErrorCode();
             System.out.println("[CuartelData Error " + errorCode + "] " + e.getMessage());
-            if (errorCode != 1062) { // Ignorar datos repetidos
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
         return resultado;
-    }
+    }   
 
     public boolean guardarCuartel(Cuartel cuartel) {
         boolean resultado = false;
         try {
             String sql;
-            if (cuartel.getCodigoCuartel() == -1) {
-                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-            } else {
-                sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado, codigoCuartel) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            }
+            sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?)";             
             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, cuartel.getNombreCuartel());
             ps.setString(2, cuartel.getDireccion());
@@ -67,9 +83,6 @@ public class CuartelData {
             ps.setString(5, cuartel.getTelefono());
             ps.setString(6, cuartel.getCorreo());
             ps.setBoolean(7, cuartel.isEstado());
-            if (cuartel.getCodigoCuartel() != -1) {
-                ps.setInt(8, cuartel.getCodigoCuartel());
-            }
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -177,7 +190,7 @@ public class CuartelData {
         try {
             String sql = "SELECT * FROM bombero, brigada "
                     + "WHERE bombero.codigoBrigada IN "
-                    + "(SELECT codigoBrigada FROM brigada WHERE bri.codigoCuartel = ? AND brigada.estado = true) "
+                    + "(SELECT codigoBrigada FROM brigada WHERE brigada.codigoCuartel = ? AND brigada.estado = true) "
                     + "AND bombero.estado = true "
                     + "AND brigada.codigoBrigada = bombero.codigoBrigada ";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -185,7 +198,7 @@ public class CuartelData {
             ResultSet rs = ps.executeQuery();
             Brigada brigada;
             Bombero bombero;
-            while (rs.next()) {                
+            while (rs.next()) {
                 brigada = Utils.obtenerDeResultSetBrigada(rs, cuartel);
                 bombero = Utils.obtenerDeResultSetBombero(rs, brigada);
                 bomberos.add(bombero);
@@ -211,14 +224,14 @@ public class CuartelData {
             ps.setInt(4, cuartel.getCoordenadaY());
             ps.setString(5, cuartel.getTelefono());
             ps.setString(6, cuartel.getCorreo());
-            ps.setBoolean(7, cuartel.isEstado());
-            ps.setInt(8, cuartel.getCodigoCuartel());
+            ps.setInt(7, cuartel.getCodigoCuartel());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[CuartelData] Cuartel modificado");
             } else {
                 System.out.println("[CuartelData] No se pudo modificar el Cuartel");
             }
+            ps.close();
         } catch (SQLException e) {
             System.out.println("[CuartelData Error " + e.getErrorCode() + "] " + e.getMessage());
             e.printStackTrace();
@@ -242,6 +255,7 @@ public class CuartelData {
             } else {
                 System.out.println("[CuartelData] No se pudo eliminar el cuartel");
             }
+            ps.close();
         } catch (SQLException e) {
             System.out.println("[CuartelData Error " + e.getErrorCode() + "] " + e.getMessage());
             e.printStackTrace();
@@ -266,6 +280,7 @@ public class CuartelData {
             } else {
                 System.out.println("[CuartelData] No se pudo eliminar el cuartel");
             }
+            ps.close();
         } catch (SQLException e) {
             System.out.println("[CuartelData Error " + e.getErrorCode() + "] " + e.getMessage());
             e.printStackTrace();

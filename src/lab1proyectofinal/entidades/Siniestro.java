@@ -1,6 +1,9 @@
 package lab1proyectofinal.entidades;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import lab1proyectofinal.accesoADatos.BrigadaData;
+
 
 /**
  *
@@ -13,11 +16,9 @@ public class Siniestro {
      */
     public static final int PUNTUACION_NIL = -1;
     public static final int PUNTUACION_MIN = 1;
-    public static final int PUNTUACION_MAX = 10;
-    private static final Cuartel cuartelFalso = new Cuartel("cuartel inexistente", "---", 0, 0, "---", "---", -1, false);
-    private static final Brigada brigadaFalsa = new Brigada("brigada inexistente", "---", false, cuartelFalso, -1, false);
+    public static final int PUNTUACION_MAX = 10;    
 
-    private int codigoSiniestro;
+    private int codigoSiniestro=-1;
     private String tipo;
     private LocalDateTime fechaHoraInicio;
     private int coordenadaX;
@@ -30,9 +31,8 @@ public class Siniestro {
     public Siniestro() {
     }
 
-    // usuario inicializa todo menos 'codigoSiniestro', 'fechaHoraResolucion', 'puntuacion' Y 'brigada'
+    // usuario inicializa todo menos 'codigoSiniestro', 'fechaHoraResolucion', 'puntuacion' y 'brigada'
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles) {
-        this.codigoSiniestro = -1;
         this.tipo = tipo;
         this.fechaHoraInicio = fechaHoraInicio;
         this.coordenadaX = coordenadaX;
@@ -40,12 +40,11 @@ public class Siniestro {
         this.detalles = detalles;
         this.fechaHoraResolucion = null;
         this.puntuacion = PUNTUACION_NIL;
-        this.brigada = brigadaFalsa;
+        this.brigada = BrigadaData.brigadaNull;
     }
 
     // usuario inicializa todo menos 'codigoSiniestro', 'fechaHoraResolucion' y 'puntuacion'
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, Brigada brigada) {
-        this.codigoSiniestro = -1;
         this.tipo = tipo;
         this.fechaHoraInicio = fechaHoraInicio;
         this.coordenadaX = coordenadaX;
@@ -56,9 +55,8 @@ public class Siniestro {
         this.brigada = brigada;
     }
     
-    // usuario inicializa todo menos 'codigoSiniestro' Y 'brigada'
+    // usuario inicializa todo menos 'codigoSiniestro' y 'brigada' (en principio, para registrar emergencias que no se registraron anteriormente por cualquier motivo y que fueron tratados por una brigada que actualmente se encuentra tratando otra emergencia)
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion) {
-        this.codigoSiniestro = -1;
         this.tipo = tipo;
         this.fechaHoraInicio = fechaHoraInicio;
         this.coordenadaX = coordenadaX;
@@ -66,25 +64,11 @@ public class Siniestro {
         this.detalles = detalles;
         this.fechaHoraResolucion = fechaHoraResolucion;
         this.puntuacion = puntuacion;
-        this.brigada = brigadaFalsa;
+        this.brigada = BrigadaData.brigadaNull;
     }
 
     // usuario inicializa todo menos 'codigoSiniestro'
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion, Brigada brigada) {
-        this.codigoSiniestro = -1;
-        this.tipo = tipo;
-        this.fechaHoraInicio = fechaHoraInicio;
-        this.coordenadaX = coordenadaX;
-        this.coordenadaY = coordenadaY;
-        this.detalles = detalles;
-        this.fechaHoraResolucion = fechaHoraResolucion;
-        this.puntuacion = puntuacion;
-        this.brigada = brigada;
-    }
-
-    // usuario inicializa todo 
-    public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion, Brigada brigada, int codigoSiniestro) {
-        this.codigoSiniestro = codigoSiniestro;
         this.tipo = tipo;
         this.fechaHoraInicio = fechaHoraInicio;
         this.coordenadaX = coordenadaX;
@@ -172,4 +156,7 @@ public class Siniestro {
         return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaHoraInicio=" + fechaHoraInicio + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", fechaHoraResolucion=" + fechaHoraResolucion + ", puntuacion=" + puntuacion + ", brigada=" + brigada + '}';
     }
 
+    public String debugToString() {
+        return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaHoraInicio=" + fechaHoraInicio + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", fechaHoraResolucion=" + fechaHoraResolucion + ", puntuacion=" + puntuacion + ", brigada=" + brigada + '}';
+    }
 }

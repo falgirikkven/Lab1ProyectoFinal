@@ -9,35 +9,34 @@ public class Brigada {
     /**
      * SUJETO A CAMBIOS
      */
-    private int codigoBrigada;
+    private int codigoBrigada=-1;
     private String nombreBrigada;
     private String especialidad;
-    private boolean tratandoSiniestro;
+    private boolean disponible;
     private Cuartel cuartel;
     private boolean estado;
 
     public Brigada() {
     }
 
-    // el usuario inicializa todo menos 'codigoBrigada' y 'estado'
-    public Brigada(String nombreBrigada, String especialidad, boolean tratandoSiniestro, Cuartel cuartel) {
-        this.codigoBrigada = -1;
+    // inicializa todo menos 'codigoBrigada' y 'estado'
+    public Brigada(String nombreBrigada, String especialidad, boolean disponible, Cuartel cuartel) {
         this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
-        this.tratandoSiniestro = tratandoSiniestro;
-        this.cuartel = cuartel;
+        this.disponible = disponible;
+        this.cuartel = cuartel;  
         this.estado = true;
     }
     
-    // el usuario inicializa todo     
-    public Brigada(String nombreBrigada, String especialidad, boolean tratandoSiniestro, Cuartel cuartel, int codigoBrigada, boolean estado) {
-        this.codigoBrigada = codigoBrigada;
+    // inicializa todo menos 'codigoBrigada'
+    public Brigada(String nombreBrigada, String especialidad, boolean disponible, Cuartel cuartel, boolean estado) {
         this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
-        this.tratandoSiniestro = tratandoSiniestro;
+        this.disponible = disponible;
         this.cuartel = cuartel;
         this.estado = estado;
     }
+    
 
     public int getCodigoBrigada() {
         return codigoBrigada;
@@ -63,12 +62,12 @@ public class Brigada {
         this.especialidad = especialidad;
     }
 
-    public boolean isTratandoSiniestro() {
-        return tratandoSiniestro;
+    public boolean isDisponible() {
+        return disponible;
     }
 
-    public void setTratandoSiniestro(boolean tratandoSiniestro) {
-        this.tratandoSiniestro = tratandoSiniestro;
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
     }
 
     public Cuartel getCuartel() {
@@ -89,6 +88,11 @@ public class Brigada {
 
     @Override
     public String toString() {
-        return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", tratandoSiniestro=" + tratandoSiniestro + ", cuartel=" + cuartel + ", estado=" + estado + '}';
+        return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", disponible=" + disponible + ", cuartel=" + cuartel + ", estado=" + estado + '}';
+    }
+    
+    // no tiene estado
+    public String debugToString(){
+        return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", disponible=" + disponible + ", cuartel=" + cuartel + '}';
     }
 }
