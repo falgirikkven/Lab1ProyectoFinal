@@ -205,7 +205,7 @@ public class SiniestroData {
         List<Siniestro> siniestros = new ArrayList();
         try {
             String sql = "SELECT * FROM siniestro, brigada, cuartel "
-                    + "WHERE (fechaHoraInicio BETWEEN ? and ?) "
+                    + "WHERE (fechaHoraInicio>=? AND fechaHoraInicio<=?) "
                     + "AND siniestro.codigoBrigada=brigada.codigoBrigada "
                     + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -299,7 +299,7 @@ public class SiniestroData {
         } else if (siniestro.getFechaHoraInicio().isAfter(fechaHoraResolucion)) {
             System.out.println("[SiniestroData] Error al asignar resolución. La fecha y hora de resolución es anterior a la fecha y hora de inicio del siniestro");
             return false;
-        } else if (siniestro.getFechaHoraResolucion().isAfter(LocalDateTime.now())) {
+        } else if (fechaHoraResolucion.isAfter(LocalDateTime.now())) {
             System.out.println("[SiniestroData] Error al asignar resolución. La fecha y hora de resolución de la emergencia no puede ser posterior a la fecha y hora actual");
             return false;
         }

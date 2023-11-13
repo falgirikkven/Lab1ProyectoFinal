@@ -24,7 +24,7 @@ public class BrigadaData {
 
     public BrigadaData() {
         this.connection = Conexion.getInstance();
-    }    
+    }
 
     public boolean insertarBrigadaNull() {
         boolean resultado = false;
@@ -65,7 +65,7 @@ public class BrigadaData {
             e.printStackTrace();
         }
         return resultado;
-    }    
+    }
 
     public boolean guardarBrigada(Brigada brigada) {
         boolean resultado = false;
@@ -217,7 +217,7 @@ public class BrigadaData {
         try {
             String sql = "SELECT * FROM brigada, cuartel "
                     + "WHERE brigada.estado = true "
-                    + "AND (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada)!=0 "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada AND puntuacion=-1)!=0 "
                     + "AND brigada.codigoCuartel = cuartel.codigoCuartel;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -233,7 +233,7 @@ public class BrigadaData {
         }
         return brigadas;
     }
-    
+
     // brigada incompleta: cantidad de bomberos menor que 5 (la brigada NO tiene la cantidad de integrantes requerida para actuar)
     public List<Brigada> listarBrigadasIncompletas() {
         List<Brigada> brigadas = new ArrayList();
@@ -304,9 +304,12 @@ public class BrigadaData {
     public boolean eliminarBrigada(int codigoBrigada) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE brigada SET estado=false WHERE codigoBrigada=? AND estado=true";
+//            String sql = "UPDATE brigada SET estado=false WHERE codigoBrigada=? AND estado=true"
+            String sql = "UPDATE brigada SET estado=false WHERE codigoBrigada=? AND estado=true "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM bombero WHERE codigoBrigada=? AND estado=true)=0";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoBrigada);
+            ps.setInt(2, codigoBrigada);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[BrigadaData] Brigada eliminada");
@@ -324,9 +327,12 @@ public class BrigadaData {
     public boolean eliminarBrigadaPorNombre(String nombreBrigada) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE brigada SET estado=false WHERE nombreBrigada=? AND estado=true";
+//            String sql = "UPDATE brigada SET estado=false WHERE nombreBrigada=? AND estado=true";
+            String sql = "UPDATE brigada SET estado=false WHERE nombreBrigada=? AND estado=true "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM bombero WHERE codigoBrigada IN (SELECT codigoBrigada FROM brigada WHERE nombreBrigada=?) AND estado=true)=0";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, nombreBrigada);
+            ps.setString(2, nombreBrigada);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[BrigadaData] Brigada eliminada");

@@ -165,7 +165,9 @@ public class BomberoData {
     public boolean eliminarBombero(int idBombero) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE bombero SET estado=false WHERE idBombero=? AND estado=true";
+//            String sql = "UPDATE bombero SET estado=false WHERE idBombero=? AND estado=true";
+            String sql = "UPDATE bombero SET estado=false WHERE idBombero=? AND estado=true "
+                    + "AND codigoBrigada NOT IN (SELECT codigoBrigada FROM siniestro WHERE puntuacion=-1);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, idBombero);
             if (ps.executeUpdate() > 0) {
@@ -185,7 +187,9 @@ public class BomberoData {
     public boolean eliminarBomberoPorDni(int dni) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE bombero SET estado=false WHERE dni=? AND estado=true";
+//            String sql = "UPDATE bombero SET estado=false WHERE dni=? AND estado=true";
+            String sql = "UPDATE bombero SET estado=false WHERE dni=? AND estado=true "
+                    + "AND codigoBrigada NOT IN (SELECT codigoBrigada FROM siniestro WHERE puntuacion=-1);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, dni);
             if (ps.executeUpdate() > 0) {
@@ -200,6 +204,6 @@ public class BomberoData {
             e.printStackTrace();
         }
         return resultado;
-    }
+    }        
 
 }

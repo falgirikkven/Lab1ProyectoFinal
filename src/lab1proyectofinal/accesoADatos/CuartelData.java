@@ -190,11 +190,12 @@ public class CuartelData {
         try {
             String sql = "SELECT * FROM bombero, brigada "
                     + "WHERE bombero.codigoBrigada IN "
-                    + "(SELECT codigoBrigada FROM brigada WHERE brigada.codigoCuartel = ? AND brigada.estado = true) "
+                    + "(SELECT codigoBrigada FROM brigada WHERE codigoCuartel = ? AND codigoCuartel IN (SELECT codigoCuartel FROM cuartel WHERE codigoCuartel=? AND estado=true) AND estado = true) "
                     + "AND bombero.estado = true "
                     + "AND brigada.codigoBrigada = bombero.codigoBrigada ";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cuartel.getCodigoCuartel());
+            ps.setInt(2, cuartel.getCodigoCuartel());
             ResultSet rs = ps.executeQuery();
             Brigada brigada;
             Bombero bombero;
