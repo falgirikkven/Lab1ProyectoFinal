@@ -1,6 +1,5 @@
 package lab1proyectofinal.vistas;
 
-import java.util.List;
 import javax.swing.JOptionPane;
 import lab1proyectofinal.accesoADatos.CuartelData;
 import lab1proyectofinal.accesoADatos.Utils;
@@ -10,7 +9,7 @@ import lab1proyectofinal.entidades.Cuartel;
  *
  * @author Grupo-3
  */
-public class GestionCuartel extends javax.swing.JInternalFrame {
+public class FormularioCuartel extends javax.swing.JInternalFrame {
 
     /**
      * SUJETO A CAMBIOS
@@ -20,32 +19,18 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     /**
      * Creates new form GestionCuartel
      */
-    public GestionCuartel(CuartelData cuartelData) {
-        initComponents();
+    public FormularioCuartel(CuartelData cuartelData) {
+        this.initComponents();
         this.cuartelData = cuartelData;
     }
 
     private void limpiarCampos() {
-        cuartelCB.setSelectedIndex(-1);
         nombreTF.setText("");
         direccionTF.setText("");
         telefonoTF.setText("");
         correoTF.setText("");
         coordenadaXTF.setText("");
         coordenadaYTF.setText("");
-
-        setFieldsEnabled(false);
-    }
-
-    private void setFieldsEnabled(boolean flag) {
-        nombreTF.setEditable(flag);
-        direccionTF.setEditable(flag);
-        telefonoTF.setEditable(flag);
-        correoTF.setEditable(flag);
-        coordenadaXTF.setEditable(flag);
-        coordenadaYTF.setEditable(flag);
-        BtnGuardar.setEnabled(flag);
-        BtnEditar.setEnabled(!flag);
     }
 
     /**
@@ -57,8 +42,6 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cuartelLabel = new javax.swing.JLabel();
-        cuartelCB = new javax.swing.JComboBox<>();
         nombreLabel = new javax.swing.JLabel();
         nombreTF = new javax.swing.JTextField();
         direccionLabel = new javax.swing.JLabel();
@@ -71,14 +54,14 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         coordenadaXTF = new javax.swing.JTextField();
         coordenadaYLabel = new javax.swing.JLabel();
         coordenadaYTF = new javax.swing.JTextField();
-        BtnEditar = new javax.swing.JButton();
+        BtnBuscarNombre = new javax.swing.JButton();
+        BtnLimpiar = new javax.swing.JButton();
         BtnGuardar = new javax.swing.JButton();
-        BtnEliminar = new javax.swing.JButton();
         BtnSalir = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        setTitle("Gestionar Cuartel");
+        setTitle("Formulario Cuartel");
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameActivated(evt);
@@ -97,14 +80,6 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             }
         });
 
-        cuartelLabel.setText("Cuartel:");
-
-        cuartelCB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cuartelCBActionPerformed(evt);
-            }
-        });
-
         nombreLabel.setText("Nombre:");
 
         direccionLabel.setText("Dirección:");
@@ -117,10 +92,17 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
 
         coordenadaYLabel.setText("Coordenada Y:");
 
-        BtnEditar.setText("Editar");
-        BtnEditar.addActionListener(new java.awt.event.ActionListener() {
+        BtnBuscarNombre.setText("Verificar Disponibilidad");
+        BtnBuscarNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnEditarActionPerformed(evt);
+                BtnBuscarNombreActionPerformed(evt);
+            }
+        });
+
+        BtnLimpiar.setText("Limpiar Campos");
+        BtnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnLimpiarActionPerformed(evt);
             }
         });
 
@@ -128,13 +110,6 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         BtnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnGuardarActionPerformed(evt);
-            }
-        });
-
-        BtnEliminar.setText("Dar de Baja");
-        BtnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnEliminarActionPerformed(evt);
             }
         });
 
@@ -149,41 +124,39 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(BtnEditar)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nombreLabel)
+                            .addComponent(direccionLabel)
+                            .addComponent(telefonoLabel)
+                            .addComponent(correoLabel)
+                            .addComponent(coordenadaXLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(coordenadaYLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(correoTF, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                    .addComponent(nombreTF)
+                                    .addComponent(direccionTF)
+                                    .addComponent(telefonoTF, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(18, 18, 18)
+                                .addComponent(BtnBuscarNombre))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(BtnLimpiar)
                         .addGap(18, 18, 18)
                         .addComponent(BtnGuardar)
-                        .addGap(18, 18, 18)
-                        .addComponent(BtnEliminar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(BtnSalir))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(direccionLabel)
-                            .addComponent(nombreLabel)
-                            .addComponent(telefonoLabel)
-                            .addComponent(cuartelLabel))
-                        .addGap(66, 66, 66)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cuartelCB, 0, 257, Short.MAX_VALUE)
-                            .addComponent(direccionTF)
-                            .addComponent(nombreTF)
-                            .addComponent(telefonoTF)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(coordenadaXLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(coordenadaYLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(correoLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(correoTF)))
+                        .addComponent(BtnSalir)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -191,17 +164,14 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cuartelCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cuartelLabel))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nombreLabel)
-                    .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnBuscarNombre))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(direccionLabel)
-                    .addComponent(direccionTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(direccionTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(direccionLabel))
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(telefonoLabel)
                     .addComponent(telefonoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -217,42 +187,51 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                     .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnLimpiar)
                     .addComponent(BtnGuardar)
-                    .addComponent(BtnEliminar)
-                    .addComponent(BtnSalir)
-                    .addComponent(BtnEditar))
+                    .addComponent(BtnSalir))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditarActionPerformed
-        Cuartel cuartelSeleccionado = (Cuartel) cuartelCB.getSelectedItem();
-        if (cuartelSeleccionado != null) {
-            setFieldsEnabled(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Seleccione primero un cuartel a editar.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_BtnEditarActionPerformed
-
-    private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
-        Cuartel cuartelSeleccionado = (Cuartel) cuartelCB.getSelectedItem();
-        if (cuartelSeleccionado == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione primero un cuartel a editar.", "Error", JOptionPane.ERROR_MESSAGE);
+    private void BtnBuscarNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarNombreActionPerformed
+        String nombreStr = nombreTF.getText().trim();
+        if (nombreStr.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Se esperaba un nombre en el campo.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
+        Cuartel cuartel = this.cuartelData.buscarCuartelPorNombre(nombreStr);
+        if (cuartel != null) {
+            nombreTF.setText(cuartel.getNombreCuartel());
+            direccionTF.setText(cuartel.getDireccion());
+            telefonoTF.setText(cuartel.getTelefono());
+            correoTF.setText(cuartel.getCorreo());
+            coordenadaXTF.setText(Integer.toString(cuartel.getCoordenadaX()));
+            coordenadaYTF.setText(Integer.toString(cuartel.getCoordenadaY()));
+        } else {
+            JOptionPane.showMessageDialog(this, "No se ha encontrado cuartel con este nombre.\nEs posible que haya sido dado de baja o no exista.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_BtnBuscarNombreActionPerformed
+
+    private void BtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLimpiarActionPerformed
+        this.limpiarCampos();
+    }//GEN-LAST:event_BtnLimpiarActionPerformed
+
+    private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
         String nombreStr = nombreTF.getText().trim();
         String direccionStr = direccionTF.getText().trim();
         String telefonoStr = telefonoTF.getText().trim();
         String correoStr = correoTF.getText().trim();
         String coordenadaXStr = coordenadaXTF.getText().trim();
         String coordenadaYStr = coordenadaYTF.getText().trim();
+
         if (nombreStr.isBlank() || direccionStr.isBlank()
                 || telefonoStr.isBlank() || correoStr.isBlank()
                 || coordenadaXStr.isBlank() || coordenadaYStr.isBlank()) {
-            JOptionPane.showMessageDialog(this, "No puede haber campos vacios.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -278,76 +257,26 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         }
 
         Cuartel cuartel = new Cuartel(nombreStr, direccionStr, coordenadaX, coordenadaY, telefonoStr, correoStr);
-        cuartel.setCodigoCuartel(cuartelSeleccionado.getCodigoCuartel());
-        if (cuartelData.modificarCuartel(cuartel)) {
-            cuartelSeleccionado.setNombreCuartel(nombreStr);
-            cuartelSeleccionado.setDireccion(direccionStr);
-            cuartelSeleccionado.setCoordenadaX(coordenadaX);
-            cuartelSeleccionado.setCoordenadaY(coordenadaY);
-            cuartelSeleccionado.setTelefono(telefonoStr);
-            cuartelSeleccionado.setCorreo(correoStr);
-            JOptionPane.showMessageDialog(this, "Cuartel modificado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        if (this.cuartelData.guardarCuartel(cuartel)) {
+            JOptionPane.showMessageDialog(this, "Cuartel guardado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "No se pudo guardar la edición.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo guardar el cuartel.\nQuizás ya haya un cuartel guardado con este nombre.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_BtnGuardarActionPerformed
-
-    private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
-        Cuartel cuartelSeleccionado = (Cuartel) cuartelCB.getSelectedItem();
-        if (cuartelSeleccionado == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione primero un cuartel a eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        int option = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este cuartel?", "Confirmar eliminacion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (option == JOptionPane.YES_OPTION) {
-            if (cuartelData.eliminarCuartel(cuartelSeleccionado.getCodigoCuartel())) {
-                cuartelCB.removeItem(cuartelSeleccionado);
-                JOptionPane.showMessageDialog(this, "Cuartel eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_BtnEliminarActionPerformed
 
     private void BtnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSalirActionPerformed
         this.hide();
     }//GEN-LAST:event_BtnSalirActionPerformed
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        cuartelCB.removeAllItems();
-        List<Cuartel> cuarteles = cuartelData.listarCuarteles();
-        if (!cuarteles.isEmpty()) {
-            for (Cuartel cuartel : cuarteles) {
-                cuartelCB.addItem(cuartel);
-            }
-            cuartelCB.setEnabled(true);
-        } else {
-            cuartelCB.setEnabled(false);
-        }
-
-        limpiarCampos();
-        setFieldsEnabled(false);
+        this.limpiarCampos();
     }//GEN-LAST:event_formInternalFrameActivated
-
-    private void cuartelCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cuartelCBActionPerformed
-        Cuartel cuartelSeleccionado = (Cuartel) cuartelCB.getSelectedItem();
-        if (cuartelSeleccionado != null) {
-            setFieldsEnabled(false);
-            nombreTF.setText(cuartelSeleccionado.getNombreCuartel());
-            direccionTF.setText(cuartelSeleccionado.getDireccion());
-            telefonoTF.setText(cuartelSeleccionado.getTelefono());
-            correoTF.setText(cuartelSeleccionado.getCorreo());
-            coordenadaXTF.setText(Integer.toString(cuartelSeleccionado.getCoordenadaX()));
-            coordenadaYTF.setText(Integer.toString(cuartelSeleccionado.getCoordenadaY()));
-        }
-    }//GEN-LAST:event_cuartelCBActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnEditar;
-    private javax.swing.JButton BtnEliminar;
+    private javax.swing.JButton BtnBuscarNombre;
     private javax.swing.JButton BtnGuardar;
+    private javax.swing.JButton BtnLimpiar;
     private javax.swing.JButton BtnSalir;
     private javax.swing.JLabel coordenadaXLabel;
     private javax.swing.JTextField coordenadaXTF;
@@ -355,8 +284,6 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     private javax.swing.JTextField coordenadaYTF;
     private javax.swing.JLabel correoLabel;
     private javax.swing.JTextField correoTF;
-    private javax.swing.JComboBox<Cuartel> cuartelCB;
-    private javax.swing.JLabel cuartelLabel;
     private javax.swing.JLabel direccionLabel;
     private javax.swing.JTextField direccionTF;
     private javax.swing.JLabel nombreLabel;
