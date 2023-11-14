@@ -26,20 +26,22 @@ public class BomberoData {
 
     public boolean guardarBombero(Bombero bombero) {
         boolean resultado = false;
-        try {            
+        try {
             String sql = "SELECT COUNT(codigoBrigada) FROM bombero WHERE codigoBrigada=?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getBrigada().getCodigoBrigada());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                if (rs.getInt(1)==5) {
-                    System.out.println("[BomberoData] No se pudo agregar al bombero. No hay más espacio en la brigada");
+                if (rs.getInt(1) == 5) {
+                    System.out.println("[BomberoData.guardarBombero] No se pudo agregar al bombero: no hay más espacio en "
+                            + "la brigada con código: " + bombero.getBrigada().getCodigoBrigada()
+                            + "\nDatos del bombero que se intentó agregar: "+bombero.debugToString());
                     ps.close();
                     return resultado;
                 }
             }
             ps.close();
-            sql = "INSERT INTO bombero(dni, nombreCompleto, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, true)";            
+            sql = "INSERT INTO bombero(dni, nombreCompleto, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, true)";
             ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, bombero.getDni());
             ps.setString(2, bombero.getNombreCompleto());
@@ -52,17 +54,19 @@ public class BomberoData {
             if (rs.next()) {
                 bombero.setIdBombero(rs.getInt(1));
                 resultado = true;
-                System.out.println("[BomberoData] Bombero agregado");                                
+                System.out.println("[BomberoData.guardarBombero] Bombero agregado"
+                        + "\nDatos del bombero que se agregó: "+bombero.debugToString());
             } else {
-                System.out.println("[BomberoData] No se pudo agregar al bombero");
+                System.out.println("[BomberoData.guardarBombero] No se pudo agregar al bombero"
+                        + "\nDatos del bombero que se intentó agregar: "+bombero.debugToString());
             }
             ps.close();
         } catch (SQLException e) {
             // System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
             // e.printStackTrace();
             int errorCode = e.getErrorCode();
-            System.out.println("[BomberoData Error " + errorCode + "] " + e.getMessage());
-            if (errorCode != 1062) { // Ignorar datos repetidos
+            System.out.println("[BomberoData.guardarBombero] Error " + errorCode + " " + e.getMessage());
+            if (errorCode != 1062) { // Ignorar datos únicos repetidos
                 e.printStackTrace();
             }
         }
@@ -80,13 +84,13 @@ public class BomberoData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 bombero = Utils.obtenerDeResultSetBombero(rs);
-                System.out.println("[BomberoData] Bombero con id=" + idBombero + " encontrado");
+                System.out.println("[BomberoData.buscarBombero] Bombero encontrado (id de bombero: " + idBombero + ")");
             } else {
-                System.out.println("[BomberoData] No se ha encontrado al bombero con id=" + idBombero);
+                System.out.println("[BomberoData.buscarBombero] No se ha encontrado al bombero (id de bombero: " + idBombero + ")");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.buscarBombero] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return bombero;
@@ -103,13 +107,13 @@ public class BomberoData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 bombero = Utils.obtenerDeResultSetBombero(rs);
-                System.out.println("[BomberoData] Bombero con dni=" + dni + " encontrado");
+                System.out.println("[BomberoData.buscarBomberoPorDni] Bombero encontrado (dni de bombero: " + dni + ")");
             } else {
-                System.out.println("[BomberoData] No se ha encontrado al bombero con dni=" + dni);
+                System.out.println("[BomberoData.buscarBomberoPorDni] No se ha encontrado al bombero (dni de bombero: " + dni + ")");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.buscarBomberoPorDni] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return bombero;
@@ -131,7 +135,7 @@ public class BomberoData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.listarBomberos] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return bomberos;
@@ -150,13 +154,15 @@ public class BomberoData {
             ps.setInt(6, bombero.getIdBombero());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BomberoData] Bombero modificado");
+                System.out.println("[BomberoData.modificarBombero] Bombero modificado"
+                        + "\nNuevos datos guardados: "+bombero.debugToString());
             } else {
-                System.out.println("[BomberoData] No se pudo modificar al bombero");
+                System.out.println("[BomberoData.modificarBombero] No se pudo modificar al bombero"
+                        + "\nDatos que se intentó guardar: "+bombero.debugToString());
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.modificarBombero] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
@@ -172,13 +178,13 @@ public class BomberoData {
             ps.setInt(1, idBombero);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BomberoData] Bombero eliminado");                                
+                System.out.println("[BomberoData.eliminarBombero] Bombero eliminado (id de bombero: " + idBombero + ")");
             } else {
-                System.out.println("[BomberoData] No se pudo eliminar al bombero");
+                System.out.println("[BomberoData.eliminarBombero] No se pudo eliminar al bombero (id de bombero: " + idBombero + ")");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.eliminarBombero] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
@@ -194,16 +200,16 @@ public class BomberoData {
             ps.setInt(1, dni);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BomberoData] Bombero eliminado");
+                System.out.println("[BomberoData.eliminarBomberoPorDni] Bombero eliminado (dni de bombero: " + dni + ")");
             } else {
-                System.out.println("[BomberoData] No se pudo eliminar al bombero");
+                System.out.println("[BomberoData.eliminarBomberoPorDni] No se pudo eliminar al bombero (dni de bombero: " + dni + ")");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BomberoData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BomberoData.eliminarBomberoPorDni] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
-    }        
+    }
 
 }

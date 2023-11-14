@@ -48,20 +48,20 @@ public class BrigadaData {
                     if (rs.next()) {
                         brigadaNull.setCodigoBrigada(rs.getInt(1));
                         resultado = true;
-                        System.out.println("[CuartelData] Brigada null agregada");
+                        System.out.println("[CuartelData.insertarBrigadaNull] 'brigada null' agregada");
                     } else {
-                        System.out.println("[CuartelData] No se pudo agregar no se pudo agregar la brigada null");
+                        System.out.println("[CuartelData.insertarBrigadaNull] No se pudo agregar no se pudo agregar la 'brigada null'");
                     }
                     ps.close();
                 } else {
-                    System.out.println("[CuartelData] No se ha podido agregar la brigada null porque ya está agregada");
+                    System.out.println("[CuartelData.insertarBrigadaNull] No se ha podido agregar la 'brigada null' porque ya está agregada");
                 }
             } else {
-                System.out.println("[CuartelData] Error al buscar a brigadaNull en la BD");
+                System.out.println("[CuartelData.insertarBrigadaNull] Error al buscar la 'brigada null' en la BD");
             }
         } catch (SQLException e) {
             int errorCode = e.getErrorCode();
-            System.out.println("[CuartelData Error " + errorCode + "] " + e.getMessage());
+            System.out.println("[CuartelData.insertarBrigadaNull] Error " + errorCode + " " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
@@ -83,14 +83,16 @@ public class BrigadaData {
             if (rs.next()) {
                 brigada.setCodigoBrigada(rs.getInt(1));
                 resultado = true;
-                System.out.println("[BrigadaData] Brigada agregada");
+                System.out.println("[BrigadaData.guardarBrigada] Brigada agregada"
+                        + "\nDatos de la brigada agregada: " + brigada.debugToString());
             } else {
-                System.out.println("[BrigadaData] No se pudo agregar a la brigada");
+                System.out.println("[BrigadaData.guardarBrigada] No se pudo agregar a la brigada"
+                        + "\nDatos de la brigada que se intentó agregar: " + brigada.debugToString());
             }
             ps.close();
         } catch (SQLException e) {
             int errorCode = e.getErrorCode();
-            System.out.println("[BrigadaData Error " + errorCode + "] " + e.getMessage());
+            System.out.println("[BrigadaData.guardarBrigada] Error " + errorCode + " " + e.getMessage());
             if (errorCode != 1062) { // Ignorar datos repetidos
                 e.printStackTrace();
             }
@@ -108,13 +110,13 @@ public class BrigadaData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 brigada = Utils.obtenerDeResultSetBrigada(rs);
-                System.out.println("[BrigadaData] Brigada con codigo=" + codigoBrigada + " encontrada");
+                System.out.println("[BrigadaData.buscarBrigada] Brigada encontrada (código de brigada: " + codigoBrigada + ")");
             } else {
-                System.out.println("[BrigadaData] No se ha encontrado a la brigada con codigo=" + codigoBrigada);
+                System.out.println("[BrigadaData.buscarBrigada] No se ha encontrado a la brigada (código de brigada: " + codigoBrigada + ")");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.buscarBrigada] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return brigada;
@@ -130,13 +132,13 @@ public class BrigadaData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 brigada = Utils.obtenerDeResultSetBrigada(rs);
-                System.out.println("[BrigadaData] Brigada '" + nombreBrigada + "' encontrada");
+                System.out.println("[BrigadaData.buscarBrigadaPorNombre] Brigada encontrada (nombre de brigada: " + nombreBrigada + ")");
             } else {
-                System.out.println("[BrigadaData] No se ha encontrado a la brigada '" + nombreBrigada + "'");
+                System.out.println("[BrigadaData.buscarBrigadaPorNombre] No se ha encontrado la brigada (nombre de brigada: " + nombreBrigada + ")");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.buscarBrigadaPorNombre] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return brigada;
@@ -156,7 +158,7 @@ public class BrigadaData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.listarBrigadas] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return brigadas;
@@ -181,7 +183,7 @@ public class BrigadaData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.listarBrigadasAsignables] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return brigadas;
@@ -206,7 +208,7 @@ public class BrigadaData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.listarBrigadasNoAsignables] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return brigadas;
@@ -228,7 +230,7 @@ public class BrigadaData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.listarBrigadasAtendiendoEmergencia] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return brigadas;
@@ -251,7 +253,7 @@ public class BrigadaData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.listarBrigadasIncompletas] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return brigadas;
@@ -271,7 +273,7 @@ public class BrigadaData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.listarBomberosDeBrigada] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return bomberos;
@@ -289,13 +291,15 @@ public class BrigadaData {
             ps.setInt(5, brigada.getCodigoBrigada());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BrigadaData] Brigada modificada");
+                System.out.println("[BrigadaData.modificarBrigada] Brigada modificada"
+                        + "\nNuevos datos guardados: " + brigada.debugToString());
             } else {
-                System.out.println("[BrigadaData] No se pudo modificar a la brigada");
+                System.out.println("[BrigadaData.modificarBrigada] No se pudo modificar a la brigada"
+                        + "\nDatos que se intentó guardar: " + brigada.debugToString());
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.modificarBrigada] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
@@ -312,13 +316,13 @@ public class BrigadaData {
             ps.setInt(2, codigoBrigada);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BrigadaData] Brigada eliminada");
+                System.out.println("[BrigadaData.eliminarBrigada] Brigada eliminada (código de brigada: " + codigoBrigada + ")");
             } else {
-                System.out.println("[BrigadaData] No se pudo eliminar a la brigada");
+                System.out.println("[BrigadaData.eliminarBrigada] No se pudo eliminar a la brigada (código de brigada: " + codigoBrigada + ")");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.eliminarBrigada] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
@@ -335,13 +339,13 @@ public class BrigadaData {
             ps.setString(2, nombreBrigada);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[BrigadaData] Brigada eliminada");
+                System.out.println("[BrigadaData.eliminarBrigadaPorNombre] Brigada eliminada (nombre de brigada: " + nombreBrigada + ")");
             } else {
-                System.out.println("[BrigadaData] No se pudo eliminar a la brigada");
+                System.out.println("[BrigadaData.eliminarBrigadaPorNombre] No se pudo eliminar la brigada (nombre de brigada: " + nombreBrigada + ")");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[BrigadaData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[BrigadaData.eliminarBrigadaPorNombre] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;

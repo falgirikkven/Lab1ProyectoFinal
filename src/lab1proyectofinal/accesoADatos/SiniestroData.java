@@ -35,22 +35,27 @@ public class SiniestroData {
         LocalDateTime fecHorRes = siniestro.getFechaHoraResolucion();
         LocalDateTime fecActual = LocalDateTime.now();
         if (fecHorIni.isAfter(fecActual)) {
-            System.out.println("[SiniestroData] Error al agregar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora actual");
+            System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. La fecha y hora de inicio de la "
+                    + "emergencia (" + fecHorIni + ") no puede ser posterior a la fecha y hora actual");
             return resultado;
         }
         if (fecHorRes != null && puntuacion != Siniestro.PUNTUACION_NIL) {
             if (fecHorIni.isAfter(fecHorRes)) {
-                System.out.println("[SiniestroData] Error al agregar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora de resolución de la misma");
+                System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. La fecha y hora de inicio de la "
+                        + "emergencia (" + fecHorIni + ") no puede ser posterior a la fecha y hora de resolución de la misma");
                 return resultado;
             } else if (fecHorRes.isAfter(fecActual)) {
-                System.out.println("[SiniestroData] Error al agregar. La fecha y hora de resolución de la emergencia no puede ser posterior a la fecha y hora actual");
+                System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. La fecha y hora de resolución de la "
+                        + "emergencia (" + fecHorRes + ") no puede ser posterior a la fecha y hora actual");
                 return resultado;
             } else if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
-                System.out.println("[SiniestroData] Error al agregar. Puntuacion fuera de rango");
+                System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. Puntuacion (" + puntuacion + ") fuera "
+                        + "de rango");
                 return resultado;
             }
         } else if (fecHorRes != null || puntuacion != Siniestro.PUNTUACION_NIL) {
-            System.out.println("[SiniestroData] Error al agregar. No se puede establecer una fecha de resolución sin establecer una puntuación, ni viceversa");
+            System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. No se puede establecer una fecha de resolución "
+                    + "sin establecer una puntuación, ni viceversa");
             return false;
         }
         try {
@@ -75,9 +80,11 @@ public class SiniestroData {
             if (rs.next()) {
                 siniestro.setCodigoSiniestro(rs.getInt(1));
                 resultado = true;
-                System.out.println("[SiniestroData] Siniestro agregado");
+                System.out.println("[SiniestroData.guardarSiniestro] Siniestro agregado"
+                        + "\nDatos del siniestro agregado: " + siniestro.debugToString());
             } else {
-                System.out.println("[SiniestroData] No ha podido agregar el siniestro");
+                System.out.println("[SiniestroData.guardarSiniestro] No ha podido agregar el siniestro"
+                        + "\nDatos del siniestro que se intentó agregar: " + siniestro.debugToString());
             }
             ps.close();
         } catch (SQLException e) {
@@ -102,13 +109,13 @@ public class SiniestroData {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 siniestro = Utils.obtenerDeResultSetSiniestro(rs);
-                System.out.println("[SiniestroData] Siniestro con codigo '" + codigoSiniestro + "' encontrado");
+                System.out.println("[SiniestroData.buscarSiniestro] Siniestro encontrado (codigo del siniestro: " + codigoSiniestro + ")");
             } else {
-                System.out.println("[SiniestroData] No se ha encontrado el siniestro con código '" + codigoSiniestro + "'");
+                System.out.println("[SiniestroData.buscarSiniestro] No se ha encontrado el siniestro (codigo del siniestro: " + codigoSiniestro + ")");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[SiniestroData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[SiniestroData.buscarSiniestro] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return siniestro;
@@ -129,7 +136,7 @@ public class SiniestroData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[SiniestroData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[SiniestroData.listarSiniestros] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return siniestros;
@@ -150,7 +157,7 @@ public class SiniestroData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[SiniestroData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[SiniestroData.listarSiniestrosResueltos] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return siniestros;
@@ -171,7 +178,7 @@ public class SiniestroData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[SiniestroData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[SiniestroData.listarSiniestrosSinResolucion] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return siniestros;
@@ -181,7 +188,7 @@ public class SiniestroData {
         List<Siniestro> siniestros = new ArrayList();
         try {
             String sql = "SELECT * FROM siniestro, brigada, cuartel "
-                    + "WHERE (fechaHoraInicio>=? AND fechaHoraResolucion<=?) " // comparar NULL con algo podría ser fuente de errores
+                    + "WHERE (fechaHoraInicio>=? AND fechaHoraResolucion<=?) " // comparar NULL con algo aparenta devolver siempre falso
                     + "AND siniestro.codigoBrigada=brigada.codigoBrigada "
                     + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -195,7 +202,7 @@ public class SiniestroData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[SiniestroData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[SiniestroData.listarSiniestrosEntreFechas] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return siniestros;
@@ -219,7 +226,7 @@ public class SiniestroData {
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[SiniestroData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[SiniestroData.listarSiniestrosInicioEntreFechas] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return siniestros;
@@ -234,22 +241,27 @@ public class SiniestroData {
         LocalDateTime fecHorRes = siniestro.getFechaHoraResolucion();
         LocalDateTime fecActual = LocalDateTime.now();
         if (fecHorIni.isAfter(fecActual)) {
-            System.out.println("[SiniestroData] Error al modificar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora actual");
+            System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. La fecha y hora de inicio de la "
+                    + "emergencia (" + fecHorIni + ") no puede ser posterior a la fecha y hora actual");
             return resultado;
         }
         if (fecHorRes != null && puntuacion != Siniestro.PUNTUACION_NIL) {
             if (fecHorIni.isAfter(fecHorRes)) {
-                System.out.println("[SiniestroData] Error al modificar. La fecha y hora de inicio de la emergencia no puede ser posterior a la fecha y hora de resolución de la misma");
+                System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. La fecha y hora de inicio de la "
+                        + "emergencia (" + fecHorIni + ") no puede ser posterior a la fecha y hora de resolución de la misma");
                 return resultado;
             } else if (fecHorRes.isAfter(fecActual)) {
-                System.out.println("[SiniestroData] Error al modificar. La fecha y hora de resolución de la emergencia no puede ser posterior a la fecha y hora actual");
+                System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. La fecha y hora de resolución de la "
+                        + "emergencia (" + fecHorRes + ") no puede ser posterior a la fecha y hora actual");
                 return resultado;
             } else if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
-                System.out.println("[SiniestroData] Error al modificar. Puntuacion fuera de rango");
+                System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. Puntuacion (" + puntuacion + ") fuera "
+                        + "de rango");
                 return resultado;
             }
         } else if (fecHorRes != null || puntuacion != Siniestro.PUNTUACION_NIL) {
-            System.out.println("[SiniestroData] Error al modificar. No se puede establecer una fecha de resolución sin establecer una puntuación, ni viceversa");
+            System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. No se puede establecer una fecha de resolución "
+                    + "sin establecer una puntuación, ni viceversa");
             return false;
         }
         try {
@@ -275,9 +287,11 @@ public class SiniestroData {
             ps.setInt(9, siniestro.getCodigoSiniestro());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[SiniestroData] Siniestro modificado");
+                System.out.println("[SiniestroData] Siniestro modificado"
+                        + "\nNuevos datos guardados: " + siniestro.debugToString());
             } else {
-                System.out.println("[SiniestroData] No se pudo modificar el siniestro");
+                System.out.println("[SiniestroData] No se pudo modificar el siniestro"
+                        + "\nDatos que se intentaron guardar: " + siniestro.debugToString());
             }
             ps.close();
         } catch (SQLException e) {
@@ -291,16 +305,18 @@ public class SiniestroData {
         boolean resultado = false;
 
         if (!(fechaHoraResolucion != null && puntuacion != Siniestro.PUNTUACION_NIL)) {
-            System.out.println("[SiniestroData] Error al asignar resolución. Tanto la fecha y hora de la resolución como la puntuación deben ser establecidos");
+            System.out.println("[SiniestroData.asignarResolucion] Error al asignar resolución. Tanto la fecha y hora de la resolución como la puntuación deben ser establecidos");
             return false;
         } else if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
-            System.out.println("[SiniestroData] Error al asignar resolución. Puntuacion fuera de rango");
+            System.out.println("[SiniestroData.asignarResolucion] Error al asignar resolución. Puntuacion (" + puntuacion + ") fuera de rango");
             return false;
         } else if (siniestro.getFechaHoraInicio().isAfter(fechaHoraResolucion)) {
-            System.out.println("[SiniestroData] Error al asignar resolución. La fecha y hora de resolución es anterior a la fecha y hora de inicio del siniestro");
+            System.out.println("[SiniestroData.asignarResolucion] Error al asignar resolución. La fecha y hora de resolución de la "
+                    + "emergencia (" + siniestro.getFechaHoraInicio() + ") es anterior a la fecha y hora de inicio del siniestro");
             return false;
         } else if (fechaHoraResolucion.isAfter(LocalDateTime.now())) {
-            System.out.println("[SiniestroData] Error al asignar resolución. La fecha y hora de resolución de la emergencia no puede ser posterior a la fecha y hora actual");
+            System.out.println("[SiniestroData.asignarResolucion] Error al asignar resolución. La fecha y hora de resolución de la "
+                    + "emergencia (" + fechaHoraResolucion + ") no puede ser posterior a la fecha y hora actual");
             return false;
         }
         try {
@@ -312,13 +328,19 @@ public class SiniestroData {
             ps.setInt(3, siniestro.getCodigoSiniestro());
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[SiniestroData] Resolucion asignada");
+                System.out.println("[SiniestroData.asignarResolucion] Resolucion asignada"
+                        + "\nDatos del siniestro al que se le asignó la resolución: " + siniestro.debugToString()
+                        + "\nFecha de resolución asignada: " + fechaHoraResolucion
+                        + "\nPuntuación asignada: " + puntuacion);
             } else {
-                System.out.println("[SiniestroData] No se pudo asignar la resolucion");
+                System.out.println("[SiniestroData.asignarResolucion] No se pudo asignar la resolucion"
+                        + "\nDatos del siniestro al que se le intentó asignar la resolución: " + siniestro.debugToString()
+                        + "\nFecha de resolución que se intentó asignar: " + fechaHoraResolucion
+                        + "\nPuntuación que se intentó asignar: " + puntuacion);
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[SiniestroData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[SiniestroData.asignarResolucion] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
@@ -332,13 +354,13 @@ public class SiniestroData {
             ps.setInt(1, codigoSiniestro);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
-                System.out.println("[SiniestroData] Siniestro eliminado");
+                System.out.println("[SiniestroData.eliminarSiniestro] Siniestro eliminado (codigo del siniestro: " + codigoSiniestro + ")");
             } else {
-                System.out.println("[SiniestroData] No se pudo eliminar el siniestro");
+                System.out.println("[SiniestroData.eliminarSiniestro] No se pudo eliminar el siniestro (codigo del siniestro: " + codigoSiniestro + ")");
             }
             ps.close();
         } catch (SQLException e) {
-            System.out.println("[SiniestroData Error " + e.getErrorCode() + "] " + e.getMessage());
+            System.out.println("[SiniestroData.eliminarSiniestro] Error " + e.getErrorCode() + " " + e.getMessage());
             e.printStackTrace();
         }
         return resultado;
