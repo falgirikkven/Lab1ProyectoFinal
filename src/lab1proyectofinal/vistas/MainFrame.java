@@ -15,7 +15,9 @@ public class MainFrame extends javax.swing.JFrame {
      * SUJETO A CAMBIOS
      */
     private JInternalFrame focusedFrame = null;
+    private final FormularioCuartel formularioCuartel;
     private final GestionCuartel gestionCuartel;
+    private final FormularioBrigada formularioBrigada;
     private final GestionBrigada gestionBrigada;
 
     private final CuartelData cuartelData;
@@ -30,9 +32,17 @@ public class MainFrame extends javax.swing.JFrame {
         this.cuartelData = new CuartelData();
         this.brigadaData = new BrigadaData();
 
+        // Formulario Cuartel
+        this.formularioCuartel = new FormularioCuartel(cuartelData);
+        DesktopPane.add(this.formularioCuartel);
+
         // Gestion Cuartel
         this.gestionCuartel = new GestionCuartel(cuartelData);
         DesktopPane.add(this.gestionCuartel);
+
+        // Formulario Brigada
+        this.formularioBrigada = new FormularioBrigada(cuartelData, brigadaData);
+        DesktopPane.add(this.formularioBrigada);
 
         // Gestion Brigada
         this.gestionBrigada = new GestionBrigada(cuartelData, brigadaData);
@@ -70,12 +80,15 @@ public class MainFrame extends javax.swing.JFrame {
         DesktopPane = new javax.swing.JDesktopPane();
         MenuBar = new javax.swing.JMenuBar();
         cuartelMenu = new javax.swing.JMenu();
+        formularioCuartelMI = new javax.swing.JMenuItem();
         gestionCuartelMI = new javax.swing.JMenuItem();
         brigadaMenu = new javax.swing.JMenu();
+        formularioBrigadaMI = new javax.swing.JMenuItem();
         gestionBrigadaMI = new javax.swing.JMenuItem();
-        asignacionBrigadaMI = new javax.swing.JMenuItem();
         bomberoMenu = new javax.swing.JMenu();
-        formularioBombero = new javax.swing.JMenuItem();
+        formularioBomberoMI = new javax.swing.JMenuItem();
+        gestionBomberoMI = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestión Bomberos");
@@ -93,6 +106,14 @@ public class MainFrame extends javax.swing.JFrame {
 
         cuartelMenu.setText("Cuartel");
 
+        formularioCuartelMI.setText("Formulario Cuartel");
+        formularioCuartelMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formularioCuartelMIActionPerformed(evt);
+            }
+        });
+        cuartelMenu.add(formularioCuartelMI);
+
         gestionCuartelMI.setText("Gestión Cuartel");
         gestionCuartelMI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,6 +126,14 @@ public class MainFrame extends javax.swing.JFrame {
 
         brigadaMenu.setText("Brigada");
 
+        formularioBrigadaMI.setText("Formulario Brigada");
+        formularioBrigadaMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formularioBrigadaMIActionPerformed(evt);
+            }
+        });
+        brigadaMenu.add(formularioBrigadaMI);
+
         gestionBrigadaMI.setText("Gestión Brigada");
         gestionBrigadaMI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -113,17 +142,20 @@ public class MainFrame extends javax.swing.JFrame {
         });
         brigadaMenu.add(gestionBrigadaMI);
 
-        asignacionBrigadaMI.setText("Asignación de Brigadas");
-        brigadaMenu.add(asignacionBrigadaMI);
-
         MenuBar.add(brigadaMenu);
 
         bomberoMenu.setText("Bombero");
 
-        formularioBombero.setText("Formulario Bombero");
-        bomberoMenu.add(formularioBombero);
+        formularioBomberoMI.setText("Formulario Bombero");
+        bomberoMenu.add(formularioBomberoMI);
+
+        gestionBomberoMI.setText("Gestión Bombero");
+        bomberoMenu.add(gestionBomberoMI);
 
         MenuBar.add(bomberoMenu);
+
+        jMenu1.setText("Siniestro");
+        MenuBar.add(jMenu1);
 
         setJMenuBar(MenuBar);
 
@@ -141,9 +173,17 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formularioCuartelMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioCuartelMIActionPerformed
+        focusIFrame(formularioCuartel);
+    }//GEN-LAST:event_formularioCuartelMIActionPerformed
+
     private void gestionCuartelMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionCuartelMIActionPerformed
         focusIFrame(gestionCuartel);
     }//GEN-LAST:event_gestionCuartelMIActionPerformed
+
+    private void formularioBrigadaMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioBrigadaMIActionPerformed
+        focusIFrame(formularioBrigada);
+    }//GEN-LAST:event_formularioBrigadaMIActionPerformed
 
     private void gestionBrigadaMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionBrigadaMIActionPerformed
         focusIFrame(gestionBrigada);
@@ -187,12 +227,15 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane DesktopPane;
     private javax.swing.JMenuBar MenuBar;
-    private javax.swing.JMenuItem asignacionBrigadaMI;
     private javax.swing.JMenu bomberoMenu;
     private javax.swing.JMenu brigadaMenu;
     private javax.swing.JMenu cuartelMenu;
-    private javax.swing.JMenuItem formularioBombero;
+    private javax.swing.JMenuItem formularioBomberoMI;
+    private javax.swing.JMenuItem formularioBrigadaMI;
+    private javax.swing.JMenuItem formularioCuartelMI;
+    private javax.swing.JMenuItem gestionBomberoMI;
     private javax.swing.JMenuItem gestionBrigadaMI;
     private javax.swing.JMenuItem gestionCuartelMI;
+    private javax.swing.JMenu jMenu1;
     // End of variables declaration//GEN-END:variables
 }

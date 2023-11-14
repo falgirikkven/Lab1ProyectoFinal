@@ -30,10 +30,21 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     }
 
     private void limpiarCampos() {
-        codigoTF.setText("");
+        brigadaCB.setSelectedIndex(-1);
         nombreTF.setText("");
         especialidadCB.setSelectedIndex(-1);
         cuartelCB.setSelectedIndex(-1);
+        disponibleChB.setSelected(false);
+        setFieldsEnabled(false);
+    }
+
+    private void setFieldsEnabled(boolean flag) {
+        nombreTF.setEnabled(flag);
+        especialidadCB.setEnabled(flag);
+        cuartelCB.setEnabled(flag);
+        disponibleChB.setEnabled(flag);
+        BtnGuardar.setEnabled(flag);
+        BtnEditar.setEnabled(!flag);
     }
 
     /**
@@ -45,25 +56,24 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        titulo = new javax.swing.JLabel();
-        codigoLabel = new javax.swing.JLabel();
-        codigoTF = new javax.swing.JTextField();
+        brigadaLabel = new javax.swing.JLabel();
+        brigadaCB = new javax.swing.JComboBox<>();
         nombreLabel = new javax.swing.JLabel();
         nombreTF = new javax.swing.JTextField();
         especialidadLabel = new javax.swing.JLabel();
         especialidadCB = new javax.swing.JComboBox<>();
         cuartelLabel = new javax.swing.JLabel();
         cuartelCB = new javax.swing.JComboBox<>();
-        BtnBuscarCodigo = new javax.swing.JButton();
-        BtnBuscarNombre = new javax.swing.JButton();
-        BtnLimpiar = new javax.swing.JButton();
+        disponibleLabel = new javax.swing.JLabel();
+        disponibleChB = new javax.swing.JCheckBox();
+        BtnEditar = new javax.swing.JButton();
         BtnGuardar = new javax.swing.JButton();
         BtnEliminar = new javax.swing.JButton();
         BtnSalir = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        setTitle("Brigadas");
+        setTitle("Gestion Brigada");
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameActivated(evt);
@@ -82,11 +92,13 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
             }
         });
 
-        titulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titulo.setText("Formulario Brigada");
+        brigadaLabel.setText("Brigada:");
 
-        codigoLabel.setText("Código:");
+        brigadaCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                brigadaCBActionPerformed(evt);
+            }
+        });
 
         nombreLabel.setText("Nombre:");
 
@@ -96,24 +108,12 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
 
         cuartelLabel.setText("Cuartel:");
 
-        BtnBuscarCodigo.setText("Buscar");
-        BtnBuscarCodigo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnBuscarCodigoActionPerformed(evt);
-            }
-        });
+        disponibleLabel.setText("Disponible:");
 
-        BtnBuscarNombre.setText("Buscar");
-        BtnBuscarNombre.addActionListener(new java.awt.event.ActionListener() {
+        BtnEditar.setText("Editar");
+        BtnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnBuscarNombreActionPerformed(evt);
-            }
-        });
-
-        BtnLimpiar.setText("Limpiar Campos");
-        BtnLimpiar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnLimpiarActionPerformed(evt);
+                BtnEditarActionPerformed(evt);
             }
         });
 
@@ -142,51 +142,46 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(titulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(codigoLabel)
-                            .addComponent(nombreLabel)
-                            .addComponent(especialidadLabel)
-                            .addComponent(cuartelLabel))
-                        .addGap(41, 41, 41)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nombreTF)
-                            .addComponent(especialidadCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cuartelCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(codigoTF))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(BtnBuscarCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(BtnBuscarNombre, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(BtnLimpiar)
+                        .addComponent(BtnEditar)
                         .addGap(18, 18, 18)
                         .addComponent(BtnGuardar)
                         .addGap(18, 18, 18)
                         .addComponent(BtnEliminar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                        .addComponent(BtnSalir)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addComponent(BtnSalir))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(especialidadLabel)
+                            .addComponent(cuartelLabel)
+                            .addComponent(disponibleLabel)
+                            .addComponent(nombreLabel)
+                            .addComponent(brigadaLabel))
+                        .addGap(41, 41, 41)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(disponibleChB)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(nombreTF)
+                            .addComponent(brigadaCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cuartelCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(especialidadCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(titulo)
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(codigoLabel)
-                    .addComponent(codigoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BtnBuscarCodigo))
+                    .addComponent(brigadaCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(brigadaLabel))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nombreLabel)
-                    .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BtnBuscarNombre))
+                    .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(especialidadLabel)
@@ -197,120 +192,102 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
                     .addComponent(cuartelCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BtnLimpiar)
+                    .addComponent(disponibleLabel)
+                    .addComponent(disponibleChB))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnGuardar)
                     .addComponent(BtnEliminar)
-                    .addComponent(BtnSalir))
+                    .addComponent(BtnSalir)
+                    .addComponent(BtnEditar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BtnBuscarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarCodigoActionPerformed
-        // TODO: Corregir poder seleccionar items del combobox mediante codigo
-        int codigo;
-        try {
-            codigo = Integer.parseInt(codigoTF.getText().trim());
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Se esperaba un numero entero en Código.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Brigada brigada = brigadaData.buscarBrigada(codigo);
-        if (brigada != null) {
-            codigoTF.setText(Integer.toString(brigada.getCodigoBrigada()));
-            nombreTF.setText(brigada.getNombreBrigada());
-            especialidadCB.setSelectedItem(brigada.getEspecialidad());
-            cuartelCB.setSelectedItem(brigada.getCuartel());
+    private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
+        brigadaCB.removeAllItems();
+        List<Brigada> brigadas = brigadaData.listarBrigadas();
+        if (!brigadas.isEmpty()) {
+            for (Brigada brigada : brigadas) {
+                brigadaCB.addItem(brigada);
+                cuartelCB.addItem(brigada.getCuartel());
+            }
+            brigadaCB.setEnabled(true);
         } else {
-            JOptionPane.showMessageDialog(this, "Brigada no encontrada.\nEs posible que haya sido dado de baja o no exista.", "Información", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_BtnBuscarCodigoActionPerformed
-
-    private void BtnBuscarNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarNombreActionPerformed
-        // TODO: Corregir poder seleccionar items del combobox mediante codigo
-        String nombreStr = nombreTF.getText().trim();
-        if (nombreStr.isBlank()) {
-            JOptionPane.showMessageDialog(this, "Se esperaba un nombre en el campo.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            brigadaCB.setEnabled(false);
         }
 
-        Brigada brigada = brigadaData.buscarBrigadaPorNombre(nombreStr);
-        if (brigada != null) {
-            codigoTF.setText(Integer.toString(brigada.getCodigoBrigada()));
-            nombreTF.setText(brigada.getNombreBrigada());
-            especialidadCB.setSelectedItem(brigada.getEspecialidad());
-            cuartelCB.setSelectedItem(brigada.getCuartel());
+        limpiarCampos();
+        setFieldsEnabled(false);
+    }//GEN-LAST:event_formInternalFrameActivated
+
+    private void brigadaCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brigadaCBActionPerformed
+        Brigada brigadaSeleccionada = (Brigada) brigadaCB.getSelectedItem();
+        if (brigadaSeleccionada != null) {
+            setFieldsEnabled(false);
+            nombreTF.setText(brigadaSeleccionada.getNombreBrigada());
+            especialidadCB.setSelectedItem(brigadaSeleccionada.getEspecialidad());
+            cuartelCB.setSelectedItem(brigadaSeleccionada.getCuartel());
+            disponibleChB.setSelected(brigadaSeleccionada.isDisponible());
+        }
+    }//GEN-LAST:event_brigadaCBActionPerformed
+
+    private void BtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditarActionPerformed
+        Brigada brigadaSeleccionada = (Brigada) brigadaCB.getSelectedItem();
+        if (brigadaSeleccionada != null) {
+            setFieldsEnabled(true);
         } else {
-            JOptionPane.showMessageDialog(this, "Brigada no encontrada.\nEs posible que haya sido dado de baja o no exista.", "Información", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Seleccione primero una brigada a editar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_BtnBuscarNombreActionPerformed
-
-    private void BtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLimpiarActionPerformed
-        this.limpiarCampos();
-    }//GEN-LAST:event_BtnLimpiarActionPerformed
+    }//GEN-LAST:event_BtnEditarActionPerformed
 
     private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
-        String codigoStr = codigoTF.getText().trim();
+        Brigada brigadaSeleccionada = (Brigada) brigadaCB.getSelectedItem();
+        if (brigadaSeleccionada == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione primero una brigada a editar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         String nombreStr = nombreTF.getText().trim();
         String especialidadStr = (String) especialidadCB.getSelectedItem();
         Cuartel cuartel = (Cuartel) cuartelCB.getSelectedItem();
+        boolean disponible = disponibleChB.isSelected();
 
-        if (codigoStr.isBlank() || nombreStr.isBlank()
-                || especialidadStr == null || cuartel == null) {
-            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (nombreStr.isBlank() || especialidadStr == null || cuartel == null) {
+            JOptionPane.showMessageDialog(this, "No puede haber campos vacios.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        int codigo;
-        try {
-            codigo = Integer.parseInt(codigoStr);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Se esperaba un numero entero en Código.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Brigada brigada = new Brigada();
-        brigada.setCodigoBrigada(codigo);
-        brigada.setNombreBrigada(nombreStr);
-        brigada.setEspecialidad(especialidadStr);
-        brigada.setDisponible(true);
-        brigada.setCuartel(cuartel);
-        brigada.setEstado(true);
-        if (brigadaData.guardarBrigada(brigada)) {
-            JOptionPane.showMessageDialog(this, "Brigada guardada.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        Brigada brigada = new Brigada(nombreStr, especialidadStr, disponible, cuartel);
+        brigada.setCodigoBrigada(brigadaSeleccionada.getCodigoBrigada());
+        if (brigadaData.modificarBrigada(brigada)) {
+            brigadaSeleccionada.setNombreBrigada(nombreStr);
+            brigadaSeleccionada.setEspecialidad(especialidadStr);
+            brigadaSeleccionada.setCuartel(cuartel);
+            brigadaSeleccionada.setDisponible(disponible);
+            JOptionPane.showMessageDialog(this, "Brigada modificada.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "No se pudo guardar la brigada.\nQuizás ya haya una brigada guardada con este código o nombre.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo guardar la edición.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_BtnGuardarActionPerformed
 
     private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
-        String codigoStr = codigoTF.getText().trim();
-        String nombreStr = nombreTF.getText().trim();
-
-        if (codigoStr.isBlank() && nombreStr.isBlank()) {
-            JOptionPane.showMessageDialog(this, "Debe especificar código o nombre de la brigada a eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+        Brigada brigadaSeleccionada = (Brigada) brigadaCB.getSelectedItem();
+        if (brigadaSeleccionada == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione primero un cuartel a eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        int codigo = -1;
-        try {
-            codigo = Integer.parseInt(codigoStr);
-        } catch (NumberFormatException e) {
-        }
-
-        boolean resultado = false;
-        if (codigo != -1) {
-            resultado = brigadaData.eliminarBrigada(codigo);
-        } else {
-            resultado = brigadaData.eliminarBrigadaPorNombre(nombreStr);
-        }
-        if (resultado) {
-            this.limpiarCampos();
-            JOptionPane.showMessageDialog(this, "Brigada dada de baja.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "No se pudo dar de baja la brigada.\nQuizás la brigada ya haya sido dada de baja o no exista.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        int option = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar esta brigada?", "Confirmar eliminacion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (option == JOptionPane.YES_OPTION) {
+            if (brigadaData.eliminarBrigada(brigadaSeleccionada.getCodigoBrigada())){
+                brigadaCB.removeItem(brigadaSeleccionada);
+                JOptionPane.showMessageDialog(this, "Cuartel eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_BtnEliminarActionPerformed
 
@@ -318,40 +295,21 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         this.hide();
     }//GEN-LAST:event_BtnSalirActionPerformed
 
-    private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        cuartelCB.removeAllItems();
-
-        List<Cuartel> cuarteles = cuartelData.listarCuarteles();
-        if (!cuarteles.isEmpty()) {
-            for (Cuartel cuartel : cuarteles) {
-                cuartelCB.addItem(cuartel);
-            }
-            cuartelCB.setEnabled(true);
-            BtnGuardar.setEnabled(true);
-        } else {
-            cuartelCB.setEnabled(false);
-            BtnGuardar.setEnabled(false);
-        }
-
-        this.limpiarCampos();
-    }//GEN-LAST:event_formInternalFrameActivated
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnBuscarCodigo;
-    private javax.swing.JButton BtnBuscarNombre;
+    private javax.swing.JButton BtnEditar;
     private javax.swing.JButton BtnEliminar;
     private javax.swing.JButton BtnGuardar;
-    private javax.swing.JButton BtnLimpiar;
     private javax.swing.JButton BtnSalir;
-    private javax.swing.JLabel codigoLabel;
-    private javax.swing.JTextField codigoTF;
+    private javax.swing.JComboBox<Brigada> brigadaCB;
+    private javax.swing.JLabel brigadaLabel;
     private javax.swing.JComboBox<Cuartel> cuartelCB;
     private javax.swing.JLabel cuartelLabel;
+    private javax.swing.JCheckBox disponibleChB;
+    private javax.swing.JLabel disponibleLabel;
     private javax.swing.JComboBox<String> especialidadCB;
     private javax.swing.JLabel especialidadLabel;
     private javax.swing.JLabel nombreLabel;
     private javax.swing.JTextField nombreTF;
-    private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }
