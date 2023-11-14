@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 
-
 /**
  *
  * @author Grupo-3
@@ -16,9 +15,9 @@ public class Siniestro {
      */
     public static final int PUNTUACION_NIL = -1;
     public static final int PUNTUACION_MIN = 1;
-    public static final int PUNTUACION_MAX = 10;    
+    public static final int PUNTUACION_MAX = 10;
 
-    private int codigoSiniestro=-1;
+    private int codigoSiniestro = -1;
     private String tipo;
     private LocalDateTime fechaHoraInicio;
     private int coordenadaX;
@@ -54,7 +53,7 @@ public class Siniestro {
         this.puntuacion = PUNTUACION_NIL;
         this.brigada = brigada;
     }
-    
+
     // usuario inicializa todo menos 'codigoSiniestro' y 'brigada' (en principio, para registrar emergencias que no se registraron anteriormente por cualquier motivo y que fueron tratados por una brigada que actualmente se encuentra tratando otra emergencia)
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion) {
         this.tipo = tipo;

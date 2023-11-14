@@ -20,7 +20,7 @@ public class Utils {
      */
     public static final int TIPO_SINIESTRO_CANTIDAD = 6;
     private static final Pattern p = Pattern.compile("^\\d+$");
-    
+
     public static String obtenerTipoSiniestro(int codigo) {
         String s = null;
         switch (codigo) {
@@ -49,8 +49,8 @@ public class Utils {
         }
         return s;
     }
-    
-    public static void imprimirListaBombero(List<Bombero> lista){
+
+    public static void imprimirListaBombero(List<Bombero> lista) {
         if (lista.isEmpty()) {
             System.out.println("No se ha encontrado ningún elemento");
         }
@@ -58,8 +58,8 @@ public class Utils {
             System.out.println(bom.debugToString());
         }
     }
-    
-    public static void imprimirListaSiniestro(List<Siniestro> lista){
+
+    public static void imprimirListaSiniestro(List<Siniestro> lista) {
         if (lista.isEmpty()) {
             System.out.println("No se ha encontrado ningún elemento");
         }
@@ -67,8 +67,8 @@ public class Utils {
             System.out.println(sin.debugToString());
         }
     }
-    
-    public static void imprimirListaBrigada(List<Brigada> lista){
+
+    public static void imprimirListaBrigada(List<Brigada> lista) {
         if (lista.isEmpty()) {
             System.out.println("No se ha encontrado ningún elemento");
         }
@@ -76,8 +76,8 @@ public class Utils {
             System.out.println(bri.debugToString());
         }
     }
-    
-    public static void imprimirListaCuartel(List<Cuartel> lista){
+
+    public static void imprimirListaCuartel(List<Cuartel> lista) {
         if (lista.isEmpty()) {
             System.out.println("No se ha encontrado ningún elemento");
         }
@@ -85,29 +85,29 @@ public class Utils {
             System.out.println(cru.debugToString());
         }
     }
-    
-    public static void imprimirResultadoBombero(Bombero bombero){
+
+    public static void imprimirResultadoBombero(Bombero bombero) {
         if (bombero != null) {
             System.out.println("Mostrando:\n" + bombero.debugToString());
-        } 
+        }
     }
-    
-    public static void imprimirResultadoSiniestro(Siniestro siniestro){
+
+    public static void imprimirResultadoSiniestro(Siniestro siniestro) {
         if (siniestro != null) {
             System.out.println("Mostrando:\n" + siniestro.debugToString());
-        } 
+        }
     }
-    
-    public static void imprimirResultadoBrigada(Brigada brigada){
+
+    public static void imprimirResultadoBrigada(Brigada brigada) {
         if (brigada != null) {
             System.out.println("Mostrando:\n" + brigada.debugToString());
-        } 
+        }
     }
-    
-    public static void imprimirResultadoCuartel(Cuartel cuartel){
+
+    public static void imprimirResultadoCuartel(Cuartel cuartel) {
         if (cuartel != null) {
             System.out.println("Mostrando:\n" + cuartel.debugToString());
-        } 
+        }
     }
 
     public static boolean esTelefonoValido(String telefono) {
@@ -129,7 +129,7 @@ public class Utils {
 
     public static Brigada obtenerDeResultSetBrigada(ResultSet rs) throws SQLException {
         Cuartel cuartel = obtenerDeResultSetCuartel(rs);
-        
+
         Brigada brigada = new Brigada();
         brigada.setCodigoBrigada(rs.getInt("brigada.codigoBrigada"));
         brigada.setNombreBrigada(rs.getString("nombreBrigada"));
@@ -139,7 +139,7 @@ public class Utils {
         brigada.setEstado(rs.getBoolean("brigada.estado"));
         return brigada;
     }
-    
+
     public static Brigada obtenerDeResultSetBrigada(ResultSet rs, Cuartel cuartel) throws SQLException {
         Brigada brigada = new Brigada();
         brigada.setCodigoBrigada(rs.getInt("brigada.codigoBrigada"));
@@ -153,7 +153,7 @@ public class Utils {
 
     public static Bombero obtenerDeResultSetBombero(ResultSet rs) throws SQLException {
         Brigada brigada = obtenerDeResultSetBrigada(rs);
-        
+
         Bombero bombero = new Bombero();
         bombero.setIdBombero(rs.getInt("idBombero"));
         bombero.setDni(rs.getInt("dni"));
@@ -165,8 +165,8 @@ public class Utils {
         bombero.setEstado(rs.getBoolean("bombero.estado"));
         return bombero;
     }
-    
-    public static Bombero obtenerDeResultSetBombero(ResultSet rs, Brigada brigada) throws SQLException {        
+
+    public static Bombero obtenerDeResultSetBombero(ResultSet rs, Brigada brigada) throws SQLException {
         Bombero bombero = new Bombero();
         bombero.setIdBombero(rs.getInt("idBombero"));
         bombero.setDni(rs.getInt("dni"));
@@ -178,10 +178,10 @@ public class Utils {
         bombero.setEstado(rs.getBoolean("bombero.estado"));
         return bombero;
     }
-    
+
     public static Siniestro obtenerDeResultSetSiniestro(ResultSet rs) throws SQLException {
         Brigada brigada = obtenerDeResultSetBrigada(rs);
-        
+
         Siniestro siniestro = new Siniestro();
         siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));
         siniestro.setTipo(rs.getString("tipo"));
@@ -198,7 +198,7 @@ public class Utils {
         siniestro.setPuntuacion(rs.getInt("puntuacion"));
         return siniestro;
     }
-    
+
     public static Siniestro obtenerDeResultSetSiniestro(ResultSet rs, Brigada brigada) throws SQLException {
         Siniestro siniestro = new Siniestro();
         siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));

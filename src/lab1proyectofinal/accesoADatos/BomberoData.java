@@ -35,7 +35,7 @@ public class BomberoData {
                 if (rs.getInt(1) == 5) {
                     System.out.println("[BomberoData.guardarBombero] No se pudo agregar al bombero: no hay más espacio en "
                             + "la brigada con código: " + bombero.getBrigada().getCodigoBrigada()
-                            + "\nDatos del bombero que se intentó agregar: "+bombero.debugToString());
+                            + "\nDatos del bombero que se intentó agregar: " + bombero.debugToString());
                     ps.close();
                     return resultado;
                 }
@@ -55,10 +55,10 @@ public class BomberoData {
                 bombero.setIdBombero(rs.getInt(1));
                 resultado = true;
                 System.out.println("[BomberoData.guardarBombero] Bombero agregado"
-                        + "\nDatos del bombero que se agregó: "+bombero.debugToString());
+                        + "\nDatos del bombero que se agregó: " + bombero.debugToString());
             } else {
                 System.out.println("[BomberoData.guardarBombero] No se pudo agregar al bombero"
-                        + "\nDatos del bombero que se intentó agregar: "+bombero.debugToString());
+                        + "\nDatos del bombero que se intentó agregar: " + bombero.debugToString());
             }
             ps.close();
         } catch (SQLException e) {
@@ -155,10 +155,10 @@ public class BomberoData {
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[BomberoData.modificarBombero] Bombero modificado"
-                        + "\nNuevos datos guardados: "+bombero.debugToString());
+                        + "\nNuevos datos guardados: " + bombero.debugToString());
             } else {
                 System.out.println("[BomberoData.modificarBombero] No se pudo modificar al bombero"
-                        + "\nDatos que se intentó guardar: "+bombero.debugToString());
+                        + "\nDatos que se intentó guardar: " + bombero.debugToString());
             }
             ps.close();
         } catch (SQLException e) {

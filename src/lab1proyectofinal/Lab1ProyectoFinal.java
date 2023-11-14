@@ -3,7 +3,6 @@ package lab1proyectofinal;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import lab1proyectofinal.accesoADatos.Conexion;
-import lab1proyectofinal.vistas.MainFrame;
 
 /**
  *
@@ -24,7 +23,7 @@ public class Lab1ProyectoFinal {
         }
 
         // TODO: implementar vistas
-        MainFrame.ejecutar(args);
+        
 
     }
 

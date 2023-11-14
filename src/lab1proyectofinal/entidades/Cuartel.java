@@ -9,7 +9,7 @@ public class Cuartel {
     /*
      * SUJETO A CAMBIOS
      */
-    private int codigoCuartel=-1;
+    private int codigoCuartel = -1;
     private String nombreCuartel;
     private String direccion;
     private int coordenadaX;
@@ -42,7 +42,6 @@ public class Cuartel {
         this.correo = correo;
         this.estado = estado;
     }
-    
 
     public int getCodigoCuartel() {
         return codigoCuartel;
@@ -112,7 +111,7 @@ public class Cuartel {
     public String toString() {
         return "Cuartel{" + "codigoCuartel=" + codigoCuartel + ", nombreCuartel=" + nombreCuartel + ", direccion=" + direccion + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", telefono=" + telefono + ", correo=" + correo + ", estado=" + estado + '}';
     }
-    
+
     // no pasa estado
     public String debugToString() {
         return "Cuartel{" + "codigoCuartel=" + codigoCuartel + ", nombreCuartel=" + nombreCuartel + ", direccion=" + direccion + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", telefono=" + telefono + ", correo=" + correo + '}';

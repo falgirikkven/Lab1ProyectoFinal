@@ -9,7 +9,7 @@ public class Brigada {
     /**
      * SUJETO A CAMBIOS
      */
-    private int codigoBrigada=-1;
+    private int codigoBrigada = -1;
     private String nombreBrigada;
     private String especialidad;
     private boolean disponible;
@@ -24,10 +24,10 @@ public class Brigada {
         this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
         this.disponible = disponible;
-        this.cuartel = cuartel;  
+        this.cuartel = cuartel;
         this.estado = true;
     }
-    
+
     // inicializa todo menos 'codigoBrigada'
     public Brigada(String nombreBrigada, String especialidad, boolean disponible, Cuartel cuartel, boolean estado) {
         this.nombreBrigada = nombreBrigada;
@@ -36,7 +36,6 @@ public class Brigada {
         this.cuartel = cuartel;
         this.estado = estado;
     }
-    
 
     public int getCodigoBrigada() {
         return codigoBrigada;
@@ -90,9 +89,9 @@ public class Brigada {
     public String toString() {
         return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", disponible=" + disponible + ", cuartel=" + cuartel + ", estado=" + estado + '}';
     }
-    
+
     // no tiene estado
-    public String debugToString(){
+    public String debugToString() {
         return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", disponible=" + disponible + ", cuartel=" + cuartel + '}';
     }
 }

@@ -261,8 +261,8 @@ public class CuartelData {
                 resultado = true;
                 System.out.println("[CuartelData.eliminarCuartel] Cuartel eliminado (código del cuartel: " + codigoCuartel + ")");
             } else {
-                System.out.println("[CuartelData.eliminarCuartel] No se pudo eliminar el cuartel (código del cuartel: " + 
-                        codigoCuartel + ")");
+                System.out.println("[CuartelData.eliminarCuartel] No se pudo eliminar el cuartel (código del cuartel: "
+                        + codigoCuartel + ")");
             }
             ps.close();
         } catch (SQLException e) {
