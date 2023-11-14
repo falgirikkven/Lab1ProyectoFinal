@@ -1,5 +1,6 @@
 package lab1proyectofinal.entidades;
 
+import java.util.Objects;
 import lab1proyectofinal.accesoADatos.Utils;
 
 /**
@@ -78,6 +79,53 @@ public class Brigada {
 
     public String DebugToString() {
         return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", disponible=" + disponible + ", codigoCuartel=" + Integer.toString(cuartel.getCodigoCuartel()) + ", estado=" + estado + '}';
+    }
+
+    @Override
+    public String toString() {
+        return codigoBrigada + ". " + nombreBrigada;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + this.codigoBrigada;
+        hash = 97 * hash + Objects.hashCode(this.nombreBrigada);
+        hash = 97 * hash + Objects.hashCode(this.especialidad);
+        hash = 97 * hash + (this.disponible ? 1 : 0);
+        hash = 97 * hash + Objects.hashCode(this.cuartel);
+        hash = 97 * hash + (this.estado ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Brigada other = (Brigada) obj;
+        if (this.codigoBrigada != other.codigoBrigada) {
+            return false;
+        }
+        if (this.disponible != other.disponible) {
+            return false;
+        }
+        if (this.estado != other.estado) {
+            return false;
+        }
+        if (!Objects.equals(this.nombreBrigada, other.nombreBrigada)) {
+            return false;
+        }
+        if (!Objects.equals(this.especialidad, other.especialidad)) {
+            return false;
+        }
+        return Objects.equals(this.cuartel, other.cuartel);
     }
 
 }

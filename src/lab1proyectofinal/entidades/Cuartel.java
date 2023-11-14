@@ -1,5 +1,6 @@
 package lab1proyectofinal.entidades;
 
+import java.util.Objects;
 import lab1proyectofinal.accesoADatos.Utils;
 
 /**
@@ -98,6 +99,61 @@ public class Cuartel {
 
     public String DebugToString() {
         return "Cuartel{" + "codigoCuartel=" + codigoCuartel + ", nombreCuartel=" + nombreCuartel + ", direccion=" + direccion + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", telefono=" + telefono + ", correo=" + correo + ", estado=" + estado + '}';
+    }
+
+    @Override
+    public String toString() {
+        return codigoCuartel + ". " + nombreCuartel;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + this.codigoCuartel;
+        hash = 97 * hash + Objects.hashCode(this.nombreCuartel);
+        hash = 97 * hash + Objects.hashCode(this.direccion);
+        hash = 97 * hash + this.coordenadaX;
+        hash = 97 * hash + this.coordenadaY;
+        hash = 97 * hash + Objects.hashCode(this.telefono);
+        hash = 97 * hash + Objects.hashCode(this.correo);
+        hash = 97 * hash + (this.estado ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Cuartel other = (Cuartel) obj;
+        if (this.codigoCuartel != other.codigoCuartel) {
+            return false;
+        }
+        if (this.coordenadaX != other.coordenadaX) {
+            return false;
+        }
+        if (this.coordenadaY != other.coordenadaY) {
+            return false;
+        }
+        if (this.estado != other.estado) {
+            return false;
+        }
+        if (!Objects.equals(this.nombreCuartel, other.nombreCuartel)) {
+            return false;
+        }
+        if (!Objects.equals(this.direccion, other.direccion)) {
+            return false;
+        }
+        if (!Objects.equals(this.telefono, other.telefono)) {
+            return false;
+        }
+        return Objects.equals(this.correo, other.correo);
     }
 
 }
