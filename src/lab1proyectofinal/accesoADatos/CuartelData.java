@@ -162,6 +162,8 @@ public class CuartelData {
                 cuartel = Utils.obtenerDeResultSetCuartel(rs);
                 cuarteles.add(cuartel);
             }
+            System.out.println("[CuartelData.listarCuarteles] Cantidad de cuarteles "
+                    + "encontrados: "+cuarteles.size());
             ps.close();
         } catch (SQLException e) {
             System.out.println("[CuartelData.listarCuarteles] Error " + e.getErrorCode() + " " + e.getMessage());
