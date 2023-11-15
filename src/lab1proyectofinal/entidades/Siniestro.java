@@ -52,19 +52,7 @@ public class Siniestro {
         this.fechaHoraResolucion = null;
         this.puntuacion = PUNTUACION_NIL;
         this.brigada = brigada;
-    }
-
-    // usuario inicializa todo menos 'codigoSiniestro' y 'brigada' (en principio, para registrar emergencias que no se registraron anteriormente por cualquier motivo y que fueron tratados por una brigada que actualmente se encuentra tratando otra emergencia)
-    public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion) {
-        this.tipo = tipo;
-        this.fechaHoraInicio = fechaHoraInicio;
-        this.coordenadaX = coordenadaX;
-        this.coordenadaY = coordenadaY;
-        this.detalles = detalles;
-        this.fechaHoraResolucion = fechaHoraResolucion;
-        this.puntuacion = puntuacion;
-        this.brigada = BrigadaData.brigadaNull;
-    }
+    } 
 
     // usuario inicializa todo menos 'codigoSiniestro'
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, LocalDateTime fechaHoraResolucion, int puntuacion, Brigada brigada) {

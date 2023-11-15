@@ -150,6 +150,29 @@ public class CuartelData {
         }
         return cuartel;
     }
+    
+    public boolean buscarNombreEnRegistrosElim(String nombreCuartel) {
+        boolean resultado = false;
+        try {
+            String sql = "SELECT nombreCuartel FROM cuartel WHERE nombreCuartel=? AND estado=false";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, nombreCuartel);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                resultado = true;
+                System.out.println("[CuartelData.buscarNombreEnRegistrosElim] Cuartel encontrado "
+                        + "(nombre del cuartel: " + nombreCuartel + ")");
+            } else {
+                System.out.println("[CuartelData.buscarNombreEnRegistrosElim] No se ha encontrado al cuartel "
+                        + "(nombre del cuartel: " + nombreCuartel + ")");
+            }
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("[CuartelData.buscarNombreEnRegistrosElim Error " + e.getErrorCode() + "] " + e.getMessage());
+            e.printStackTrace();
+        }
+        return resultado;
+    }
 
     public List<Cuartel> listarCuarteles() {
         List<Cuartel> cuarteles = new ArrayList();
@@ -282,6 +305,8 @@ public class CuartelData {
                     + "AND estado=true "
                     + "AND (SELECT COUNT(codigoBrigada) FROM brigada "
                     + "WHERE codigoCuartel=(SELECT codigoCuartel FROM cuartel WHERE nombreCuartel=?) AND estado=true)=0";
+            
+            // 
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, nombreCuartel);
             ps.setString(2, nombreCuartel);
