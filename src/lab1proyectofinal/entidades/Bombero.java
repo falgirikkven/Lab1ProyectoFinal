@@ -103,6 +103,11 @@ public class Bombero {
     }
 
     @Override
+    public String toString() {
+        return idBombero + ". " + nombreApellido + " - " + dni;
+    }
+
+    @Override
     public int hashCode() {
         int hash = 7;
         hash = 29 * hash + this.idBombero;

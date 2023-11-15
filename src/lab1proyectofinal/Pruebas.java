@@ -160,7 +160,7 @@ public class Pruebas {
         bomberoData.buscarBombero(-2); // Deberia fallar
 
         // Modificar Bombero
-        Bombero bomberoModificado = new Bombero(42897241, "Ramiro Moran", grupoSanguineo[7], LocalDate.of(2000, Month.NOVEMBER, 13), "42897241", brigada3);
+        Bombero bomberoModificado = new Bombero(42897241, "Ramiro Moran", grupoSanguineo[7], LocalDate.of(2000, Month.NOVEMBER, 13), "42897241", brigada2);
         bomberoModificado.setIdBombero(bombero2.getIdBombero());
         System.out.println("\n----- Modificar Bombero (con idBombero=" + Integer.toString(bomberoModificado.getIdBombero()) + ")-----");
         bomberoData.modificarBombero(bomberoModificado);

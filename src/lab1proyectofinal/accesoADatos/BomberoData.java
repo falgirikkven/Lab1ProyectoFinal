@@ -133,6 +133,8 @@ public class BomberoData {
                 Bombero bombero = Utils.obtenerDeResultSetBombero(rs);
                 bomberos.add(bombero);
             }
+            System.out.println("[BomberoData.listarBomberos] "
+                    + "Cantidad de bomberos: " + bomberos.size());
             ps.close();
         } catch (SQLException e) {
             System.out.println("[BomberoData.buscarBombero] "

@@ -128,6 +128,8 @@ public class BrigadaData {
                 Brigada brigada = Utils.obtenerDeResultSetBrigada(rs);
                 brigadas.add(brigada);
             }
+            System.out.println("[BrigadaData.listarBrigadas] "
+                    + "Cantidad de brigadas: " + brigadas.size());
             ps.close();
         } catch (SQLException e) {
             System.out.println("[BrigadaData.listarBrigadas] "
@@ -150,6 +152,8 @@ public class BrigadaData {
                 Brigada brigada = Utils.obtenerDeResultSetBrigada(rs);
                 brigadas.add(brigada);
             }
+            System.out.println("[BrigadaData.listarBrigadasDisponibles] "
+                    + "Cantidad de brigadas: " + brigadas.size());
             ps.close();
         } catch (SQLException e) {
             System.out.println("[BrigadaData.listarBrigadasDisponibles] "
@@ -172,6 +176,8 @@ public class BrigadaData {
                 Brigada brigada = Utils.obtenerDeResultSetBrigada(rs);
                 brigadas.add(brigada);
             }
+            System.out.println("[BrigadaData.listarBrigadasOcupadas] "
+                    + "Cantidad de brigadas: " + brigadas.size());
             ps.close();
         } catch (SQLException e) {
             System.out.println("[BrigadaData.listarBrigadasOcupadas] "
@@ -196,6 +202,8 @@ public class BrigadaData {
                 Bombero bombero = Utils.obtenerDeResultSetBombero(rs);
                 bomberos.add(bombero);
             }
+            System.out.println("[BrigadaData.listarBomberosEnBrigada] "
+                    + "Cantidad de bomberos: " + bomberos.size());
             ps.close();
         } catch (SQLException e) {
             System.out.println("[BrigadaData.listarBomberosEnBrigada] "
