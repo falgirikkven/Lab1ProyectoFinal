@@ -31,6 +31,20 @@ public class Utils {
         return s;
     }
 
+    public static String[] obtenerGrupoSanguineo() {
+        String[] s = new String[]{
+            "A+",
+            "B+",
+            "AB+",
+            "O+",
+            "A-",
+            "B-",
+            "AB-",
+            "O-"
+        };
+        return s;
+    }
+
     public static boolean esTelefonoValido(String telefono) {
         return telefono.matches("^\\d+$");
     }

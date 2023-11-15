@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-11-2023 a las 00:59:57
+-- Tiempo de generación: 14-11-2023 a las 19:17:14
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -47,7 +47,7 @@ CREATE TABLE `bombero` (
 CREATE TABLE `brigada` (
   `codigoBrigada` int(11) NOT NULL,
   `nombreBrigada` varchar(20) NOT NULL,
-  `especialidad` varchar(30) NOT NULL,
+  `especialidad` varchar(50) NOT NULL,
   `disponible` tinyint(4) NOT NULL,
   `codigoCuartel` int(11) NOT NULL,
   `estado` tinyint(4) NOT NULL
@@ -79,7 +79,7 @@ CREATE TABLE `cuartel` (
 CREATE TABLE `siniestro` (
   `codigoSiniestro` int(11) NOT NULL,
   `tipo` varchar(30) NOT NULL,
-  `fechaHoraInicio` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `fechaHoraInicio` datetime NOT NULL,
   `coordenadaX` int(11) NOT NULL,
   `coordenadaY` int(11) NOT NULL,
   `detalles` text NOT NULL,
