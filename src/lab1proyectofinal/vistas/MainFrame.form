@@ -9,6 +9,14 @@
             <Property name="text" type="java.lang.String" value="Cuartel"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="formularioCuartelMI">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Formulario Cuartel"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="formularioCuartelMIActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="gestionCuartelMI">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Cuartel"/>
@@ -24,6 +32,14 @@
             <Property name="text" type="java.lang.String" value="Brigada"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="formularioBrigadaMI">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Formulario Brigada"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="formularioBrigadaMIActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="gestionBrigadaMI">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Brigada"/>
@@ -32,11 +48,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gestionBrigadaMIActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="asignacionBrigadaMI">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Asignaci&#xf3;n de Brigadas"/>
-              </Properties>
-            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="bomberoMenu">
@@ -44,9 +55,37 @@
             <Property name="text" type="java.lang.String" value="Bombero"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="formularioBombero">
+            <MenuItem class="javax.swing.JMenuItem" name="formularioBomberoMI">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Formulario Bombero"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="formularioBomberoMIActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="gestionBomberoMI">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Bombero"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gestionBomberoMIActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="siniestroMenu">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Siniestro"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="formularioSiniestroMI">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Formulario Siniestro"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="gestionSiniestroMI">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Siniestro"/>
               </Properties>
             </MenuItem>
           </SubComponents>

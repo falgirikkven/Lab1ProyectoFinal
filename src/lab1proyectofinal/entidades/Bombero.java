@@ -1,6 +1,8 @@
 package lab1proyectofinal.entidades;
 
 import java.time.LocalDate;
+import java.util.Objects;
+import lab1proyectofinal.accesoADatos.Utils;
 
 /**
  *
@@ -11,38 +13,25 @@ public class Bombero {
     /**
      * SUJETO A CAMBIOS
      */
-    private int idBombero;
+    private int idBombero = Utils.NIL;
     private int dni;
     private String nombreApellido;
     private String grupoSanguineo;
     private LocalDate fechaNacimiento;
-    private long telefono;
+    private String celular;
     private Brigada brigada;
-    private boolean estado;
+    private boolean estado = true;
 
     public Bombero() {
     }
 
-    public Bombero(int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, Brigada brigada) {
-        this.idBombero = -1;
+    public Bombero(int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada) {
         this.dni = dni;
         this.nombreApellido = nombreApellido;
         this.grupoSanguineo = grupoSanguineo;
         this.fechaNacimiento = fechaNacimiento;
-        this.telefono = telefono;
+        this.celular = celular;
         this.brigada = brigada;
-        this.estado = true;
-    }
-
-    public Bombero(int idBombero, int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, long telefono, Brigada brigada, boolean estado) {
-        this.idBombero = idBombero;
-        this.dni = dni;
-        this.nombreApellido = nombreApellido;
-        this.grupoSanguineo = grupoSanguineo;
-        this.fechaNacimiento = fechaNacimiento;
-        this.telefono = telefono;
-        this.brigada = brigada;
-        this.estado = estado;
     }
 
     public int getIdBombero() {
@@ -85,12 +74,12 @@ public class Bombero {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public long getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setTelefono(long telefono) {
-        this.telefono = telefono;
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public Brigada getBrigada() {
@@ -109,9 +98,63 @@ public class Bombero {
         this.estado = estado;
     }
 
+    public String DebugToString() {
+        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", celular=" + celular + ", codigoBrigada=" + Integer.toString(brigada.getCodigoBrigada()) + ", estado=" + estado + '}';
+    }
+
     @Override
     public String toString() {
-        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", brigada=" + brigada + ", estado=" + estado + '}';
+        return idBombero + ". " + nombreApellido + " - " + dni;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + this.idBombero;
+        hash = 29 * hash + this.dni;
+        hash = 29 * hash + Objects.hashCode(this.nombreApellido);
+        hash = 29 * hash + Objects.hashCode(this.grupoSanguineo);
+        hash = 29 * hash + Objects.hashCode(this.fechaNacimiento);
+        hash = 29 * hash + Objects.hashCode(this.celular);
+        hash = 29 * hash + Objects.hashCode(this.brigada);
+        hash = 29 * hash + (this.estado ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Bombero other = (Bombero) obj;
+        if (this.idBombero != other.idBombero) {
+            return false;
+        }
+        if (this.dni != other.dni) {
+            return false;
+        }
+        if (this.estado != other.estado) {
+            return false;
+        }
+        if (!Objects.equals(this.nombreApellido, other.nombreApellido)) {
+            return false;
+        }
+        if (!Objects.equals(this.grupoSanguineo, other.grupoSanguineo)) {
+            return false;
+        }
+        if (!Objects.equals(this.celular, other.celular)) {
+            return false;
+        }
+        if (!Objects.equals(this.fechaNacimiento, other.fechaNacimiento)) {
+            return false;
+        }
+        return Objects.equals(this.brigada, other.brigada);
     }
 
 }

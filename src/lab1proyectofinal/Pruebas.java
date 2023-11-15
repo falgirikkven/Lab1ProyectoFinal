@@ -10,6 +10,7 @@ import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.Conexion;
 import lab1proyectofinal.accesoADatos.CuartelData;
 import lab1proyectofinal.accesoADatos.SiniestroData;
+import lab1proyectofinal.accesoADatos.Utils;
 import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.entidades.Cuartel;
@@ -33,6 +34,9 @@ public class Pruebas {
             return;
         }
 
+        /* RECORDATORIO: Limpiar base de datos antes de ejecutar las pruebas */
+        System.out.println("[RECORDATORIO] Limpiar base de datos antes de ejecutar las pruebas");
+
         // ***** CUARTEL PRUEBAS *****
         System.out.println("\n***** CUARTEL PRUEBAS *****");
 
@@ -40,9 +44,9 @@ public class Pruebas {
         CuartelData cuartelData = new CuartelData();
 
         // Cuarteles
-        Cuartel cuartel1 = new Cuartel(1, "central1", "Bolivar 123", 2, 3, "266498271", "cuartel1@gmail.com", true);
-        Cuartel cuartel2 = new Cuartel(2, "central2", "Maipu 345", 4, 1, "266421345", "cuartel2@gmail.com", true);
-        Cuartel cuartel3 = new Cuartel(3, "central3", "Pringles 678", 5, 7, "266456437", "cuartel3@gmail.com", true);
+        Cuartel cuartel1 = new Cuartel("central1", "Bolivar 123", 2, 3, "266498271", "cuartel1@gmail.com");
+        Cuartel cuartel2 = new Cuartel("central2", "Maipu 345", 4, 1, "266421345", "cuartel2@gmail.com");
+        Cuartel cuartel3 = new Cuartel("central3", "Pringles 678", 5, 7, "266456437", "cuartel3@gmail.com");
         Cuartel cuarteles[] = new Cuartel[]{cuartel1, cuartel2, cuartel3};
 
         // Guardar Cuartel
@@ -56,39 +60,45 @@ public class Pruebas {
         cuartelData.buscarCuartel(cuartel1.getCodigoCuartel()); // No deberia fallar
         cuartelData.buscarCuartel(-2); // Deberia fallar
 
-        // Modificar Cuartel (codigo 1)
-        Cuartel cuartelModificado = new Cuartel(1, "central1Nueva", "Bolivar 341", 3, 1, "26641323", "cuartelnue@gmail.com", true);
+        // Modificar Cuartel
+        Cuartel cuartelModificado = new Cuartel("central2Nueva", "Bolivar 341", 3, 1, "26641323", "cuartelnue@gmail.com");
+        cuartelModificado.setCodigoCuartel(cuartel2.getCodigoCuartel());
         System.out.println("\n----- Modificar cuartel (con codigo " + Integer.toString(cuartelModificado.getCodigoCuartel()) + ")-----");
         cuartelData.modificarCuartel(cuartelModificado);
 
         //  Eliminar Cuartel
-        int cualEliminar = 3;
-        System.out.println("\n----- Eliminar Cuartel (con codigo " + cualEliminar + ") -----");
-        cuartelData.eliminarCuartel(cualEliminar);
+        int cualCuartelEliminar = cuartel3.getCodigoCuartel();
+        System.out.println("\n----- Eliminar Cuartel (con codigo " + cualCuartelEliminar + ") -----");
+        cuartelData.eliminarCuartel(cualCuartelEliminar);
 
         // Listar Cuartel
         System.out.println("\n----- Listar Cuartel -----");
         List<Cuartel> listaCuartel = cuartelData.listarCuarteles();
         for (Cuartel cuartel : listaCuartel) {
-            System.out.println(cuartel.toString());
+            System.out.println(cuartel.DebugToString());
         }
         // ***** FIN CUARTEL PRUEBAS *****
 
         // ***** BRIGADA PRUEBAS *****
         System.out.println("\n***** BRIGADA PRUEBAS *****");
 
+        // Especialidades
+        String[] especialidades = Utils.obtenerEspecialidades();
+        if (especialidades.length != 6) { // No deberia ejecutarse nunca
+            System.out.println("AVISO: Las especialidades no parecen correctas");
+        }
+
         // Brigada Data
         BrigadaData brigadaData = new BrigadaData();
 
         // Brigadas
-        Brigada brigada1 = new Brigada(1, "Grupo 1", "Quien sabe", true, cuartel1, true);
-        Brigada brigada2 = new Brigada(2, "Grupo 2", "Quien sabe", true, cuartel1, true);
-        Brigada brigada3 = new Brigada(3, "Grupo 3", "Sabotear ejercitos", false, cuartel1, true);
-        Brigada brigada4 = new Brigada(4, "Grupo 4", "Quien sabe", true, cuartel1, true);
-        Brigada brigada5 = new Brigada(5, "Grupo 5", "Quien sabe", true, cuartel1, false);
-        Brigada brigada6 = new Brigada(6, "Grupo 6", "Quien sabe", true, cuartel1, true);
-        Brigada brigada7 = new Brigada(7, "Grupo 7", "Quien sabe", true, cuartel1, true);
-        Brigada brigadas[] = new Brigada[]{brigada1, brigada2, brigada3, brigada4, brigada5, brigada6, brigada7};
+        Brigada brigada1 = new Brigada("Grupo 1", especialidades[0], true, cuartel1);
+        Brigada brigada2 = new Brigada("Grupo 2", especialidades[1], true, cuartel1);
+        Brigada brigada3 = new Brigada("Grupo 3", especialidades[2], false, cuartel1);
+        Brigada brigada4 = new Brigada("Grupo 4", especialidades[3], true, cuartel1);
+        Brigada brigada5 = new Brigada("Grupo 5", especialidades[4], true, cuartel1);
+        Brigada brigada6 = new Brigada("Grupo 6", especialidades[5], true, cuartel1);
+        Brigada brigadas[] = new Brigada[]{brigada1, brigada2, brigada3, brigada4, brigada5, brigada6};
 
         // Guardar Brigadas
         System.out.println("\n----- Guardar Brigadas -----");
@@ -98,16 +108,17 @@ public class Pruebas {
 
         // Buscar Brigadas
         System.out.println("\n----- Buscar Brigada -----");
-        brigadaData.buscarBrigada(brigada3.getCodigoBrigada()); // No deberia fallar
+        brigadaData.buscarBrigada(brigada1.getCodigoBrigada()); // No deberia fallar
         brigadaData.buscarBrigada(-2); // Deberia fallar
 
-        // Modificar Brigada (codigo 6)
-        Brigada brigadaModificada = new Brigada(6, "Infernal", "Traer caos y corrupcion", true, cuartel1, true);
+        // Modificar Brigada
+        Brigada brigadaModificada = new Brigada("Brigada modificada", especialidades[1], true, cuartel1);
+        brigadaModificada.setCodigoBrigada(brigada2.getCodigoBrigada());
         System.out.println("\n----- Modificar Brigada (con codigo=" + Integer.toString(brigadaModificada.getCodigoBrigada()) + ")-----");
         brigadaData.modificarBrigada(brigadaModificada);
 
         // Eliminar Brigada
-        int cualBrigadaEliminar = brigada2.getCodigoBrigada();
+        int cualBrigadaEliminar = brigada3.getCodigoBrigada();
         System.out.println("\n----- Eliminar brigada (con codigo=" + cualBrigadaEliminar + ") -----");
         brigadaData.eliminarBrigada(cualBrigadaEliminar);
 
@@ -115,20 +126,26 @@ public class Pruebas {
         System.out.println("\n----- Listar Brigadas -----");
         List<Brigada> listaBrigadas = brigadaData.listarBrigadas();
         for (Brigada brigada : listaBrigadas) {
-            System.out.println(brigada.toString());
+            System.out.println(brigada.DebugToString());
         }
         // ***** FIN BRIGADA PRUEBAS *****
 
         // ***** BOMBERO PRUEBAS *****
         System.out.println("\n***** BOMBERO PRUEBAS *****");
 
+        // Grupo sanguineo
+        String[] grupoSanguineo = Utils.obtenerGrupoSanguineo();
+        if (grupoSanguineo.length != 8) { // No deberia ejecutarse nunca
+            System.out.println("AVISO: Los Grupos sanguineos no parecen correctos");
+        }
+
         // Bombero Data
         BomberoData bomberoData = new BomberoData();
 
         // Bomberos
-        Bombero bombero1 = new Bombero(1, 11000111, "Nahuel Lucero", "A+", LocalDate.of(1998, Month.AUGUST, 1), 11000111, brigada3, true);
-        Bombero bombero2 = new Bombero(2, 37666666, "Leonel Nievas", "A+", LocalDate.of(1993, Month.AUGUST, 7), 37666666, brigada3, true);
-        Bombero bombero3 = new Bombero(3, 40000444, "Nahuel Ochoa", "B+", LocalDate.of(1999, Month.OCTOBER, 18), 40000444, brigada3, true);
+        Bombero bombero1 = new Bombero(11000111, "Nahuel Lucero", grupoSanguineo[0], LocalDate.of(1998, Month.AUGUST, 1), "11000111", brigada1);
+        Bombero bombero2 = new Bombero(37666666, "Leonel Nievas", grupoSanguineo[0], LocalDate.of(1993, Month.AUGUST, 7), "37666666", brigada1);
+        Bombero bombero3 = new Bombero(40000444, "Nahuel Ochoa", grupoSanguineo[1], LocalDate.of(1999, Month.OCTOBER, 18), "40000444", brigada1);
         Bombero bomberos[] = new Bombero[]{bombero1, bombero2, bombero3};
 
         // Guardar Bomberos
@@ -142,13 +159,14 @@ public class Pruebas {
         bomberoData.buscarBombero(bombero1.getIdBombero()); // No deberia fallar
         bomberoData.buscarBombero(-2); // Deberia fallar
 
-        // Modificar Bombero (id 2)
-        Bombero bomberoModificado = new Bombero(2, 42897241, "Ramiro Moran", "O-", LocalDate.of(2000, Month.NOVEMBER, 13), 42897241, brigada3, true);
+        // Modificar Bombero
+        Bombero bomberoModificado = new Bombero(42897241, "Ramiro Moran", grupoSanguineo[7], LocalDate.of(2000, Month.NOVEMBER, 13), "42897241", brigada2);
+        bomberoModificado.setIdBombero(bombero2.getIdBombero());
         System.out.println("\n----- Modificar Bombero (con idBombero=" + Integer.toString(bomberoModificado.getIdBombero()) + ")-----");
         bomberoData.modificarBombero(bomberoModificado);
 
         // Eliminar Bombero
-        int cualBomberoEliminar = bombero2.getIdBombero();
+        int cualBomberoEliminar = bombero3.getIdBombero();
         System.out.println("\n----- Eliminar Bombero (con idBombero=" + cualBomberoEliminar + ") -----");
         bomberoData.eliminarBombero(cualBomberoEliminar);
 
@@ -156,7 +174,7 @@ public class Pruebas {
         System.out.println("\n----- Listar Bomberos -----");
         List<Bombero> listaBomberos = bomberoData.listarBomberos();
         for (Bombero bombero : listaBomberos) {
-            System.out.println(bombero.toString());
+            System.out.println(bombero.DebugToString());
         }
         // ***** FIN BOMBERO PRUEBAS *****
 
@@ -167,10 +185,10 @@ public class Pruebas {
         SiniestroData siniestroData = new SiniestroData();
 
         // Siniestros
-        Siniestro siniestro1 = new Siniestro("Incendio", LocalDateTime.of(2023, Month.NOVEMBER, 1, 12, 0), 10, 10, "Mucho humo", 3, null, Siniestro.PUNTUACION_NIL, 1);
-        Siniestro siniestro2 = new Siniestro("Derrumbe", LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 0), 10, 10, "Mucho escombro", 3, null, Siniestro.PUNTUACION_NIL, 2);
-        Siniestro siniestro3 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 0), 10, 10, "Al desarmadero", 3, null, Siniestro.PUNTUACION_NIL, 3);
-        Siniestro siniestro4 = new Siniestro("NADA", LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 0), 10, 10, "NADA", 3, LocalDateTime.of(2023, Month.NOVEMBER, 3, 17, 0), 10, 4);
+        Siniestro siniestro1 = new Siniestro("Incendio", LocalDateTime.of(2023, Month.NOVEMBER, 1, 12, 0), 10, 10, "Mucho humo", brigada3);
+        Siniestro siniestro2 = new Siniestro("Derrumbe", LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 0), 10, 10, "Mucho escombro", brigada3);
+        Siniestro siniestro3 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 0), 10, 10, "Al desarmadero", brigada3);
+        Siniestro siniestro4 = new Siniestro("NADA", LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 0), 10, 10, "NADA", brigada3, LocalDateTime.of(2023, Month.NOVEMBER, 5, 17, 0), 10);
         Siniestro siniestros[] = new Siniestro[]{siniestro1, siniestro2, siniestro3, siniestro4};
 
         // Guardar Siniestros
@@ -185,7 +203,8 @@ public class Pruebas {
         siniestroData.buscarSiniestro(-2); // Deberia fallar
 
         // Modificar Siniestro
-        Siniestro siniestroModificado = new Siniestro("Accidente FATAL", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 30), -666, -666, "Se ve al diablo", 3, null, Siniestro.PUNTUACION_NIL, 3);
+        Siniestro siniestroModificado = new Siniestro("Accidente FATAL", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 30), -666, -666, "Se ve al diablo", brigada3);
+        siniestroModificado.setCodigoSiniestro(siniestro3.getCodigoSiniestro());
         System.out.println("\n----- Modificar Siniestro (con codigoSiniestro=" + Integer.toString(siniestroModificado.getCodigoSiniestro()) + " ) -----");
         siniestroData.modificarSiniestro(siniestroModificado);
 
@@ -198,7 +217,7 @@ public class Pruebas {
         System.out.println("\n----- Listar Siniestros -----");
         List<Siniestro> listaSiniestros = siniestroData.listarSiniestros();
         for (Siniestro siniestro : listaSiniestros) {
-            System.out.println(siniestro.toString());
+            System.out.println(siniestro.DebugToString());
         }
         // ***** FIN SINIESTRO PRUEBAS *****
 
