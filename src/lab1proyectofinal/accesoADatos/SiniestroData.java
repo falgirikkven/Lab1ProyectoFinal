@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lab1proyectofinal.entidades.*;
 
@@ -299,6 +300,62 @@ public class SiniestroData {
             e.printStackTrace();
         }
         return siniestros;
+    }
+
+    public List<BrigadaDistancia> listarBrigadasConvenientes(Siniestro siniestro) {
+        // TODO: Corregir sentencia SQL para que tome en cuenta cantidad de bomberos
+        // y que no este atentiendo un siniestro
+
+        // BrigadaData.listarBrigadasAsignables (casi)
+        List<BrigadaDistancia> brigadas = null;
+        try {
+            String sql = "SELECT * FROM brigada "
+                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
+                    + "WHERE brigada.estado = true AND brigada.disponible = true;";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            brigadas = new ArrayList();
+            while (rs.next()) {
+                Brigada brigada = Utils.obtenerDeResultSetBrigada(rs);
+                int distanciaX = siniestro.getCoordenadaX() - brigada.getCuartel().getCoordenadaX();
+                int distanciaY = siniestro.getCoordenadaY() - brigada.getCuartel().getCoordenadaY();
+                distanciaX = distanciaX < 0 ? -distanciaX : distanciaX;
+                distanciaY = distanciaY < 0 ? -distanciaY : distanciaY;
+                brigadas.add(new BrigadaDistancia(brigada, distanciaX + distanciaY));
+            }
+            //System.out.println("[BrigadaData.listarBrigadasConvenientes] "
+            //        + "Cantidad de brigadas: " + brigadas.size());
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("[SiniestroData.listarBrigadasConvenientes] "
+                    + "Error" + e.getErrorCode() + ": " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+
+        List<BrigadaDistancia> brigadasConvenientes = new ArrayList();
+        List<BrigadaDistancia> inconveniInconvenientes = new ArrayList();
+        for (BrigadaDistancia bd : brigadas) {
+            if (bd.getBrigada().getEspecialidad().equals(siniestro.getTipo())) {
+                brigadasConvenientes.add(bd);
+            } else {
+                inconveniInconvenientes.add(bd);
+            }
+        }
+        Collections.sort(brigadasConvenientes);
+        Collections.sort(inconveniInconvenientes);
+
+        brigadas.clear();
+        for (BrigadaDistancia bd : brigadasConvenientes) {
+            brigadas.add(bd);
+        }
+        for (BrigadaDistancia bd : inconveniInconvenientes) {
+            brigadas.add(bd);
+        }
+
+        System.out.println("[SiniestroData.listarBrigadasConvenientes] "
+                + "Cantidad de brigadas: " + brigadas.size());
+        return brigadas;
     }
 
     public boolean modificarSiniestro(Siniestro siniestro) {
