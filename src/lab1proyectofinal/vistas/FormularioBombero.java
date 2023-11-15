@@ -313,7 +313,7 @@ public class FormularioBombero extends javax.swing.JInternalFrame {
 
         Cuartel cuartelSeleccionado = (Cuartel) cuartelCB.getSelectedItem();
         if (cuartelSeleccionado != null) {
-            List<Brigada> brigadas = cuartelData.listarBrigadasEnCuartel(cuartelSeleccionado.getCodigoCuartel());
+            List<Brigada> brigadas = cuartelData.listarBrigadasDelCuartel(cuartelSeleccionado.getCodigoCuartel());
             for (Brigada brigada : brigadas) {
                 brigadaCB.addItem(brigada);
             }

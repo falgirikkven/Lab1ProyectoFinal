@@ -1,22 +1,22 @@
 package lab1proyectofinal.entidades;
 
+import java.util.Objects;
+import lab1proyectofinal.accesoADatos.Utils;
+
 /**
  *
  * @author Grupo-3
  */
 public class Cuartel {
 
-    /*
-     * SUJETO A CAMBIOS
-     */
-    private int codigoCuartel = -1;
+    private int codigoCuartel = Utils.NIL;
     private String nombreCuartel;
     private String direccion;
     private int coordenadaX;
     private int coordenadaY;
     private String telefono;
     private String correo;
-    private boolean estado;
+    private boolean estado = true;
 
     public Cuartel() {
     }
@@ -29,18 +29,6 @@ public class Cuartel {
         this.coordenadaY = coordenadaY;
         this.telefono = telefono;
         this.correo = correo;
-        this.estado = true;
-    }
-
-    // inicializa todo menos 'codigoCuartel'
-    public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo, boolean estado) {
-        this.nombreCuartel = nombreCuartel;
-        this.direccion = direccion;
-        this.coordenadaX = coordenadaX;
-        this.coordenadaY = coordenadaY;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.estado = estado;
     }
 
     public int getCodigoCuartel() {
@@ -107,14 +95,63 @@ public class Cuartel {
         this.estado = estado;
     }
 
-    @Override
-    public String toString() {
+    public String debugToString() {
         return "Cuartel{" + "codigoCuartel=" + codigoCuartel + ", nombreCuartel=" + nombreCuartel + ", direccion=" + direccion + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", telefono=" + telefono + ", correo=" + correo + ", estado=" + estado + '}';
     }
 
-    // no pasa estado
-    public String debugToString() {
-        return "Cuartel{" + "codigoCuartel=" + codigoCuartel + ", nombreCuartel=" + nombreCuartel + ", direccion=" + direccion + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", telefono=" + telefono + ", correo=" + correo + '}';
+    @Override
+    public String toString() {
+        return codigoCuartel + ". " + nombreCuartel;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 61 * hash + this.codigoCuartel;
+        hash = 61 * hash + Objects.hashCode(this.nombreCuartel);
+        hash = 61 * hash + Objects.hashCode(this.direccion);
+        hash = 61 * hash + this.coordenadaX;
+        hash = 61 * hash + this.coordenadaY;
+        hash = 61 * hash + Objects.hashCode(this.telefono);
+        hash = 61 * hash + Objects.hashCode(this.correo);
+        hash = 61 * hash + (this.estado ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Cuartel other = (Cuartel) obj;
+        if (this.codigoCuartel != other.codigoCuartel) {
+            return false;
+        }
+        if (this.coordenadaX != other.coordenadaX) {
+            return false;
+        }
+        if (this.coordenadaY != other.coordenadaY) {
+            return false;
+        }
+        if (this.estado != other.estado) {
+            return false;
+        }
+        if (!Objects.equals(this.nombreCuartel, other.nombreCuartel)) {
+            return false;
+        }
+        if (!Objects.equals(this.direccion, other.direccion)) {
+            return false;
+        }
+        if (!Objects.equals(this.telefono, other.telefono)) {
+            return false;
+        }
+        return Objects.equals(this.correo, other.correo);
     }
 
 }

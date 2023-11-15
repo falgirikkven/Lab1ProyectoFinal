@@ -294,7 +294,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         Bombero bomberoSeleccionado = (Bombero) bomberoCB.getSelectedItem();
         if (bomberoSeleccionado != null) {
             dniTF.setText(Integer.toString(bomberoSeleccionado.getDni()));
-            nombreTF.setText(bomberoSeleccionado.getNombreApellido());
+            nombreTF.setText(bomberoSeleccionado.getNombreCompleto());
             grupoSanguineoCB.setSelectedItem(bomberoSeleccionado.getGrupoSanguineo());
             fechaNacimientoDC.setCalendar(localDateToCalendar(bomberoSeleccionado.getFechaNacimiento()));
             celularTF.setText(bomberoSeleccionado.getCelular());
@@ -407,7 +407,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
 
         Cuartel cuartelSeleccionado = (Cuartel) cuartelCB.getSelectedItem();
         if (cuartelSeleccionado != null) {
-            List<Brigada> brigadas = cuartelData.listarBrigadasEnCuartel(cuartelSeleccionado.getCodigoCuartel());
+            List<Brigada> brigadas = cuartelData.listarBrigadasDelCuartel(cuartelSeleccionado.getCodigoCuartel());
             for (Brigada brigada : brigadas) {
                 brigadaCB.addItem(brigada);
             }
