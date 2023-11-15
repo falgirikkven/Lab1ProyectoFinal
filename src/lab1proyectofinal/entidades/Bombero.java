@@ -10,12 +10,9 @@ import lab1proyectofinal.accesoADatos.Utils;
  */
 public class Bombero {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
     private int idBombero = Utils.NIL;
     private int dni;
-    private String nombreApellido;
+    private String nombreCompleto;
     private String grupoSanguineo;
     private LocalDate fechaNacimiento;
     private String celular;
@@ -25,9 +22,10 @@ public class Bombero {
     public Bombero() {
     }
 
-    public Bombero(int dni, String nombreApellido, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada) {
+    // inicializa todo menos 'idBombero' y 'estado'
+    public Bombero(int dni, String nombreCompleto, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada) {
         this.dni = dni;
-        this.nombreApellido = nombreApellido;
+        this.nombreCompleto = nombreCompleto;
         this.grupoSanguineo = grupoSanguineo;
         this.fechaNacimiento = fechaNacimiento;
         this.celular = celular;
@@ -50,12 +48,12 @@ public class Bombero {
         this.dni = dni;
     }
 
-    public String getNombreApellido() {
-        return nombreApellido;
+    public String getNombreCompleto() {
+        return nombreCompleto;
     }
 
-    public void setNombreApellido(String nombreApellido) {
-        this.nombreApellido = nombreApellido;
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 
     public String getGrupoSanguineo() {
@@ -98,26 +96,26 @@ public class Bombero {
         this.estado = estado;
     }
 
-    public String DebugToString() {
-        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreApellido=" + nombreApellido + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", celular=" + celular + ", codigoBrigada=" + Integer.toString(brigada.getCodigoBrigada()) + ", estado=" + estado + '}';
+    public String debugToString() {
+        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreCompleto=" + nombreCompleto + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", celular=" + celular + ", codigoBrigada=" + Integer.toString(brigada.getCodigoBrigada()) + ", estado=" + estado + '}';
     }
 
     @Override
     public String toString() {
-        return idBombero + ". " + nombreApellido + " - " + dni;
+        return idBombero + ". " + nombreCompleto + " - " + dni;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + this.idBombero;
-        hash = 29 * hash + this.dni;
-        hash = 29 * hash + Objects.hashCode(this.nombreApellido);
-        hash = 29 * hash + Objects.hashCode(this.grupoSanguineo);
-        hash = 29 * hash + Objects.hashCode(this.fechaNacimiento);
-        hash = 29 * hash + Objects.hashCode(this.celular);
-        hash = 29 * hash + Objects.hashCode(this.brigada);
-        hash = 29 * hash + (this.estado ? 1 : 0);
+        int hash = 3;
+        hash = 97 * hash + this.idBombero;
+        hash = 97 * hash + this.dni;
+        hash = 97 * hash + Objects.hashCode(this.nombreCompleto);
+        hash = 97 * hash + Objects.hashCode(this.grupoSanguineo);
+        hash = 97 * hash + Objects.hashCode(this.fechaNacimiento);
+        hash = 97 * hash + Objects.hashCode(this.celular);
+        hash = 97 * hash + Objects.hashCode(this.brigada);
+        hash = 97 * hash + (this.estado ? 1 : 0);
         return hash;
     }
 
@@ -142,7 +140,7 @@ public class Bombero {
         if (this.estado != other.estado) {
             return false;
         }
-        if (!Objects.equals(this.nombreApellido, other.nombreApellido)) {
+        if (!Objects.equals(this.nombreCompleto, other.nombreCompleto)) {
             return false;
         }
         if (!Objects.equals(this.grupoSanguineo, other.grupoSanguineo)) {

@@ -2,13 +2,12 @@ package lab1proyectofinal.accesoADatos;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import lab1proyectofinal.entidades.Bombero;
+import lab1proyectofinal.entidades.*;
 
 /**
  *
@@ -26,38 +25,48 @@ public class BomberoData {
         if (bombero.getIdBombero() != Utils.NIL || !bombero.isEstado()) {
             System.out.println("[BomberoData.guardarBombero] Error: no se puede guardar. "
                     + "Bombero dado de baja o tiene idBombero definido. "
-                    + bombero.DebugToString());
+                    + bombero.debugToString());
             return false;
         }
 
         boolean resultado = false;
         try {
-            String sql = "INSERT INTO bombero(dni, nombreCompleto, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            String sql = "SELECT COUNT(codigoBrigada) FROM bombero WHERE codigoBrigada=?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, bombero.getBrigada().getCodigoBrigada());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next() && rs.getInt(1) == 5) {
+                System.out.println("[BomberoData.guardarBombero] No se pudo agregar al bombero: no hay más espacio en "
+                        + "la brigada con código: " + bombero.getBrigada().getCodigoBrigada()
+                        + "\nDatos del bombero que se intentó agregar: " + bombero.debugToString());
+                ps.close();
+                return false;
+            }
+            ps.close();
+            sql = "INSERT INTO bombero(dni, nombreCompleto, grupoSanguineo, fechaNacimiento, celular, codigoBrigada, estado) VALUES (?, ?, ?, ?, ?, ?, true)";
+            ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, bombero.getDni());
-            ps.setString(2, bombero.getNombreApellido());
+            ps.setString(2, bombero.getNombreCompleto());
             ps.setString(3, bombero.getGrupoSanguineo());
             ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
             ps.setString(5, bombero.getCelular());
             ps.setInt(6, bombero.getBrigada().getCodigoBrigada());
-            ps.setBoolean(7, bombero.isEstado());
             ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
+            rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 bombero.setIdBombero(rs.getInt(1));
                 resultado = true;
                 System.out.println("[BomberoData.guardarBombero] "
-                        + "Agregado: " + bombero.DebugToString());
+                        + "Agregado: " + bombero.debugToString());
             } else {
                 System.out.println("[BomberoData.guardarBombero] "
-                        + "No se agregó: " + bombero.DebugToString());
+                        + "No se pudo agregar: " + bombero.debugToString());
             }
             ps.close();
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) { // Informar datos repetidos
                 System.out.println("[BomberoData.guardarBombero] "
-                        + "Error: entrada duplicada para " + bombero.DebugToString());
+                        + "Error: entrada duplicada para " + bombero.debugToString());
             } else {
                 e.printStackTrace();
             }
@@ -71,14 +80,14 @@ public class BomberoData {
             String sql = "SELECT * FROM bombero "
                     + "JOIN brigada ON (bombero.codigoBrigada = brigada.codigoBrigada AND brigada.estado = true) "
                     + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
-                    + "WHERE bombero.estado = true AND bombero.idBombero = ?;";
+                    + "WHERE bombero.idBombero = ?;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, idBombero);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 bombero = Utils.obtenerDeResultSetBombero(rs);
                 System.out.println("[BomberoData.buscarBombero] "
-                        + "Encontrado: " + bombero.DebugToString());
+                        + "Encontrado: " + bombero.debugToString());
             } else {
                 System.out.println("[BomberoData.buscarBombero] "
                         + "No se ha encontrado con idBombero=" + idBombero);
@@ -98,14 +107,14 @@ public class BomberoData {
             String sql = "SELECT * FROM bombero "
                     + "JOIN brigada ON (bombero.codigoBrigada = brigada.codigoBrigada AND brigada.estado = true) "
                     + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
-                    + "WHERE bombero.estado = true AND bombero.dni = ?;";
+                    + "WHERE bombero.dni = ?;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, dni);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 bombero = Utils.obtenerDeResultSetBombero(rs);
                 System.out.println("[BomberoData.buscarBomberoPorDni] "
-                        + "Encontrado: " + bombero.DebugToString());
+                        + "Encontrado: " + bombero.debugToString());
             } else {
                 System.out.println("[BomberoData.buscarBomberoPorDni] "
                         + "No se ha encontrado con dni=" + dni);
@@ -120,7 +129,7 @@ public class BomberoData {
     }
 
     public List<Bombero> listarBomberos() {
-        List<Bombero> bomberos = null;
+        List<Bombero> bomberos = new ArrayList();
         try {
             String sql = "SELECT * FROM bombero "
                     + "JOIN brigada ON (bombero.codigoBrigada = brigada.codigoBrigada AND brigada.estado = true) "
@@ -128,9 +137,9 @@ public class BomberoData {
                     + "WHERE bombero.estado = true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            bomberos = new ArrayList();
+            Bombero bombero;
             while (rs.next()) {
-                Bombero bombero = Utils.obtenerDeResultSetBombero(rs);
+                bombero = Utils.obtenerDeResultSetBombero(rs);
                 bomberos.add(bombero);
             }
             System.out.println("[BomberoData.listarBomberos] "
@@ -148,7 +157,7 @@ public class BomberoData {
         if (bombero.getIdBombero() == Utils.NIL || !bombero.isEstado()) {
             System.out.println("[BomberoData.modificarBombero] Error: no se puede modificar. "
                     + "Bombero dado de baja o no tiene idBombero definido. "
-                    + bombero.DebugToString());
+                    + bombero.debugToString());
             return false;
         }
 
@@ -159,7 +168,7 @@ public class BomberoData {
                     + "WHERE idBombero=? AND estado=true";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, bombero.getDni());
-            ps.setString(2, bombero.getNombreApellido());
+            ps.setString(2, bombero.getNombreCompleto());
             ps.setString(3, bombero.getGrupoSanguineo());
             ps.setDate(4, Date.valueOf(bombero.getFechaNacimiento()));
             ps.setString(5, bombero.getCelular());
@@ -168,10 +177,10 @@ public class BomberoData {
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[BomberoData.modificarBombero] "
-                        + "Modificado: " + bombero.DebugToString());
+                        + "Modificado: " + bombero.debugToString());
             } else {
                 System.out.println("[BomberoData.modificarBombero] "
-                        + "No se modificó: " + bombero.DebugToString());
+                        + "No se pudo modificar: " + bombero.debugToString());
             }
             ps.close();
         } catch (SQLException e) {
@@ -185,9 +194,9 @@ public class BomberoData {
     public boolean eliminarBombero(int idBombero) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE bombero "
-                    + "SET estado = false "
-                    + "WHERE bombero.estado = true AND bombero.idBombero = ?";
+//            String sql = "UPDATE bombero SET estado=false WHERE idBombero=? AND estado=true";
+            String sql = "UPDATE bombero SET estado=false WHERE idBombero=? AND estado=true "
+                    + "AND codigoBrigada NOT IN (SELECT codigoBrigada FROM siniestro WHERE puntuacion=-1);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, idBombero);
             if (ps.executeUpdate() > 0) {
@@ -196,7 +205,7 @@ public class BomberoData {
                         + "Eliminado: idBombero=" + idBombero);
             } else {
                 System.out.println("[BomberoData.eliminarBombero] "
-                        + "No se eliminó: idBombero=" + idBombero);
+                        + "No se pudo eliminar: idBombero=" + idBombero);
             }
             ps.close();
         } catch (SQLException e) {
@@ -210,9 +219,9 @@ public class BomberoData {
     public boolean eliminarBomberoPorDni(int dni) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE bombero "
-                    + "SET estado = false "
-                    + "WHERE bombero.estado = true AND bombero.dni = ?";
+//            String sql = "UPDATE bombero SET estado=false WHERE dni=? AND estado=true";
+            String sql = "UPDATE bombero SET estado=false WHERE dni=? AND estado=true "
+                    + "AND codigoBrigada NOT IN (SELECT codigoBrigada FROM siniestro WHERE puntuacion=-1);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, dni);
             if (ps.executeUpdate() > 0) {
@@ -221,7 +230,7 @@ public class BomberoData {
                         + "Eliminado: dni=" + dni);
             } else {
                 System.out.println("[BomberoData.eliminarBombero] "
-                        + "No se eliminó: dni=" + dni);
+                        + "No se pudo eliminar: dni=" + dni);
             }
             ps.close();
         } catch (SQLException e) {
