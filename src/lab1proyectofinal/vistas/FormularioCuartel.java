@@ -11,9 +11,6 @@ import lab1proyectofinal.entidades.Cuartel;
  */
 public class FormularioCuartel extends javax.swing.JInternalFrame {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
     private final CuartelData cuartelData;
 
     /**
@@ -54,7 +51,7 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
         coordenadaXTF = new javax.swing.JTextField();
         coordenadaYLabel = new javax.swing.JLabel();
         coordenadaYTF = new javax.swing.JTextField();
-        BtnBuscarNombre = new javax.swing.JButton();
+        BtnComprobar = new javax.swing.JButton();
         BtnLimpiar = new javax.swing.JButton();
         BtnGuardar = new javax.swing.JButton();
         BtnSalir = new javax.swing.JButton();
@@ -92,10 +89,10 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
 
         coordenadaYLabel.setText("Coordenada Y:");
 
-        BtnBuscarNombre.setText("Verificar Disponibilidad");
-        BtnBuscarNombre.addActionListener(new java.awt.event.ActionListener() {
+        BtnComprobar.setText("Comprobar");
+        BtnComprobar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnBuscarNombreActionPerformed(evt);
+                BtnComprobarActionPerformed(evt);
             }
         });
 
@@ -145,12 +142,12 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(correoTF, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                    .addComponent(correoTF, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                                     .addComponent(nombreTF)
                                     .addComponent(direccionTF)
                                     .addComponent(telefonoTF, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addGap(18, 18, 18)
-                                .addComponent(BtnBuscarNombre))))
+                                .addComponent(BtnComprobar))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(BtnLimpiar)
                         .addGap(18, 18, 18)
@@ -166,7 +163,7 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nombreLabel)
                     .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BtnBuscarNombre))
+                    .addComponent(BtnComprobar))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(direccionTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -196,25 +193,20 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BtnBuscarNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarNombreActionPerformed
+    private void BtnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnComprobarActionPerformed
         String nombreStr = nombreTF.getText().trim();
         if (nombreStr.isBlank()) {
-            JOptionPane.showMessageDialog(this, "Se esperaba un nombre en el campo.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ingrese el nombre a comprobar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         Cuartel cuartel = this.cuartelData.buscarCuartelPorNombre(nombreStr);
         if (cuartel != null) {
-            nombreTF.setText(cuartel.getNombreCuartel());
-            direccionTF.setText(cuartel.getDireccion());
-            telefonoTF.setText(cuartel.getTelefono());
-            correoTF.setText(cuartel.getCorreo());
-            coordenadaXTF.setText(Integer.toString(cuartel.getCoordenadaX()));
-            coordenadaYTF.setText(Integer.toString(cuartel.getCoordenadaY()));
+            JOptionPane.showMessageDialog(this, "Este nombre está disponible.", "Disponible", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "No se ha encontrado cuartel con este nombre.\nEs posible que haya sido dado de baja o no exista.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Este nombre no se encuentra disponible.", "No disponible", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_BtnBuscarNombreActionPerformed
+    }//GEN-LAST:event_BtnComprobarActionPerformed
 
     private void BtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLimpiarActionPerformed
         this.limpiarCampos();
@@ -274,7 +266,7 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnBuscarNombre;
+    private javax.swing.JButton BtnComprobar;
     private javax.swing.JButton BtnGuardar;
     private javax.swing.JButton BtnLimpiar;
     private javax.swing.JButton BtnSalir;

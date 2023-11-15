@@ -50,13 +50,13 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="correoTF" pref="180" max="32767" attributes="0"/>
+                                  <Component id="correoTF" pref="241" max="32767" attributes="0"/>
                                   <Component id="nombreTF" alignment="1" max="32767" attributes="0"/>
                                   <Component id="direccionTF" alignment="1" max="32767" attributes="0"/>
                                   <Component id="telefonoTF" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                              <Component id="BtnBuscarNombre" min="-2" max="-2" attributes="0"/>
+                              <Component id="BtnComprobar" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -79,7 +79,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nombreLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="nombreTF" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="BtnBuscarNombre" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="BtnComprobar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -157,12 +157,12 @@
     </Component>
     <Component class="javax.swing.JTextField" name="coordenadaYTF">
     </Component>
-    <Component class="javax.swing.JButton" name="BtnBuscarNombre">
+    <Component class="javax.swing.JButton" name="BtnComprobar">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Verificar Disponibilidad"/>
+        <Property name="text" type="java.lang.String" value="Comprobar"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnBuscarNombreActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnComprobarActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="BtnLimpiar">

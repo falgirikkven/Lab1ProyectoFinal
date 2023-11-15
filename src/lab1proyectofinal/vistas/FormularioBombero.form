@@ -4,7 +4,7 @@
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
     <Property name="defaultCloseOperation" type="int" value="1"/>
-    <Property name="title" type="java.lang.String" value="Formulario Brigada"/>
+    <Property name="title" type="java.lang.String" value="Formulario Bombero"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -33,23 +33,31 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="nombreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="especialidadLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="dniLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="grupoSanguineoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="fechaNacimientoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="celularLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="cuartelLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="brigadaLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="nombreTF" max="32767" attributes="0"/>
-                          <Component id="especialidadCB" max="32767" attributes="0"/>
-                          <Component id="cuartelCB" max="32767" attributes="0"/>
+                          <Component id="celularTF" alignment="1" max="32767" attributes="0"/>
+                          <Component id="fechaNacimientoDC" alignment="0" pref="186" max="32767" attributes="0"/>
+                          <Component id="cuartelCB" alignment="1" max="32767" attributes="0"/>
+                          <Component id="brigadaCB" alignment="1" max="32767" attributes="0"/>
+                          <Component id="nombreTF" alignment="0" max="32767" attributes="0"/>
+                          <Component id="grupoSanguineoCB" alignment="0" max="32767" attributes="0"/>
+                          <Component id="dniTF" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                       <Component id="BtnComprobar" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="BtnLimpiar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="BtnGuardar" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="147" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="BtnSalir" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -60,55 +68,96 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="nombreLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="nombreTF" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="dniLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="dniTF" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="BtnComprobar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="especialidadLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="especialidadCB" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nombreLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nombreTF" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="grupoSanguineoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="grupoSanguineoCB" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="fechaNacimientoLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="fechaNacimientoDC" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="celularLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="celularTF" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="cuartelLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cuartelCB" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="brigadaLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="brigadaCB" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="17" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="BtnLimpiar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="BtnGuardar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="BtnSalir" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
+    <Component class="javax.swing.JLabel" name="dniLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="DNI:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="dniTF">
+    </Component>
     <Component class="javax.swing.JLabel" name="nombreLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Nombre:"/>
+        <Property name="text" type="java.lang.String" value="Nombre Completo:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="nombreTF">
     </Component>
-    <Component class="javax.swing.JLabel" name="especialidadLabel">
+    <Component class="javax.swing.JLabel" name="grupoSanguineoLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Especialidad:"/>
+        <Property name="text" type="java.lang.String" value="Grupo Sangu&#xed;neo:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="especialidadCB">
+    <Component class="javax.swing.JComboBox" name="grupoSanguineoCB">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(Utils.obtenerEspecialidades())" type="code"/>
+          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(Utils.obtenerGrupoSanguineo())" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="fechaNacimientoLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Fecha Nacimiento:"/>
+      </Properties>
+    </Component>
+    <Component class="com.toedter.calendar.JDateChooser" name="fechaNacimientoDC">
+    </Component>
+    <Component class="javax.swing.JLabel" name="celularLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Celular:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="celularTF">
     </Component>
     <Component class="javax.swing.JLabel" name="cuartelLabel">
       <Properties>
@@ -121,8 +170,26 @@
           <StringArray count="0"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cuartelCBActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Cuartel&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="brigadaLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Brigada:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="brigadaCB">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Brigada&gt;"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="BtnComprobar">

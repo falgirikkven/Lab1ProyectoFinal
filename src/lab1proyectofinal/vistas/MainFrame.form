@@ -59,18 +59,36 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Formulario Bombero"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="formularioBomberoMIActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="gestionBomberoMI">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Bombero"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gestionBomberoMIActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenu1">
+        <Menu class="javax.swing.JMenu" name="siniestroMenu">
           <Properties>
             <Property name="text" type="java.lang.String" value="Siniestro"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="formularioSiniestroMI">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Formulario Siniestro"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="gestionSiniestroMI">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Siniestro"/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
         </Menu>
       </SubComponents>
     </Menu>

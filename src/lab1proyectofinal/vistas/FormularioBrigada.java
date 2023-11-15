@@ -10,15 +10,12 @@ import lab1proyectofinal.entidades.Cuartel;
 
 /**
  *
- * @author Falic
+ * @author Grupo-3
  */
 public class FormularioBrigada extends javax.swing.JInternalFrame {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
-    private final CuartelData cuartelData;
     private final BrigadaData brigadaData;
+    private final CuartelData cuartelData;
 
     /**
      * Creates new form GestionBrigada
@@ -50,7 +47,7 @@ public class FormularioBrigada extends javax.swing.JInternalFrame {
         especialidadCB = new javax.swing.JComboBox<>();
         cuartelLabel = new javax.swing.JLabel();
         cuartelCB = new javax.swing.JComboBox<>();
-        BtnBuscarNombre = new javax.swing.JButton();
+        BtnComprobar = new javax.swing.JButton();
         BtnLimpiar = new javax.swing.JButton();
         BtnGuardar = new javax.swing.JButton();
         BtnSalir = new javax.swing.JButton();
@@ -84,10 +81,10 @@ public class FormularioBrigada extends javax.swing.JInternalFrame {
 
         cuartelLabel.setText("Cuartel:");
 
-        BtnBuscarNombre.setText("Buscar");
-        BtnBuscarNombre.addActionListener(new java.awt.event.ActionListener() {
+        BtnComprobar.setText("Comprobar");
+        BtnComprobar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnBuscarNombreActionPerformed(evt);
+                BtnComprobarActionPerformed(evt);
             }
         });
 
@@ -130,7 +127,7 @@ public class FormularioBrigada extends javax.swing.JInternalFrame {
                             .addComponent(especialidadCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cuartelCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(BtnBuscarNombre))
+                        .addComponent(BtnComprobar))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(BtnLimpiar)
                         .addGap(18, 18, 18)
@@ -146,7 +143,7 @@ public class FormularioBrigada extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nombreLabel)
                     .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BtnBuscarNombre))
+                    .addComponent(BtnComprobar))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(especialidadLabel)
@@ -166,22 +163,20 @@ public class FormularioBrigada extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BtnBuscarNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarNombreActionPerformed
+    private void BtnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnComprobarActionPerformed
         String nombreStr = nombreTF.getText().trim();
         if (nombreStr.isBlank()) {
-            JOptionPane.showMessageDialog(this, "Se esperaba un nombre en el campo.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ingrese el nombre a comprobar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         Brigada brigada = brigadaData.buscarBrigadaPorNombre(nombreStr);
-        if (brigada != null) {
-            nombreTF.setText(brigada.getNombreBrigada());
-            especialidadCB.setSelectedItem(brigada.getEspecialidad());
-            cuartelCB.setSelectedItem(brigada.getCuartel());
+        if (brigada == null) {
+            JOptionPane.showMessageDialog(this, "Este nombre está disponible.", "Disponible", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "Brigada no encontrada.\nEs posible que haya sido dado de baja o no exista.", "Información", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Este nombre no se encuentra disponible.", "No disponible", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_BtnBuscarNombreActionPerformed
+    }//GEN-LAST:event_BtnComprobarActionPerformed
 
     private void BtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLimpiarActionPerformed
         this.limpiarCampos();
@@ -201,7 +196,7 @@ public class FormularioBrigada extends javax.swing.JInternalFrame {
         if (brigadaData.guardarBrigada(brigada)) {
             JOptionPane.showMessageDialog(this, "Brigada guardada.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "No se pudo guardar la brigada.\nQuizás ya haya una brigada guardada con este código o nombre.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo guardar la brigada.\nQuizás ya haya una brigada guardada con este nombre.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_BtnGuardarActionPerformed
 
@@ -229,7 +224,7 @@ public class FormularioBrigada extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnBuscarNombre;
+    private javax.swing.JButton BtnComprobar;
     private javax.swing.JButton BtnGuardar;
     private javax.swing.JButton BtnLimpiar;
     private javax.swing.JButton BtnSalir;
