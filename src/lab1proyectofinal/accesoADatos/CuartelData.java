@@ -72,8 +72,7 @@ public class CuartelData {
     public Cuartel buscarCuartel(int codigoCuartel) {
         Cuartel cuartel = null;
         try {
-            String sql = "SELECT * FROM cuartel "
-                    + "WHERE cuartel.estado = true AND cuartel.codigoCuartel = ?;";
+            String sql = "SELECT * FROM cuartel WHERE cuartel.codigoCuartel = ?;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoCuartel);
             ResultSet rs = ps.executeQuery();
@@ -97,8 +96,7 @@ public class CuartelData {
     public Cuartel buscarCuartelPorNombre(String nombreCuartel) {
         Cuartel cuartel = null;
         try {
-            String sql = "SELECT * FROM cuartel "
-                    + "WHERE cuartel.estado = true AND cuartel.nombreCuartel = ?;";
+            String sql = "SELECT * FROM cuartel WHERE cuartel.nombreCuartel = ?;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, nombreCuartel);
             ResultSet rs = ps.executeQuery();
@@ -233,11 +231,13 @@ public class CuartelData {
     public boolean eliminarCuartel(int codigoCuartel) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE cuartel "
-                    + "SET estado = false "
-                    + "WHERE cuartel.codigoCuartel = ? AND cuartel.estado = true";
+            String sql = "UPDATE cuartel SET estado=false "
+                    + "WHERE codigoCuartel=? "
+                    + "AND estado=true "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM brigada WHERE codigoCuartel=? AND estado=true)=0;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoCuartel);
+            ps.setInt(2, codigoCuartel);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[CuartelData.eliminarCuartel] "
@@ -246,6 +246,7 @@ public class CuartelData {
                 System.out.println("[CuartelData.eliminarCuartel] "
                         + "No se eliminó: codigoCuartel=" + codigoCuartel);
             }
+            ps.close();
         } catch (SQLException e) {
             System.out.println("[CuartelData.eliminarCuartel] "
                     + "Error" + e.getErrorCode() + ": " + e.getMessage());
@@ -257,11 +258,14 @@ public class CuartelData {
     public boolean eliminarCuartelPorNombre(String nombreCuartel) {
         boolean resultado = false;
         try {
-            String sql = "UPDATE cuartel "
-                    + "SET estado = false "
-                    + "WHERE cuartel.nombreCuartel = ? AND cuartel.estado = true";
+            String sql = "UPDATE cuartel SET estado=false "
+                    + "WHERE nombreCuartel=? "
+                    + "AND estado=true "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM brigada "
+                    + "WHERE codigoCuartel=(SELECT codigoCuartel FROM cuartel WHERE nombreCuartel=?) AND estado=true)=0";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, nombreCuartel);
+            ps.setString(2, nombreCuartel);
             if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[CuartelData.eliminarCuartelPorNombre] "
@@ -270,6 +274,7 @@ public class CuartelData {
                 System.out.println("[CuartelData.eliminarCuartelPorNombre] "
                         + "No se eliminó: nombreCuartel='" + nombreCuartel + "'");
             }
+            ps.close();
         } catch (SQLException e) {
             System.out.println("[CuartelData.eliminarCuartelPorNombre] "
                     + "Error" + e.getErrorCode() + ": " + e.getMessage());

@@ -67,8 +67,8 @@ public class BrigadaData {
         Brigada brigada = null;
         try {
             String sql = "SELECT * FROM brigada "
-                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
-                    + "WHERE brigada.estado = true AND brigada.codigoBrigada = ?;";
+                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel) "
+                    + "WHERE brigada.codigoBrigada = ?;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoBrigada);
             ResultSet rs = ps.executeQuery();
@@ -93,8 +93,8 @@ public class BrigadaData {
         Brigada brigada = null;
         try {
             String sql = "SELECT * FROM brigada JOIN cuartel "
-                    + "ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
-                    + "WHERE brigada.estado = true AND brigada.nombreBrigada = ?;";
+                    + "ON (brigada.codigoCuartel = cuartel.codigoCuartel) "
+                    + "WHERE brigada.nombreBrigada = ?;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, nombreBrigada);
             ResultSet rs = ps.executeQuery();

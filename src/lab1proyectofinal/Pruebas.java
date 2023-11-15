@@ -135,8 +135,8 @@ public class Pruebas {
 
         // Grupo sanguineo
         String[] grupoSanguineo = Utils.obtenerGrupoSanguineo();
-        if (especialidades.length != 6) { // No deberia ejecutarse nunca
-            System.out.println("AVISO: Las especialidades no parecen correctas");
+        if (grupoSanguineo.length != 8) { // No deberia ejecutarse nunca
+            System.out.println("AVISO: Los Grupos sanguineos no parecen correctos");
         }
 
         // Bombero Data

@@ -201,7 +201,7 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
         }
 
         Cuartel cuartel = this.cuartelData.buscarCuartelPorNombre(nombreStr);
-        if (cuartel != null) {
+        if (cuartel == null) {
             JOptionPane.showMessageDialog(this, "Este nombre está disponible.", "Disponible", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "Este nombre no se encuentra disponible.", "No disponible", JOptionPane.WARNING_MESSAGE);
