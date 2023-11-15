@@ -34,6 +34,8 @@ public class Pruebas {
             return;
         }
 
+        SiniestroData.inicializar();
+
         /* RECORDATORIO: Limpiar base de datos antes de ejecutar las pruebas */
         System.out.println("[RECORDATORIO] Limpiar base de datos antes de ejecutar las pruebas");
 
@@ -75,7 +77,7 @@ public class Pruebas {
         System.out.println("\n----- Listar Cuartel -----");
         List<Cuartel> listaCuartel = cuartelData.listarCuarteles();
         for (Cuartel cuartel : listaCuartel) {
-            System.out.println(cuartel.DebugToString());
+            System.out.println(cuartel.debugToString());
         }
         // ***** FIN CUARTEL PRUEBAS *****
 
@@ -126,7 +128,7 @@ public class Pruebas {
         System.out.println("\n----- Listar Brigadas -----");
         List<Brigada> listaBrigadas = brigadaData.listarBrigadas();
         for (Brigada brigada : listaBrigadas) {
-            System.out.println(brigada.DebugToString());
+            System.out.println(brigada.debugToString());
         }
         // ***** FIN BRIGADA PRUEBAS *****
 
@@ -174,7 +176,7 @@ public class Pruebas {
         System.out.println("\n----- Listar Bomberos -----");
         List<Bombero> listaBomberos = bomberoData.listarBomberos();
         for (Bombero bombero : listaBomberos) {
-            System.out.println(bombero.DebugToString());
+            System.out.println(bombero.debugToString());
         }
         // ***** FIN BOMBERO PRUEBAS *****
 
@@ -217,7 +219,7 @@ public class Pruebas {
         System.out.println("\n----- Listar Siniestros -----");
         List<Siniestro> listaSiniestros = siniestroData.listarSiniestros();
         for (Siniestro siniestro : listaSiniestros) {
-            System.out.println(siniestro.DebugToString());
+            System.out.println(siniestro.debugToString());
         }
         // ***** FIN SINIESTRO PRUEBAS *****
 
