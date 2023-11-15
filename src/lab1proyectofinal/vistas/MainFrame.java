@@ -16,6 +16,7 @@ public class MainFrame extends javax.swing.JFrame {
     private final FormularioBombero formularioBombero;
     private final FormularioBrigada formularioBrigada;
     private final FormularioCuartel formularioCuartel;
+    private final FormularioSiniestro formularioSiniestro;
     private final GestionBombero gestionBombero;
     private final GestionBrigada gestionBrigada;
     private final GestionCuartel gestionCuartel;
@@ -57,6 +58,10 @@ public class MainFrame extends javax.swing.JFrame {
         // Gestion Bombero
         this.gestionBombero = new GestionBombero(cuartelData, brigadaData, bomberoData);
         DesktopPane.add(this.gestionBombero);
+        
+        // Formulario Siniestro
+        this.formularioSiniestro = new FormularioSiniestro();
+        DesktopPane.add(this.formularioSiniestro);
     }
 
     private void focusIFrame(JInternalFrame iFrame) {
@@ -179,6 +184,11 @@ public class MainFrame extends javax.swing.JFrame {
         siniestroMenu.setText("Siniestro");
 
         formularioSiniestroMI.setText("Formulario Siniestro");
+        formularioSiniestroMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formularioSiniestroMIActionPerformed(evt);
+            }
+        });
         siniestroMenu.add(formularioSiniestroMI);
 
         gestionSiniestroMI.setText("Gestión Siniestro");
@@ -225,6 +235,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void gestionBomberoMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionBomberoMIActionPerformed
         focusIFrame(gestionBombero);
     }//GEN-LAST:event_gestionBomberoMIActionPerformed
+
+    private void formularioSiniestroMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioSiniestroMIActionPerformed
+        focusIFrame(formularioSiniestro);
+    }//GEN-LAST:event_formularioSiniestroMIActionPerformed
 
     /**
      * @param args the command line arguments
