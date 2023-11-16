@@ -118,7 +118,11 @@ public class SiniestroData {
             ps.setInt(3, siniestro.getCoordenadaX());
             ps.setInt(4, siniestro.getCoordenadaY());
             ps.setString(5, siniestro.getDetalles());
-            ps.setInt(6, siniestro.getBrigada().getCodigoBrigada());
+            if (siniestro.getBrigada() != null) {
+                ps.setInt(6, siniestro.getBrigada().getCodigoBrigada());
+            } else {
+                ps.setInt(6, SiniestroData.obtenerBrigadaNula().getCodigoBrigada());
+            }
             if (fecHorRes == null && puntuacion == Utils.NIL) {
                 ps.setNull(7, Types.TIMESTAMP);
                 ps.setInt(8, puntuacion);
@@ -408,7 +412,11 @@ public class SiniestroData {
             ps.setInt(3, siniestro.getCoordenadaX());
             ps.setInt(4, siniestro.getCoordenadaY());
             ps.setString(5, siniestro.getDetalles());
-            ps.setInt(6, siniestro.getBrigada().getCodigoBrigada());
+            if (siniestro.getBrigada() != null) {
+                ps.setInt(6, siniestro.getBrigada().getCodigoBrigada());
+            } else {
+                ps.setInt(6, SiniestroData.obtenerBrigadaNula().getCodigoBrigada());
+            }
             if (fecHorRes == null && puntuacion == Utils.NIL) {
                 ps.setNull(7, Types.TIMESTAMP);
                 ps.setInt(8, puntuacion);

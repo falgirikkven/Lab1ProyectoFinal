@@ -1,6 +1,16 @@
 package lab1proyectofinal.vistas;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import lab1proyectofinal.accesoADatos.SiniestroData;
 import lab1proyectofinal.accesoADatos.Utils;
+import lab1proyectofinal.entidades.Siniestro;
 
 /**
  *
@@ -8,11 +18,26 @@ import lab1proyectofinal.accesoADatos.Utils;
  */
 public class FormularioSiniestro extends javax.swing.JInternalFrame {
 
+    private final SiniestroData siniestroData;
+    private final DateTimeFormatter formatter;
+
     /**
      * Creates new form FormularioSiniestro
      */
-    public FormularioSiniestro() {
+    public FormularioSiniestro(SiniestroData siniestroData) {
         initComponents();
+        this.siniestroData = siniestroData;
+
+        this.formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    }
+
+    private void limpiarCampos() {
+        tipoCB.setSelectedIndex(-1);
+        fechaSiniestroDC.setCalendar(null);
+        horaSiniestroTF.setText("");
+        coordenadaXTF.setText("");
+        coordenadaYTF.setText("");
+        detallesTA.setText("");
     }
 
     /**
@@ -120,19 +145,19 @@ public class FormularioSiniestro extends javax.swing.JInternalFrame {
                                     .addComponent(coordenadaXLabel))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(coordenadaYLabel)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(tipoCB, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(fechaSiniestroDC, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
                                         .addComponent(horaSiniestroLabel)
                                         .addGap(18, 18, 18)
-                                        .addComponent(horaSiniestroTF, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(horaSiniestroTF, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(coordenadaYLabel)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(detallesLabel)
                             .addComponent(jScrollPane1))
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -180,19 +205,63 @@ public class FormularioSiniestro extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        // TODO add your handling code here:
+        this.limpiarCampos();
     }//GEN-LAST:event_formInternalFrameActivated
 
     private void BtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLimpiarActionPerformed
-        // TODO add your handling code here:
+        this.limpiarCampos();
     }//GEN-LAST:event_BtnLimpiarActionPerformed
 
     private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
-        // TODO add your handling code here:
+        String tipo = (String) tipoCB.getSelectedItem();
+        Date date = fechaSiniestroDC.getDate();
+        String horaStr = horaSiniestroTF.getText();
+        String coordenadaXStr = coordenadaXTF.getText().trim();
+        String coordenadaYStr = coordenadaYTF.getText().trim();
+        String detalles = detallesTA.getText().trim();
+
+        if (tipo == null || date == null || horaStr.isBlank() || coordenadaXStr.isBlank()
+                || coordenadaYStr.isBlank() || detalles.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int coordenadaX;
+        try {
+            coordenadaX = Integer.parseInt(coordenadaXStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Se esperaba un numero entero en Coordenada X.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int coordenadaY;
+        try {
+            coordenadaY = Integer.parseInt(coordenadaYStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Se esperaba un numero entero en Coordenada Y.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        LocalTime lt;
+        try {
+            lt = LocalTime.parse(horaStr, formatter);
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this, "La hora introducida no parece ser correcta.\nAsegurese de que tenga el siguiente formato: HH:mm:ss", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        LocalDate ld = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDateTime fechaHoraSiniestro = LocalDateTime.of(ld.getYear(), ld.getMonth(), ld.getDayOfMonth(), lt.getHour(), lt.getMinute(), lt.getSecond());
+
+        Siniestro siniestro = new Siniestro(tipo, fechaHoraSiniestro, coordenadaX, coordenadaY, detalles);
+        if (this.siniestroData.guardarSiniestro(siniestro)) {
+            JOptionPane.showMessageDialog(this, "Siniestro guardado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo guardar el siniestro.\nContacte al administrador para mas información.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_BtnGuardarActionPerformed
 
     private void BtnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSalirActionPerformed
-        // TODO add your handling code here:
+        this.hide();
     }//GEN-LAST:event_BtnSalirActionPerformed
 
 

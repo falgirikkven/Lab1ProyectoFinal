@@ -5,6 +5,7 @@ import javax.swing.JInternalFrame;
 import lab1proyectofinal.accesoADatos.BomberoData;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.CuartelData;
+import lab1proyectofinal.accesoADatos.SiniestroData;
 
 /**
  *
@@ -24,6 +25,7 @@ public class MainFrame extends javax.swing.JFrame {
     private final BomberoData bomberoData;
     private final BrigadaData brigadaData;
     private final CuartelData cuartelData;
+    private final SiniestroData siniestroData;
 
     /**
      * Creates new form MainFrame
@@ -34,6 +36,7 @@ public class MainFrame extends javax.swing.JFrame {
         this.bomberoData = new BomberoData();
         this.brigadaData = new BrigadaData();
         this.cuartelData = new CuartelData();
+        this.siniestroData = new SiniestroData();
 
         // Formulario Cuartel
         this.formularioCuartel = new FormularioCuartel(cuartelData);
@@ -58,9 +61,9 @@ public class MainFrame extends javax.swing.JFrame {
         // Gestion Bombero
         this.gestionBombero = new GestionBombero(cuartelData, brigadaData, bomberoData);
         DesktopPane.add(this.gestionBombero);
-        
+
         // Formulario Siniestro
-        this.formularioSiniestro = new FormularioSiniestro();
+        this.formularioSiniestro = new FormularioSiniestro(siniestroData);
         DesktopPane.add(this.formularioSiniestro);
     }
 
