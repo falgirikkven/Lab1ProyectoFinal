@@ -168,12 +168,14 @@ public class BrigadaData {
     public List<Brigada> listarBrigadasAsignables() {
         List<Brigada> brigadas = new ArrayList();
         try {
-            String sql = "SELECT * FROM brigada, cuartel "
-                    + "WHERE brigada.estado = true "
-                    + "AND brigada.disponible = true "
-                    + "AND (SELECT COUNT(codigoBrigada) FROM bombero WHERE bombero.codigoBrigada=brigada.codigoBrigada)=5 "
-                    + "AND (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada)=0 "
-                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel;";
+            String sql = "SELECT * FROM brigada, cuartel "      // una "parte brigada" y otra "parte cuartel"
+                    + "WHERE brigada.estado = true "            // la parte brigada tiene un estado true
+                    + "AND brigada.disponible = true "          // la parte brigada está dispobible
+                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel "      // la parte brigada y la parte cuartel están vinculados por 'codigoCuartel' (la brigada pertenece al cuartel)
+                    + "AND (SELECT COUNT(codigoBrigada) FROM bombero WHERE bombero.codigoBrigada=brigada.codigoBrigada AND bombero.estado=true)=5 "     // la cantidad de bomberos activos que pertenecen a la parte de brigada tiene que ser igual a 5
+                    + "AND (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada AND siniestro.puntuacion=-1)=0;";        // la cantidad de siniestros aun no resueltos que están siendo atendidos por la brigada es igual a 0
+            
+            
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             Brigada brigada;
@@ -193,12 +195,12 @@ public class BrigadaData {
     public List<Brigada> listarBrigadasNoAsignables() {
         List<Brigada> brigadas = new ArrayList();
         try {
-            String sql = "SELECT * FROM brigada, cuartel "
-                    + "WHERE brigada.estado = true "
-                    + "AND (brigada.disponible = false "
-                    + "OR (SELECT COUNT(codigoBrigada) FROM bombero WHERE bombero.codigoBrigada=brigada.codigoBrigada)!=5 "
-                    + "OR (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada)!=0) "
-                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel;";
+            String sql = "SELECT * FROM brigada, cuartel "      // una "parte brigada" y otra "parte cuartel"
+                    + "WHERE brigada.estado = true "            // la parte brigada tiene un estado true
+                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel "      // la parte brigada y la parte cuartel están vinculados por 'codigoCuartel' (la brigada pertenece al cuartel)
+                    + "AND (brigada.disponible != true "          // la parte brigada no está dispobible                    
+                    + "OR (SELECT COUNT(codigoBrigada) FROM bombero WHERE bombero.codigoBrigada=brigada.codigoBrigada AND bombero.estado=true)!=5 "     // la cantidad de bomberos activos que pertenecen a la parte de brigada es distinta de 5
+                    + "OR (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada AND siniestro.puntuacion=-1)!=0);";        // la cantidad de siniestros aun no resueltos que están siendo atendidos por la brigada es igual a 0            
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             Brigada brigada;
@@ -219,8 +221,9 @@ public class BrigadaData {
         try {
             String sql = "SELECT * FROM brigada, cuartel "
                     + "WHERE brigada.estado = true "
-                    + "AND (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada AND puntuacion=-1)!=0 "
-                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel;";
+                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel"
+                    + "AND (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada AND puntuacion=-1)!=0; ";
+                    
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             Brigada brigada;
@@ -242,8 +245,9 @@ public class BrigadaData {
         try {
             String sql = "SELECT * FROM brigada, cuartel "
                     + "WHERE brigada.estado = true "
-                    + "AND (SELECT COUNT(codigoBrigada) FROM bombero WHERE bombero.codigoBrigada=brigada.codigoBrigada)<5 "
-                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel;";
+                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel";
+                    + "AND (SELECT COUNT(codigoBrigada) FROM bombero WHERE bombero.codigoBrigada=brigada.codigoBrigada)<5; "
+                    
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             Brigada brigada;
