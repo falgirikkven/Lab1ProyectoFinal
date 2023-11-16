@@ -22,7 +22,6 @@ public class Bombero {
     public Bombero() {
     }
 
-    // inicializa todo menos 'idBombero' y 'estado'
     public Bombero(int dni, String nombreCompleto, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada) {
         this.dni = dni;
         this.nombreCompleto = nombreCompleto;
@@ -102,7 +101,7 @@ public class Bombero {
 
     @Override
     public String toString() {
-        return idBombero + ". " + nombreCompleto + " - " + dni;
+        return nombreCompleto + " (dni=" + dni + ", codigoBrigada=" + brigada.getCodigoBrigada() + ", codigoCuartel=" + brigada.getCuartel().getCodigoCuartel() + ")";
     }
 
     @Override

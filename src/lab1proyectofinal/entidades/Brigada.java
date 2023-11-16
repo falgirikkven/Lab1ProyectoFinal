@@ -19,7 +19,6 @@ public class Brigada {
     public Brigada() {
     }
 
-    // inicializa todo menos 'codigoBrigada' y 'estado'
     public Brigada(String nombreBrigada, String especialidad, boolean disponible, Cuartel cuartel) {
         this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
@@ -81,7 +80,7 @@ public class Brigada {
 
     @Override
     public String toString() {
-        return codigoBrigada + ". " + nombreBrigada;
+        return nombreBrigada + " (codigoBrigada=" + codigoBrigada + ", codigoCuartel=" + cuartel.getCodigoCuartel() + ")";
     }
 
     @Override

@@ -21,6 +21,8 @@ public class MainFrame extends javax.swing.JFrame {
     private final GestionBombero gestionBombero;
     private final GestionBrigada gestionBrigada;
     private final GestionCuartel gestionCuartel;
+    private final GestionSiniestro gestionSiniestro;
+    private final TratamientoEmergencia tratamientoEmergencia;
 
     private final BomberoData bomberoData;
     private final BrigadaData brigadaData;
@@ -65,6 +67,14 @@ public class MainFrame extends javax.swing.JFrame {
         // Formulario Siniestro
         this.formularioSiniestro = new FormularioSiniestro(siniestroData);
         DesktopPane.add(this.formularioSiniestro);
+
+        // Gestion Siniestro
+        this.gestionSiniestro = new GestionSiniestro(siniestroData, brigadaData);
+        DesktopPane.add(this.gestionSiniestro);
+
+        // Tratamiento Emergencia
+        this.tratamientoEmergencia = new TratamientoEmergencia(siniestroData);
+        DesktopPane.add(this.tratamientoEmergencia);
     }
 
     private void focusIFrame(JInternalFrame iFrame) {
@@ -109,9 +119,11 @@ public class MainFrame extends javax.swing.JFrame {
         siniestroMenu = new javax.swing.JMenu();
         formularioSiniestroMI = new javax.swing.JMenuItem();
         gestionSiniestroMI = new javax.swing.JMenuItem();
+        tratamientoEmergenciaMI = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestión Bomberos");
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
         javax.swing.GroupLayout DesktopPaneLayout = new javax.swing.GroupLayout(DesktopPane);
         DesktopPane.setLayout(DesktopPaneLayout);
@@ -195,7 +207,20 @@ public class MainFrame extends javax.swing.JFrame {
         siniestroMenu.add(formularioSiniestroMI);
 
         gestionSiniestroMI.setText("Gestión Siniestro");
+        gestionSiniestroMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gestionSiniestroMIActionPerformed(evt);
+            }
+        });
         siniestroMenu.add(gestionSiniestroMI);
+
+        tratamientoEmergenciaMI.setText("Tratamiento de Emergencia");
+        tratamientoEmergenciaMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tratamientoEmergenciaMIActionPerformed(evt);
+            }
+        });
+        siniestroMenu.add(tratamientoEmergenciaMI);
 
         MenuBar.add(siniestroMenu);
 
@@ -242,6 +267,14 @@ public class MainFrame extends javax.swing.JFrame {
     private void formularioSiniestroMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioSiniestroMIActionPerformed
         focusIFrame(formularioSiniestro);
     }//GEN-LAST:event_formularioSiniestroMIActionPerformed
+
+    private void gestionSiniestroMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionSiniestroMIActionPerformed
+        focusIFrame(gestionSiniestro);
+    }//GEN-LAST:event_gestionSiniestroMIActionPerformed
+
+    private void tratamientoEmergenciaMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tratamientoEmergenciaMIActionPerformed
+        focusIFrame(tratamientoEmergencia);
+    }//GEN-LAST:event_tratamientoEmergenciaMIActionPerformed
 
     /**
      * @param args the command line arguments
@@ -293,5 +326,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem gestionCuartelMI;
     private javax.swing.JMenuItem gestionSiniestroMI;
     private javax.swing.JMenu siniestroMenu;
+    private javax.swing.JMenuItem tratamientoEmergenciaMI;
     // End of variables declaration//GEN-END:variables
 }

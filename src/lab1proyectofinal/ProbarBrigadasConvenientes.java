@@ -1,13 +1,16 @@
 package lab1proyectofinal;
 
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import lab1proyectofinal.accesoADatos.BomberoData;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.Conexion;
 import lab1proyectofinal.accesoADatos.CuartelData;
 import lab1proyectofinal.accesoADatos.SiniestroData;
 import lab1proyectofinal.accesoADatos.Utils;
+import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.entidades.BrigadaDistancia;
 import lab1proyectofinal.entidades.Cuartel;
@@ -78,11 +81,28 @@ public class ProbarBrigadasConvenientes {
             brigadaData.guardarBrigada(brigada);
         }
 
+        // Grupo sanguineo
+        String[] grupoSanguineo = Utils.obtenerGrupoSanguineo();
+
+        // Bombero Data
+        BomberoData bomberoData = new BomberoData();
+
+        // Guardar Bomberos
+        System.out.println("\n----- Guardar Brigadas -----");
+        for (int i = 0; i < brigadas.length; i++) {
+            for (int j = 0; j < 5; j++) {
+                int dni = (i * 5) + j;
+                Bombero bombero = new Bombero(dni, "Soldado Imperial " + dni, grupoSanguineo[dni % 8],
+                        LocalDate.of(2000, 1, 1), Integer.toString(dni * dni), brigadas[i]);
+                bomberoData.guardarBombero(bombero);
+            }
+        }
+
         // Siniestro data
         SiniestroData siniestroData = new SiniestroData();
 
         // Siniestros
-        Siniestro siniestro1 = new Siniestro(especialidades[0], LocalDateTime.MIN, 2, 2, "");
+        Siniestro siniestro1 = new Siniestro(especialidades[3], LocalDateTime.MIN, 2, 2, "");
 
         System.out.println("\n----- Brigadas Convenientes -----");
         List<BrigadaDistancia> brigadasConvenientes = siniestroData.listarBrigadasConvenientes(siniestro1);

@@ -19,7 +19,7 @@ import lab1proyectofinal.entidades.Siniestro;
  *
  * @author Grupo-3
  */
-public class PruebaDefinitiva {
+public class PruebasN8A {
 
     /* Utilitarios */
     public static void imprimirListaBombero(List<Bombero> lista) {

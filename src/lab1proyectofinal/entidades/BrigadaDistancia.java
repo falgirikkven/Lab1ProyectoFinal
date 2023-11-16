@@ -7,9 +7,9 @@ package lab1proyectofinal.entidades;
 public class BrigadaDistancia implements Comparable<BrigadaDistancia> {
 
     private Brigada brigada;
-    private int distancia; // Distancia Manhattan en 'unidades de distancia' [ud]
+    private double distancia; // Distancia Manhattan en 'unidades de distancia' [UD]
 
-    public BrigadaDistancia(Brigada brigada, int distancia) {
+    public BrigadaDistancia(Brigada brigada, double distancia) {
         this.brigada = brigada;
         this.distancia = distancia;
     }
@@ -22,22 +22,31 @@ public class BrigadaDistancia implements Comparable<BrigadaDistancia> {
         this.brigada = brigada;
     }
 
-    public int getDistancia() {
+    public double getDistancia() {
         return distancia;
     }
 
-    public void setDistancia(int distancia) {
+    public void setDistancia(double distancia) {
         this.distancia = distancia;
     }
 
     @Override
     public String toString() {
-        return distancia + "ud - " + brigada.getNombreBrigada() + " (" + brigada.getEspecialidad() + ")";
+        return String.format("%.2f", distancia) + "UD - " + brigada.getNombreBrigada() + " (" + brigada.getEspecialidad() + ")";
     }
 
     @Override
     public int compareTo(BrigadaDistancia bd) {
-        return this.distancia - bd.getDistancia();
+        double d1 = this.distancia;
+        double d2 = bd.getDistancia();
+
+        if (d1 > d2) {
+            return 1;
+        } else if (d2 > d1) {
+            return -1;
+        }
+
+        return 0;
     }
 
 }

@@ -59,7 +59,7 @@
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="correoTF" max="32767" attributes="0"/>
-                          <Component id="cuartelCB" pref="257" max="32767" attributes="0"/>
+                          <Component id="cuartelCB" pref="407" max="32767" attributes="0"/>
                           <Component id="direccionTF" alignment="0" max="32767" attributes="0"/>
                           <Component id="nombreTF" alignment="0" max="32767" attributes="0"/>
                           <Component id="telefonoTF" alignment="0" max="32767" attributes="0"/>

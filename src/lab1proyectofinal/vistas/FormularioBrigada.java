@@ -132,7 +132,7 @@ public class FormularioBrigada extends javax.swing.JInternalFrame {
                         .addComponent(BtnLimpiar)
                         .addGap(18, 18, 18)
                         .addComponent(BtnGuardar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 247, Short.MAX_VALUE)
                         .addComponent(BtnSalir)))
                 .addContainerGap())
         );

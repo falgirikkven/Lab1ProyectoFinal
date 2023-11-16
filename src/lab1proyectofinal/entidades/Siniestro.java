@@ -26,7 +26,6 @@ public class Siniestro {
     public Siniestro() {
     }
 
-    // usuario inicializa todo menos 'codigoSiniestro', 'fechaHoraResolucion', 'puntuacion' y 'brigada'
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles) {
         this.tipo = tipo;
         this.fechaHoraInicio = fechaHoraInicio;
@@ -38,7 +37,6 @@ public class Siniestro {
         this.brigada = null;
     }
 
-    // usuario inicializa todo menos 'codigoSiniestro', 'fechaHoraResolucion' y 'puntuacion'
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, Brigada brigada) {
         this.tipo = tipo;
         this.fechaHoraInicio = fechaHoraInicio;
@@ -50,7 +48,6 @@ public class Siniestro {
         this.brigada = brigada;
     }
 
-    // usuario inicializa todo menos 'codigoSiniestro'
     public Siniestro(String tipo, LocalDateTime fechaHoraInicio, int coordenadaX, int coordenadaY, String detalles, Brigada brigada, LocalDateTime fechaHoraResolucion, int puntuacion) {
         this.tipo = tipo;
         this.fechaHoraInicio = fechaHoraInicio;
@@ -140,7 +137,7 @@ public class Siniestro {
 
     @Override
     public String toString() {
-        return "Siniestro{" + "codigoSiniestro=" + codigoSiniestro + ", tipo=" + tipo + ", fechaHoraInicio=" + fechaHoraInicio + ", coordenadaX=" + coordenadaX + ", coordenadaY=" + coordenadaY + ", detalles=" + detalles + ", fechaHoraResolucion=" + fechaHoraResolucion + ", puntuacion=" + puntuacion + ", brigada=" + brigada + '}';
+        return "Fecha: " + fechaHoraInicio + ", Coordenadas: (" + coordenadaX + ", " + coordenadaY + "), Tipo: " + String.format("%.15s", tipo);
     }
 
     @Override

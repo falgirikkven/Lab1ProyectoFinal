@@ -17,56 +17,10 @@ import lab1proyectofinal.entidades.Cuartel;
 public class CuartelData {
 
     private Connection connection;
-    //public static Cuartel cuartelNull = new Cuartel("cuartel null", "---", 0, 0, "---", "---", false);
 
     public CuartelData() {
         this.connection = Conexion.getInstance();
     }
-
-    /*
-    public boolean insertarCuartelNull() {
-        boolean resultado = false;
-        try {
-            String sql = "SELECT COUNT(nombreCuartel) FROM cuartel WHERE nombreCuartel='cuartel null'";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                if (rs.getInt(1) == 0) {
-                    ps.close();     // me parece que podría dar error (si así fuera, se podría crear otro PreparedStatement)
-                    sql = "INSERT INTO cuartel(nombreCuartel, direccion, coordenadaX, coordenadaY, telefono, correo, estado) "
-                            + "VALUES (?,?,?,?,?,?,?)";
-                    ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, cuartelNull.getNombreCuartel());
-                    ps.setString(2, cuartelNull.getDireccion());
-                    ps.setInt(3, cuartelNull.getCoordenadaX());
-                    ps.setInt(4, cuartelNull.getCoordenadaY());
-                    ps.setString(5, cuartelNull.getTelefono());
-                    ps.setString(6, cuartelNull.getCorreo());
-                    ps.setBoolean(7, cuartelNull.isEstado());
-                    ps.executeUpdate();
-                    rs = ps.getGeneratedKeys();
-                    if (rs.next()) {
-                        cuartelNull.setCodigoCuartel(rs.getInt(1));
-                        resultado = true;
-                        System.out.println("[CuartelData.insertarCuartelNull] 'cuartel null' agregado");
-                    } else {
-                        System.out.println("[CuartelData.insertarCuartelNull] No se pudo agregar al 'cuartel null'");
-                    }
-                    ps.close();
-                } else {
-                    System.out.println("[CuartelData.insertarCuartelNull] No se ha podido agregar al 'cuartel null' porque ya está agregado");
-                }
-            } else {
-                System.out.println("[CuartelData.insertarCuartelNull] Error al buscar al 'cuartel null' en la BD");
-            }
-        } catch (SQLException e) {
-            int errorCode = e.getErrorCode();
-            System.out.println("[CuartelData.insertarCuartelNull] Error " + errorCode + " " + e.getMessage());
-            e.printStackTrace();
-        }
-        return resultado;
-    }
-    */
 
     public boolean guardarCuartel(Cuartel cuartel) {
         if (cuartel.getCodigoCuartel() != Utils.NIL || !cuartel.isEstado()) {

@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import lab1proyectofinal.accesoADatos.CuartelData;
-import lab1proyectofinal.entidades.*;
+import lab1proyectofinal.entidades.Bombero;
+import lab1proyectofinal.entidades.Brigada;
 import org.mariadb.jdbc.Statement;
 
 /**
@@ -16,58 +16,11 @@ import org.mariadb.jdbc.Statement;
  */
 public class BrigadaData {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
     private final Connection connection;
-    //public static Brigada brigadaNull = new Brigada("brigada null", "---", false, CuartelData.cuartelNull, false);
 
     public BrigadaData() {
         this.connection = Conexion.getInstance();
     }
-
-    /*
-    public boolean insertarBrigadaNull() {
-        boolean resultado = false;
-        try {
-            String sql = "SELECT COUNT(nombreBrigada) FROM brigada WHERE nombreBrigada='brigada null'";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                if (rs.getInt(1) == 0) {
-                    ps.close();     // me parece que podría dar error (si así fuera, se podría crear otro PreparedStatement)
-                    sql = "INSERT INTO brigada(nombreBrigada, especialidad, disponible, codigoCuartel, estado) "
-                            + "VALUES (?,?,?,?,?)";
-                    ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, brigadaNull.getNombreBrigada());
-                    ps.setString(2, brigadaNull.getEspecialidad());
-                    ps.setBoolean(3, brigadaNull.isDisponible());
-                    ps.setInt(4, brigadaNull.getCuartel().getCodigoCuartel());
-                    ps.setBoolean(5, brigadaNull.isEstado());
-                    ps.executeUpdate();
-                    rs = ps.getGeneratedKeys();
-                    if (rs.next()) {
-                        brigadaNull.setCodigoBrigada(rs.getInt(1));
-                        resultado = true;
-                        System.out.println("[CuartelData.insertarBrigadaNull] 'brigada null' agregada");
-                    } else {
-                        System.out.println("[CuartelData.insertarBrigadaNull] No se pudo agregar no se pudo agregar la 'brigada null'");
-                    }
-                    ps.close();
-                } else {
-                    System.out.println("[CuartelData.insertarBrigadaNull] No se ha podido agregar la 'brigada null' porque ya está agregada");
-                }
-            } else {
-                System.out.println("[CuartelData.insertarBrigadaNull] Error al buscar la 'brigada null' en la BD");
-            }
-        } catch (SQLException e) {
-            int errorCode = e.getErrorCode();
-            System.out.println("[CuartelData.insertarBrigadaNull] Error " + errorCode + " " + e.getMessage());
-            e.printStackTrace();
-        }
-        return resultado;
-    }
-    */
 
     public boolean guardarBrigada(Brigada brigada) {
         if (brigada.getCodigoBrigada() != Utils.NIL || !brigada.isEstado()) {
@@ -190,9 +143,15 @@ public class BrigadaData {
     public List<Brigada> listarBrigadasAsignables() {
         List<Brigada> brigadas = null;
         try {
-            String sql = "SELECT * FROM brigada "
-                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
-                    + "WHERE brigada.estado = true AND brigada.disponible = true;";
+            //String sql = "SELECT * FROM brigada "
+            //        + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
+            //        + "WHERE brigada.estado = true AND brigada.disponible = true;";
+            String sql = "SELECT * FROM brigada, cuartel "
+                    + "WHERE brigada.estado = true "
+                    + "AND brigada.disponible = true "
+                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM bombero WHERE bombero.codigoBrigada=brigada.codigoBrigada AND bombero.estado=true)=5 "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada AND siniestro.puntuacion=-1)=0;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             brigadas = new ArrayList();
@@ -215,9 +174,15 @@ public class BrigadaData {
     public List<Brigada> listarBrigadasNoAsignables() {
         List<Brigada> brigadas = null;
         try {
-            String sql = "SELECT * FROM brigada "
-                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
-                    + "WHERE brigada.estado = true AND brigada.disponible = false;";
+            //String sql = "SELECT * FROM brigada "
+            //        + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
+            //        + "WHERE brigada.estado = true AND brigada.disponible = false;";
+            String sql = "SELECT * FROM brigada, cuartel "
+                    + "WHERE brigada.estado = true "
+                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel "
+                    + "AND (brigada.disponible != true "
+                    + "OR (SELECT COUNT(codigoBrigada) FROM bombero WHERE bombero.codigoBrigada=brigada.codigoBrigada AND bombero.estado=true)!=5 "
+                    + "OR (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada AND siniestro.puntuacion=-1)!=0);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             brigadas = new ArrayList();

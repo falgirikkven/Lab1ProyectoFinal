@@ -10,7 +10,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import lab1proyectofinal.entidades.*;
+import lab1proyectofinal.entidades.Brigada;
+import lab1proyectofinal.entidades.BrigadaDistancia;
+import lab1proyectofinal.entidades.Cuartel;
+import lab1proyectofinal.entidades.Siniestro;
 
 /**
  *
@@ -313,22 +316,25 @@ public class SiniestroData {
         // BrigadaData.listarBrigadasAsignables (casi)
         List<BrigadaDistancia> brigadas = null;
         try {
-            String sql = "SELECT * FROM brigada "
-                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
-                    + "WHERE brigada.estado = true AND brigada.disponible = true;";
+            //String sql = "SELECT * FROM brigada "
+            //        + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel AND cuartel.estado = true) "
+            //        + "WHERE brigada.estado = true AND brigada.disponible = true;";
+            String sql = "SELECT * FROM brigada, cuartel "
+                    + "WHERE brigada.estado = true "
+                    + "AND brigada.disponible = true "
+                    + "AND brigada.codigoCuartel = cuartel.codigoCuartel "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM bombero WHERE bombero.codigoBrigada=brigada.codigoBrigada AND bombero.estado=true)=5 "
+                    + "AND (SELECT COUNT(codigoBrigada) FROM siniestro WHERE siniestro.codigoBrigada=brigada.codigoBrigada AND siniestro.puntuacion=-1)=0;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             brigadas = new ArrayList();
             while (rs.next()) {
                 Brigada brigada = Utils.obtenerDeResultSetBrigada(rs);
-                int distanciaX = siniestro.getCoordenadaX() - brigada.getCuartel().getCoordenadaX();
-                int distanciaY = siniestro.getCoordenadaY() - brigada.getCuartel().getCoordenadaY();
-                distanciaX = distanciaX < 0 ? -distanciaX : distanciaX;
-                distanciaY = distanciaY < 0 ? -distanciaY : distanciaY;
-                brigadas.add(new BrigadaDistancia(brigada, distanciaX + distanciaY));
+                double distanciaX = (double) (siniestro.getCoordenadaX() - brigada.getCuartel().getCoordenadaX());
+                double distanciaY = (double) (siniestro.getCoordenadaY() - brigada.getCuartel().getCoordenadaY());
+                double distancia = Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY);
+                brigadas.add(new BrigadaDistancia(brigada, distancia));
             }
-            //System.out.println("[BrigadaData.listarBrigadasConvenientes] "
-            //        + "Cantidad de brigadas: " + brigadas.size());
             ps.close();
         } catch (SQLException e) {
             System.out.println("[SiniestroData.listarBrigadasConvenientes] "

@@ -2,8 +2,12 @@ package lab1proyectofinal.accesoADatos;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.regex.Pattern;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.entidades.Cuartel;
@@ -148,6 +152,20 @@ public class Utils {
         }
         siniestro.setPuntuacion(rs.getInt("puntuacion"));
         return siniestro;
+    }
+
+    // LocalDate -> Calendar
+    public static Calendar localDateToCalendar(LocalDate ldate) {
+        ZonedDateTime zonedDateTime = ldate.atStartOfDay(ZoneId.systemDefault());
+        Instant instant = zonedDateTime.toInstant();
+        Date date = Date.from(instant);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
+
+    public static LocalDate dateToLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
 }

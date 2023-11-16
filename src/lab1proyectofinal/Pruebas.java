@@ -187,10 +187,10 @@ public class Pruebas {
         SiniestroData siniestroData = new SiniestroData();
 
         // Siniestros
-        Siniestro siniestro1 = new Siniestro("Incendio", LocalDateTime.of(2023, Month.NOVEMBER, 1, 12, 0), 10, 10, "Mucho humo", brigada3);
-        Siniestro siniestro2 = new Siniestro("Derrumbe", LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 0), 10, 10, "Mucho escombro", brigada3);
-        Siniestro siniestro3 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 0), 10, 10, "Al desarmadero", brigada3);
-        Siniestro siniestro4 = new Siniestro("NADA", LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 0), 10, 10, "NADA", brigada3, LocalDateTime.of(2023, Month.NOVEMBER, 5, 17, 0), 10);
+        Siniestro siniestro1 = new Siniestro(especialidades[0], LocalDateTime.of(2023, Month.NOVEMBER, 1, 12, 12, 13), 1, 10, "Mucho humo");
+        Siniestro siniestro2 = new Siniestro(especialidades[1], LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 13, 12), 2, -9, "Mucho escombro", brigada1);
+        Siniestro siniestro3 = new Siniestro(especialidades[2], LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 24, 32), -5, 8, "Al desarmadero", brigada2);
+        Siniestro siniestro4 = new Siniestro(especialidades[3], LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 32, 48), -6, -7, "NADA", brigada3, LocalDateTime.of(2023, Month.NOVEMBER, 5, 17, 0, 21), 10);
         Siniestro siniestros[] = new Siniestro[]{siniestro1, siniestro2, siniestro3, siniestro4};
 
         // Guardar Siniestros

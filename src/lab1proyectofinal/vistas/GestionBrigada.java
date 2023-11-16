@@ -154,7 +154,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
                         .addComponent(BtnGuardar)
                         .addGap(18, 18, 18)
                         .addComponent(BtnEliminar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 215, Short.MAX_VALUE)
                         .addComponent(BtnSalir))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,7 +300,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "Brigada eliminada.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 brigadaCB.removeItem(brigadaSeleccionada);
             } else {
-                JOptionPane.showMessageDialog(this, "No se pudo eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No se pudo eliminar.\nAsegurese de que no haya bomberos asociados a esta brigada ni que la misma esté atentiendo un siniestro.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_BtnEliminarActionPerformed

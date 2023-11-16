@@ -183,7 +183,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(correoTF)
-                            .addComponent(cuartelCB, 0, 257, Short.MAX_VALUE)
+                            .addComponent(cuartelCB, 0, 407, Short.MAX_VALUE)
                             .addComponent(direccionTF)
                             .addComponent(nombreTF)
                             .addComponent(telefonoTF))))
@@ -309,7 +309,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "Cuartel eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 cuartelCB.removeItem(cuartelSeleccionado);
             } else {
-                JOptionPane.showMessageDialog(this, "No se pudo eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No se pudo eliminar.\nAsegurese de que no haya brigadas ni bomberos asociados a este cuartel.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_BtnEliminarActionPerformed

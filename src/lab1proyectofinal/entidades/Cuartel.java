@@ -21,7 +21,6 @@ public class Cuartel {
     public Cuartel() {
     }
 
-    // inicializa todo menos 'codigoCuartel' y 'estado'
     public Cuartel(String nombreCuartel, String direccion, int coordenadaX, int coordenadaY, String telefono, String correo) {
         this.nombreCuartel = nombreCuartel;
         this.direccion = direccion;
@@ -101,7 +100,7 @@ public class Cuartel {
 
     @Override
     public String toString() {
-        return codigoCuartel + ". " + nombreCuartel;
+        return nombreCuartel + " (codigoCuartel=" + codigoCuartel + ")";
     }
 
     @Override

@@ -1,10 +1,6 @@
 package lab1proyectofinal.vistas;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -45,16 +41,6 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         celularTF.setText("");
         cuartelCB.setSelectedIndex(-1);
         brigadaCB.setSelectedIndex(-1);
-    }
-
-    // LocalDate -> Calendar
-    private Calendar localDateToCalendar(LocalDate ldate) {
-        ZonedDateTime zonedDateTime = ldate.atStartOfDay(ZoneId.systemDefault());
-        Instant instant = zonedDateTime.toInstant();
-        Date date = Date.from(instant);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar;
     }
 
     private void setFieldsEditable(boolean flag) {
@@ -224,7 +210,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                         .addComponent(BtnGuardar)
                         .addGap(18, 18, 18)
                         .addComponent(BtnEliminar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 285, Short.MAX_VALUE)
                         .addComponent(BtnSalir)))
                 .addContainerGap())
         );
@@ -296,7 +282,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             dniTF.setText(Integer.toString(bomberoSeleccionado.getDni()));
             nombreTF.setText(bomberoSeleccionado.getNombreCompleto());
             grupoSanguineoCB.setSelectedItem(bomberoSeleccionado.getGrupoSanguineo());
-            fechaNacimientoDC.setCalendar(localDateToCalendar(bomberoSeleccionado.getFechaNacimiento()));
+            fechaNacimientoDC.setCalendar(Utils.localDateToCalendar(bomberoSeleccionado.getFechaNacimiento()));
             celularTF.setText(bomberoSeleccionado.getCelular());
             cuartelCB.setSelectedItem(bomberoSeleccionado.getBrigada().getCuartel());
             brigadaCB.setSelectedItem(bomberoSeleccionado.getBrigada());
@@ -328,8 +314,8 @@ public class GestionBombero extends javax.swing.JInternalFrame {
 
     private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
         Bombero bomberoSeleccionado = (Bombero) bomberoCB.getSelectedItem();
-        if (bomberoSeleccionado != null) {
-            JOptionPane.showMessageDialog(this, "Seleccione primero una brigada a editar.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (bomberoSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione primero un bombero a editar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -344,7 +330,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         if (dniStr.isBlank() || nombreStr.isBlank() || grupoSanguineoStr == null
                 || date == null || celularStr.isBlank() || cuartel == null
                 || brigada == null) {
-            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No puede haber campos vacios.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -368,11 +354,11 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         }
 
         // Obtener Local date del calendar
-        LocalDate fechaNacimiento = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate fechaNacimiento = Utils.dateToLocalDate(date);
 
         Bombero bombero = new Bombero(dni, nombreStr, grupoSanguineoStr, fechaNacimiento, celularStr, brigada);
         bombero.setIdBombero(bomberoSeleccionado.getIdBombero());
-        if (bomberoData.guardarBombero(bombero)) {
+        if (bomberoData.modificarBombero(bombero)) {
             JOptionPane.showMessageDialog(this, "Bombero modificado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "No se pudo guardar la edición.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -392,7 +378,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "Bombero eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 brigadaCB.removeItem(bomberoSeleccionado);
             } else {
-                JOptionPane.showMessageDialog(this, "No se pudo eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No se pudo eliminar.\nAsegurese de que no pertenezca a una brigada que no esté atendiento un siniestro.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_BtnEliminarActionPerformed
