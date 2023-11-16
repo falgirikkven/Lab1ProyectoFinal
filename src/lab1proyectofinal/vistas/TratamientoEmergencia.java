@@ -323,6 +323,10 @@ public class TratamientoEmergencia extends javax.swing.JInternalFrame {
         }
 
         LocalDateTime fechaHoraResolucion = LocalDateTime.of(Utils.dateToLocalDate(date), lt);
+        if (ss.getFechaHoraInicio().isAfter(fechaHoraResolucion)) {
+            JOptionPane.showMessageDialog(this, "La fecha y hora de resolución no puede ser previa a la fecha y hora del inicio del siniestro.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         Siniestro siniestro = new Siniestro(ss.getTipo(), ss.getFechaHoraInicio(), ss.getCoordenadaX(), ss.getCoordenadaY(), ss.getDetalles(), ss.getBrigada());
         siniestro.setCodigoSiniestro(ss.getCodigoSiniestro());
