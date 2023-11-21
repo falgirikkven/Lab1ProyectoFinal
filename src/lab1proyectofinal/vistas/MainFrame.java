@@ -16,7 +16,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     private JInternalFrame focusedFrame = null;
     private final FormularioCuartel formularioCuartel;
-    private final GestionCuartel gestionCuartel;
+    private final GestionCuartelNuevaVersion gestionCuartel;
     private final FormularioBrigada formularioBrigada;
     private final GestionBrigada gestionBrigada;
 
@@ -37,7 +37,7 @@ public class MainFrame extends javax.swing.JFrame {
         DesktopPane.add(this.formularioCuartel);
 
         // Gestion Cuartel
-        this.gestionCuartel = new GestionCuartel(cuartelData);
+        this.gestionCuartel = new GestionCuartelNuevaVersion(cuartelData);
         DesktopPane.add(this.gestionCuartel);
 
         // Formulario Brigada
