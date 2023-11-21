@@ -25,12 +25,13 @@ public class SiniestroData {
     private static Brigada brigadaNula = null;
     public static String nombreEntidadNula = "nulo";
 
-    private Connection connection;
+    private final Connection connection;
 
     public SiniestroData() {
         this.connection = Conexion.getInstance();
     }
 
+    // revisado
     public static void inicializar() {
         CuartelData cuartelData = new CuartelData();
         BrigadaData brigadaData = new BrigadaData();
@@ -38,7 +39,8 @@ public class SiniestroData {
         if (cuartel == null) {
             cuartel = new Cuartel(nombreEntidadNula, "", 0, 0, "0", "");
             if (!cuartelData.guardarCuartel(cuartel) || !cuartelData.eliminarCuartelPorNombre(nombreEntidadNula)) {
-                System.out.println("[SiniestroData.inicializar] Error al inicializar");
+                System.out.println("[SiniestroData.inicializar] "
+                        + "Error al inicializar");
                 return;
             }
         }
@@ -47,7 +49,8 @@ public class SiniestroData {
         if (brigada == null) {
             brigada = new Brigada(nombreEntidadNula, "", false, cuartel);
             if (!brigadaData.guardarBrigada(brigada) || !brigadaData.eliminarBrigadaPorNombre(nombreEntidadNula)) {
-                System.out.println("[SiniestroData.inicializar] Error al inicializar");
+                System.out.println("[SiniestroData.inicializar] "
+                        + "Error al inicializar");
                 return;
             }
         }
@@ -59,6 +62,7 @@ public class SiniestroData {
         brigadaNula = brigada;
     }
 
+    // revisado, no se me ocurre para qué fue creado
     public static Cuartel obtenerCuartelNulo() {
         if (cuartelNulo == null) {
             inicializar();
@@ -66,6 +70,7 @@ public class SiniestroData {
         return cuartelNulo;
     }
 
+    // revisado
     public static Brigada obtenerBrigadaNula() {
         if (brigadaNula == null) {
             inicializar();
@@ -73,10 +78,12 @@ public class SiniestroData {
         return brigadaNula;
     }
 
+    // revisado
     public boolean guardarSiniestro(Siniestro siniestro) {
         if (siniestro.getCodigoSiniestro() != Utils.NIL) {
-            System.out.println("[SiniestroData.guardarSiniestro] Error: no se puede guardar. "
-                    + "Siniestro dado de baja o tiene codigoSiniestro definido. "
+            System.out.println("[SiniestroData.guardarSiniestro] "
+                    + "Error: no se puede guardar. "
+                    + "Tiene codigoSiniestro definido: "
                     + siniestro.debugToString());
             return false;
         }
@@ -87,33 +94,35 @@ public class SiniestroData {
         LocalDateTime fecHorRes = siniestro.getFechaHoraResolucion();
         LocalDateTime fecActual = LocalDateTime.now();
         if (fecHorIni.isAfter(fecActual)) {
-            System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. La fecha y hora de inicio de la "
-                    + "emergencia (" + fecHorIni + ") no puede ser posterior a la fecha y hora actual");
+            System.out.println("[SiniestroData.guardarSiniestro] Error: el inicio de la emergencia "
+                    + "(" + fecHorIni + ") no puede ser posterior a la actualidad");
             return false;
         }
         if (fecHorRes != null && puntuacion != Utils.NIL) {
             if (fecHorIni.isAfter(fecHorRes)) {
-                System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. La fecha y hora de inicio de la "
-                        + "emergencia (" + fecHorIni + ") no puede ser posterior a la fecha y hora de resolución de la misma");
+                System.out.println("[SiniestroData.guardarSiniestro] Error: el inicio de la "
+                        + "emergencia (" + fecHorIni + ") no puede ser posterior a la "
+                        + "resolución de la misma");
                 return false;
             } else if (fecHorRes.isAfter(fecActual)) {
-                System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. La fecha y hora de resolución de la "
-                        + "emergencia (" + fecHorRes + ") no puede ser posterior a la fecha y hora actual");
+                System.out.println("[SiniestroData.guardarSiniestro] Error: la resolución de la emergencia "
+                        + "(" + fecHorRes + ") no puede ser posterior a la actualidad");
                 return false;
             } else if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
-                System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. Puntuacion (" + puntuacion + ") fuera "
+                System.out.println("[SiniestroData.guardarSiniestro] Error: puntuacion (" + puntuacion + ") fuera "
                         + "de rango");
                 return false;
             }
         } else if (fecHorRes != null || puntuacion != Utils.NIL) {
-            System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. No se puede establecer una fecha de resolución "
-                    + "sin establecer una puntuación, ni viceversa");
+            System.out.println("[SiniestroData.guardarSiniestro] Error: no se puede establecer una fecha "
+                    + "de resolución sin establecer una puntuación, ni viceversa");
             return false;
         }
 
         boolean resultado = false;
         try {
-            String sql = "INSERT INTO siniestro(tipo, fechaHoraInicio, coordenadaX, coordenadaY, detalles, codigoBrigada, fechaHoraResolucion, puntuacion) "
+            String sql = "INSERT INTO siniestro(tipo, fechaHoraInicio, coordenadaX, coordenadaY, "
+                    + "detalles, codigoBrigada, fechaHoraResolucion, puntuacion) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, siniestro.getTipo());
@@ -129,7 +138,7 @@ public class SiniestroData {
             if (fecHorRes == null && puntuacion == Utils.NIL) {
                 ps.setNull(7, Types.TIMESTAMP);
                 ps.setInt(8, puntuacion);
-            } else if (fecHorRes != null && puntuacion != Utils.NIL) {
+            } else {
                 ps.setTimestamp(7, Timestamp.valueOf(fecHorRes));
                 ps.setInt(8, puntuacion);
             }
@@ -156,13 +165,14 @@ public class SiniestroData {
         return resultado;
     }
 
+    // revisado
     public Siniestro buscarSiniestro(int codigoSiniestro) {
         Siniestro siniestro = null;
         try {
-            String sql = "SELECT * FROM siniestro, brigada, cuartel "
-                    + "WHERE codigoSiniestro=? "
-                    + "AND siniestro.codigoBrigada=brigada.codigoBrigada "
-                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
+            String sql = "SELECT * FROM siniestro "
+                    + "JOIN brigada ON (siniestro.codigoBrigada = brigada.codigoBrigada "
+                    + "AND codigoSiniestro = ?) "
+                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoSiniestro);
             ResultSet rs = ps.executeQuery();
@@ -183,12 +193,13 @@ public class SiniestroData {
         return siniestro;
     }
 
+    // revisado
     public List<Siniestro> listarSiniestros() {
         List<Siniestro> siniestros = null;
         try {
-            String sql = "SELECT * FROM siniestro, brigada, cuartel "
-                    + "WHERE siniestro.codigoBrigada=brigada.codigoBrigada "
-                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
+            String sql = "SELECT * FROM siniestro "
+                    + "JOIN brigada ON (siniestro.codigoBrigada = brigada.codigoBrigada) "
+                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             siniestros = new ArrayList();
@@ -207,12 +218,14 @@ public class SiniestroData {
         return siniestros;
     }
 
+    // revisado
     public List<Siniestro> listarSiniestrosResueltos() {
         List<Siniestro> siniestros = null;
         try {
-            String sql = "SELECT * FROM siniestro, brigada, cuartel "
-                    + "WHERE siniestro.puntuacion!=-1 AND siniestro.codigoBrigada=brigada.codigoBrigada "
-                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
+            String sql = "SELECT * FROM siniestro "
+                    + "JOIN brigada ON (siniestro.codigoBrigada = brigada.codigoBrigada "
+                    + "AND siniestro.puntuacion != -1) "
+                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             siniestros = new ArrayList();
@@ -231,12 +244,14 @@ public class SiniestroData {
         return siniestros;
     }
 
+    // revisado
     public List<Siniestro> listarSiniestrosSinResolucion() {
         List<Siniestro> siniestros = null;
         try {
-            String sql = "SELECT * FROM siniestro, brigada, cuartel "
-                    + "WHERE siniestro.puntuacion=-1 AND siniestro.codigoBrigada=brigada.codigoBrigada "
-                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
+            String sql = "SELECT * FROM siniestro "
+                    + "JOIN brigada ON (siniestro.codigoBrigada = brigada.codigoBrigada "
+                    + "AND siniestro.puntuacion = -1) "
+                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             siniestros = new ArrayList();
@@ -255,13 +270,14 @@ public class SiniestroData {
         return siniestros;
     }
 
-    public List<Siniestro> listarSiniestrosEntreFechas(LocalDateTime fecha1, LocalDateTime fecha2) {
+    // revisado
+    public List<Siniestro> listarSiniestrosInicioEntreFechas(LocalDateTime fecha1, LocalDateTime fecha2) {
         List<Siniestro> siniestros = null;
         try {
-            String sql = "SELECT * FROM siniestro, brigada, cuartel "
-                    + "WHERE (fechaHoraInicio>=? AND fechaHoraInicio<=?) "
-                    + "AND siniestro.codigoBrigada=brigada.codigoBrigada "
-                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
+            String sql = "SELECT * FROM siniestro "
+                    + "JOIN brigada ON (siniestro.codigoBrigada = brigada.codigoBrigada "
+                    + "AND fechaHoraInicio BETWEEN (? AND ?)) "
+                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setTimestamp(1, Timestamp.valueOf(fecha1));
             ps.setTimestamp(2, Timestamp.valueOf(fecha2));
@@ -282,13 +298,14 @@ public class SiniestroData {
         return siniestros;
     }
 
+    // revisado
     public List<Siniestro> listarSiniestrosInicioFinEntreFechas(LocalDateTime fecha1, LocalDateTime fecha2) {
         List<Siniestro> siniestros = null;
         try {
-            String sql = "SELECT * FROM siniestro, brigada, cuartel "
-                    + "WHERE (fechaHoraInicio>=? AND fechaHoraResolucion<=?) " // comparar NULL con algo aparenta devolver siempre falso
-                    + "AND siniestro.codigoBrigada=brigada.codigoBrigada "
-                    + "AND brigada.codigoCuartel=cuartel.codigoCuartel;";
+            String sql = "SELECT * FROM siniestro "
+                    + "JOIN brigada ON (siniestro.codigoBrigada = brigada.codigoBrigada "
+                    + "AND fechaHoraInicio >= ? AND fechaHoraResolucion <= ?) "
+                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setTimestamp(1, Timestamp.valueOf(fecha1));
             ps.setTimestamp(2, Timestamp.valueOf(fecha2));
@@ -368,10 +385,12 @@ public class SiniestroData {
         return brigadas;
     }
 
+    // revisado
     public boolean modificarSiniestro(Siniestro siniestro) {
         if (siniestro.getCodigoSiniestro() == Utils.NIL) {
-            System.out.println("[SiniestroData.modificarSiniestro] Error: no se pudo modificar."
-                    + "Siniestro dado de baja o no tiene codigoSiniestro definido. "
+            System.out.println("[SiniestroData.modificarSiniestro] "
+                    + "Error: no se pudo modificar. "
+                    + "Siniestro dado de baja o sin codigoSiniestro definido: "
                     + siniestro.debugToString());
             return false;
         }
@@ -382,27 +401,28 @@ public class SiniestroData {
         LocalDateTime fecHorRes = siniestro.getFechaHoraResolucion();
         LocalDateTime fecActual = LocalDateTime.now();
         if (fecHorIni.isAfter(fecActual)) {
-            System.out.println("[SiniestroData.modificarSiniestro] Error al agregar. La fecha y hora de inicio de la "
-                    + "emergencia (" + fecHorIni + ") no puede ser posterior a la fecha y hora actual");
+            System.out.println("[SiniestroData.guardarSiniestro] Error: el inicio de la emergencia "
+                    + "(" + fecHorIni + ") no puede ser posterior a la actualidad");
             return false;
         }
         if (fecHorRes != null && puntuacion != Utils.NIL) {
             if (fecHorIni.isAfter(fecHorRes)) {
-                System.out.println("[SiniestroData.modificarSiniestro] Error al agregar. La fecha y hora de inicio de la "
-                        + "emergencia (" + fecHorIni + ") no puede ser posterior a la fecha y hora de resolución de la misma");
+                System.out.println("[SiniestroData.guardarSiniestro] Error: el inicio de la "
+                        + "emergencia (" + fecHorIni + ") no puede ser posterior a la "
+                        + "resolución de la misma");
                 return false;
             } else if (fecHorRes.isAfter(fecActual)) {
-                System.out.println("[SiniestroData.modificarSiniestro] Error al agregar. La fecha y hora de resolución de la "
-                        + "emergencia (" + fecHorRes + ") no puede ser posterior a la fecha y hora actual");
+                System.out.println("[SiniestroData.guardarSiniestro] Error: la resolución de la emergencia "
+                        + "(" + fecHorRes + ") no puede ser posterior a la actualidad");
                 return false;
             } else if (puntuacion < Siniestro.PUNTUACION_MIN || puntuacion > Siniestro.PUNTUACION_MAX) {
-                System.out.println("[SiniestroData.guardarSiniestro] Error al agregar. Puntuacion (" + puntuacion + ") fuera "
+                System.out.println("[SiniestroData.guardarSiniestro] Error: puntuacion (" + puntuacion + ") fuera "
                         + "de rango");
                 return false;
             }
         } else if (fecHorRes != null || puntuacion != Utils.NIL) {
-            System.out.println("[SiniestroData.modificarSiniestro] Error al agregar. No se puede establecer una fecha de resolución "
-                    + "sin establecer una puntuación, ni viceversa");
+            System.out.println("[SiniestroData.guardarSiniestro] Error: no se puede establecer una fecha "
+                    + "de resolución sin establecer una puntuación, ni viceversa");
             return false;
         }
 
@@ -411,7 +431,7 @@ public class SiniestroData {
             String sql;
             sql = "UPDATE siniestro SET tipo=?, fechaHoraInicio=?, coordenadaX=?, coordenadaY=?, detalles=?, "
                     + "codigoBrigada=?, fechaHoraResolucion=?, puntuacion=? "
-                    + "WHERE codigoSiniestro=?";
+                    + "WHERE codigoSiniestro = ?;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, siniestro.getTipo());
             ps.setTimestamp(2, Timestamp.valueOf(siniestro.getFechaHoraInicio()));
@@ -448,10 +468,12 @@ public class SiniestroData {
         return resultado;
     }
 
+    // revisado, potencialmente innecesario
     public boolean eliminarSiniestro(int codigoSiniestro) {
         boolean resultado = false;
         try {
-            String sql = "DELETE FROM siniestro WHERE codigoSiniestro=?";
+            String sql = "DELETE FROM siniestro "
+                    + "WHERE codigoSiniestro = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, codigoSiniestro);
             if (ps.executeUpdate() > 0) {
