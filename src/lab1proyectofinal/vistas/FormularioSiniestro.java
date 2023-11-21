@@ -1,33 +1,43 @@
 package lab1proyectofinal.vistas;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 import javax.swing.JOptionPane;
-import lab1proyectofinal.accesoADatos.CuartelData;
+import lab1proyectofinal.accesoADatos.SiniestroData;
 import lab1proyectofinal.accesoADatos.Utils;
-import lab1proyectofinal.entidades.Cuartel;
+import lab1proyectofinal.entidades.Siniestro;
 
 /**
  *
  * @author Grupo-3
  */
-public class FormularioCuartel extends javax.swing.JInternalFrame {
+public class FormularioSiniestro extends javax.swing.JInternalFrame {
 
-    private final CuartelData cuartelData;
+    private final SiniestroData siniestroData;
+    private final DateTimeFormatter formatter;
 
     /**
-     * Creates new form GestionCuartel
+     * Creates new form FormularioSiniestro
      */
-    public FormularioCuartel(CuartelData cuartelData) {
-        this.initComponents();
-        this.cuartelData = cuartelData;
+    public FormularioSiniestro(SiniestroData siniestroData) {
+        initComponents();
+        this.siniestroData = siniestroData;
+
+        this.formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     }
 
     private void limpiarCampos() {
-        nombreTF.setText("");
-        direccionTF.setText("");
-        telefonoTF.setText("");
-        correoTF.setText("");
+        tipoCB.setSelectedIndex(-1);
+        fechaSiniestroDC.setCalendar(null);
+        horaSiniestroTF.setText("");
         coordenadaXTF.setText("");
         coordenadaYTF.setText("");
+        detallesTA.setText("");
     }
 
     /**
@@ -39,26 +49,26 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        nombreLabel = new javax.swing.JLabel();
-        nombreTF = new javax.swing.JTextField();
-        direccionLabel = new javax.swing.JLabel();
-        direccionTF = new javax.swing.JTextField();
-        telefonoLabel = new javax.swing.JLabel();
-        telefonoTF = new javax.swing.JTextField();
-        correoLabel = new javax.swing.JLabel();
-        correoTF = new javax.swing.JTextField();
+        tipoLabel = new javax.swing.JLabel();
+        tipoCB = new javax.swing.JComboBox<>();
+        fechaSiniestroLabel = new javax.swing.JLabel();
+        fechaSiniestroDC = new com.toedter.calendar.JDateChooser();
+        horaSiniestroLabel = new javax.swing.JLabel();
+        horaSiniestroTF = new javax.swing.JFormattedTextField();
         coordenadaXLabel = new javax.swing.JLabel();
         coordenadaXTF = new javax.swing.JTextField();
         coordenadaYLabel = new javax.swing.JLabel();
         coordenadaYTF = new javax.swing.JTextField();
-        BtnComprobar = new javax.swing.JButton();
+        detallesLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        detallesTA = new javax.swing.JTextArea();
         BtnLimpiar = new javax.swing.JButton();
         BtnGuardar = new javax.swing.JButton();
         BtnSalir = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        setTitle("Formulario Cuartel");
+        setTitle("Formulario Siniestro");
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameActivated(evt);
@@ -77,24 +87,26 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
             }
         });
 
-        nombreLabel.setText("Nombre:");
+        tipoLabel.setText("Tipo:");
 
-        direccionLabel.setText("Dirección:");
+        tipoCB.setModel(new javax.swing.DefaultComboBoxModel<>(Utils.obtenerEspecialidades()));
 
-        telefonoLabel.setText("Teléfono:");
+        fechaSiniestroLabel.setText("Fecha Siniestro:");
 
-        correoLabel.setText("Correo Electrónico:");
+        horaSiniestroLabel.setText("Hora Siniestro:");
+
+        horaSiniestroTF.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getTimeInstance())));
+        horaSiniestroTF.setToolTipText("Formato hora como HH:mm:ss");
 
         coordenadaXLabel.setText("Coordenada X:");
 
         coordenadaYLabel.setText("Coordenada Y:");
 
-        BtnComprobar.setText("Comprobar");
-        BtnComprobar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnComprobarActionPerformed(evt);
-            }
-        });
+        detallesLabel.setText("Detalles:");
+
+        detallesTA.setColumns(20);
+        detallesTA.setRows(5);
+        jScrollPane1.setViewportView(detallesTA);
 
         BtnLimpiar.setText("Limpiar Campos");
         BtnLimpiar.addActionListener(new java.awt.event.ActionListener() {
@@ -121,30 +133,31 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nombreLabel)
-                            .addComponent(direccionLabel)
-                            .addComponent(telefonoLabel)
-                            .addComponent(correoLabel)
+                            .addComponent(tipoLabel)
+                            .addComponent(fechaSiniestroLabel)
                             .addComponent(coordenadaXLabel))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tipoCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                                 .addComponent(coordenadaYLabel)
                                 .addGap(18, 18, 18)
-                                .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(correoTF, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
-                            .addComponent(nombreTF)
-                            .addComponent(direccionTF)
-                            .addComponent(telefonoTF, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(18, 18, 18)
-                        .addComponent(BtnComprobar))
+                                .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(fechaSiniestroDC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(horaSiniestroLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(horaSiniestroTF, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(detallesLabel)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(BtnLimpiar)
                         .addGap(18, 18, 18)
@@ -156,30 +169,28 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nombreLabel)
-                    .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BtnComprobar))
+                    .addComponent(tipoLabel)
+                    .addComponent(tipoCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(direccionTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(direccionLabel))
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(telefonoLabel)
-                    .addComponent(telefonoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(correoLabel)
-                    .addComponent(correoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(fechaSiniestroLabel)
+                    .addComponent(fechaSiniestroDC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(horaSiniestroLabel)
+                        .addComponent(horaSiniestroTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(coordenadaXLabel)
                     .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(coordenadaYLabel)
                     .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(detallesLabel)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnLimpiar)
                     .addComponent(BtnGuardar)
@@ -190,42 +201,25 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BtnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnComprobarActionPerformed
-        String nombreStr = nombreTF.getText().trim();
-        if (nombreStr.isBlank()) {
-            JOptionPane.showMessageDialog(this, "Ingrese el nombre a comprobar.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Cuartel cuartel = this.cuartelData.buscarCuartelPorNombre(nombreStr);
-        if (cuartel == null) {
-            JOptionPane.showMessageDialog(this, "Este nombre está disponible.", "Disponible", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Este nombre no se encuentra disponible.", "No disponible", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_BtnComprobarActionPerformed
+    private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
+        this.limpiarCampos();
+    }//GEN-LAST:event_formInternalFrameActivated
 
     private void BtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLimpiarActionPerformed
         this.limpiarCampos();
     }//GEN-LAST:event_BtnLimpiarActionPerformed
 
     private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
-        String nombreStr = nombreTF.getText().trim();
-        String direccionStr = direccionTF.getText().trim();
-        String telefonoStr = telefonoTF.getText().trim();
-        String correoStr = correoTF.getText().trim();
+        String tipo = (String) tipoCB.getSelectedItem();
+        Date date = fechaSiniestroDC.getDate();
+        String horaStr = horaSiniestroTF.getText();
         String coordenadaXStr = coordenadaXTF.getText().trim();
         String coordenadaYStr = coordenadaYTF.getText().trim();
+        String detalles = detallesTA.getText().trim();
 
-        if (nombreStr.isBlank() || direccionStr.isBlank()
-                || telefonoStr.isBlank() || correoStr.isBlank()
-                || coordenadaXStr.isBlank() || coordenadaYStr.isBlank()) {
+        if (tipo == null || date == null || horaStr.isBlank() || coordenadaXStr.isBlank()
+                || coordenadaYStr.isBlank() || detalles.isBlank()) {
             JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (!Utils.esTelefonoValido(telefonoStr)) {
-            JOptionPane.showMessageDialog(this, "Se esperaba un numero entero en Teléfono.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -245,11 +239,21 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
             return;
         }
 
-        Cuartel cuartel = new Cuartel(nombreStr, direccionStr, coordenadaX, coordenadaY, telefonoStr, correoStr);
-        if (this.cuartelData.guardarCuartel(cuartel)) {
-            JOptionPane.showMessageDialog(this, "Cuartel guardado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        LocalTime lt;
+        try {
+            lt = LocalTime.parse(horaStr, formatter);
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this, "La hora introducida no parece ser correcta.\nAsegurese de que tenga el siguiente formato: HH:mm:ss", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        LocalDate ld = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDateTime fechaHoraSiniestro = LocalDateTime.of(ld.getYear(), ld.getMonth(), ld.getDayOfMonth(), lt.getHour(), lt.getMinute(), lt.getSecond());
+
+        Siniestro siniestro = new Siniestro(tipo, fechaHoraSiniestro, coordenadaX, coordenadaY, detalles);
+        if (this.siniestroData.guardarSiniestro(siniestro)) {
+            JOptionPane.showMessageDialog(this, "Siniestro guardado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "No se pudo guardar el cuartel.\nQuizás ya haya un cuartel guardado con este nombre.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo guardar el siniestro.\nContacte al administrador para mas información.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_BtnGuardarActionPerformed
 
@@ -257,13 +261,8 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
         this.hide();
     }//GEN-LAST:event_BtnSalirActionPerformed
 
-    private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        this.limpiarCampos();
-    }//GEN-LAST:event_formInternalFrameActivated
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnComprobar;
     private javax.swing.JButton BtnGuardar;
     private javax.swing.JButton BtnLimpiar;
     private javax.swing.JButton BtnSalir;
@@ -271,13 +270,14 @@ public class FormularioCuartel extends javax.swing.JInternalFrame {
     private javax.swing.JTextField coordenadaXTF;
     private javax.swing.JLabel coordenadaYLabel;
     private javax.swing.JTextField coordenadaYTF;
-    private javax.swing.JLabel correoLabel;
-    private javax.swing.JTextField correoTF;
-    private javax.swing.JLabel direccionLabel;
-    private javax.swing.JTextField direccionTF;
-    private javax.swing.JLabel nombreLabel;
-    private javax.swing.JTextField nombreTF;
-    private javax.swing.JLabel telefonoLabel;
-    private javax.swing.JTextField telefonoTF;
+    private javax.swing.JLabel detallesLabel;
+    private javax.swing.JTextArea detallesTA;
+    private com.toedter.calendar.JDateChooser fechaSiniestroDC;
+    private javax.swing.JLabel fechaSiniestroLabel;
+    private javax.swing.JLabel horaSiniestroLabel;
+    private javax.swing.JFormattedTextField horaSiniestroTF;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JComboBox<String> tipoCB;
+    private javax.swing.JLabel tipoLabel;
     // End of variables declaration//GEN-END:variables
 }

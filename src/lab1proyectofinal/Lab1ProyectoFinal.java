@@ -3,7 +3,8 @@ package lab1proyectofinal;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import lab1proyectofinal.accesoADatos.Conexion;
-import lab1proyectofinal.vistas.*;
+import lab1proyectofinal.accesoADatos.SiniestroData;
+import lab1proyectofinal.vistas.MainFrame;
 
 /**
  *
@@ -22,6 +23,8 @@ public class Lab1ProyectoFinal {
             JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        SiniestroData.inicializar();
 
         // TODO: implementar vistas
         MainFrame.ejecutar(args);

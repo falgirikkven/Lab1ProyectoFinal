@@ -4,7 +4,7 @@
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
     <Property name="defaultCloseOperation" type="int" value="1"/>
-    <Property name="title" type="java.lang.String" value="Gestionar Cuartel"/>
+    <Property name="title" type="java.lang.String" value="Gesti&#xf3;n Cuartel"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -39,21 +39,6 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="BtnSalir" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="direccionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="nombreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="telefonoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cuartelLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cuartelCB" pref="257" max="32767" attributes="0"/>
-                          <Component id="direccionTF" alignment="0" max="32767" attributes="0"/>
-                          <Component id="nombreTF" alignment="0" max="32767" attributes="0"/>
-                          <Component id="telefonoTF" alignment="0" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="coordenadaXLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -64,9 +49,21 @@
                       <Component id="coordenadaYTF" min="-2" pref="80" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="correoLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="correoTF" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="direccionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="nombreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="telefonoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cuartelLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="correoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="correoTF" max="32767" attributes="0"/>
+                          <Component id="cuartelCB" pref="407" max="32767" attributes="0"/>
+                          <Component id="direccionTF" alignment="0" max="32767" attributes="0"/>
+                          <Component id="nombreTF" alignment="0" max="32767" attributes="0"/>
+                          <Component id="telefonoTF" alignment="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>

@@ -10,5 +10,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
-
+jcalendar-1.4.jar
+mariadb-java-client-3.2.0.jar
 # End of https://www.toptal.com/developers/gitignore/api/netbeans

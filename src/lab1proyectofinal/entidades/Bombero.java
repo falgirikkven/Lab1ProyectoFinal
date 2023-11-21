@@ -1,6 +1,8 @@
 package lab1proyectofinal.entidades;
 
 import java.time.LocalDate;
+import java.util.Objects;
+import lab1proyectofinal.accesoADatos.Utils;
 
 /**
  *
@@ -8,10 +10,7 @@ import java.time.LocalDate;
  */
 public class Bombero {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
-    private int idBombero = -1;
+    private int idBombero = Utils.NIL;
     private int dni;
     private String nombreCompleto;
     private String grupoSanguineo;
@@ -23,7 +22,6 @@ public class Bombero {
     public Bombero() {
     }
 
-    // inicializa todo menos 'idBombero' y 'estado'
     public Bombero(int dni, String nombreCompleto, String grupoSanguineo, LocalDate fechaNacimiento, String celular, Brigada brigada) {
         this.dni = dni;
         this.nombreCompleto = nombreCompleto;
@@ -97,14 +95,63 @@ public class Bombero {
         this.estado = estado;
     }
 
-    @Override
-    public String toString() {
-        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreCompleto=" + nombreCompleto + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", celular=" + celular + ", brigada=" + brigada + ", estado=" + estado + '}';
+    public String debugToString() {
+        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreCompleto=" + nombreCompleto + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", celular=" + celular + ", codigoBrigada=" + Integer.toString(brigada.getCodigoBrigada()) + ", estado=" + estado + '}';
     }
 
-    // no pasa estado
-    public String debugToString() {
-        return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreCompleto=" + nombreCompleto + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", celular=" + celular + ", brigada=" + brigada + '}';
+    @Override
+    public String toString() {
+        return nombreCompleto + " (dni=" + dni + ", codigoBrigada=" + brigada.getCodigoBrigada() + ", codigoCuartel=" + brigada.getCuartel().getCodigoCuartel() + ")";
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + this.idBombero;
+        hash = 97 * hash + this.dni;
+        hash = 97 * hash + Objects.hashCode(this.nombreCompleto);
+        hash = 97 * hash + Objects.hashCode(this.grupoSanguineo);
+        hash = 97 * hash + Objects.hashCode(this.fechaNacimiento);
+        hash = 97 * hash + Objects.hashCode(this.celular);
+        hash = 97 * hash + Objects.hashCode(this.brigada);
+        hash = 97 * hash + (this.estado ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Bombero other = (Bombero) obj;
+        if (this.idBombero != other.idBombero) {
+            return false;
+        }
+        if (this.dni != other.dni) {
+            return false;
+        }
+        if (this.estado != other.estado) {
+            return false;
+        }
+        if (!Objects.equals(this.nombreCompleto, other.nombreCompleto)) {
+            return false;
+        }
+        if (!Objects.equals(this.grupoSanguineo, other.grupoSanguineo)) {
+            return false;
+        }
+        if (!Objects.equals(this.celular, other.celular)) {
+            return false;
+        }
+        if (!Objects.equals(this.fechaNacimiento, other.fechaNacimiento)) {
+            return false;
+        }
+        return Objects.equals(this.brigada, other.brigada);
     }
 
 }

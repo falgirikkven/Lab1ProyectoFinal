@@ -10,7 +10,6 @@ import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.Conexion;
 import lab1proyectofinal.accesoADatos.CuartelData;
 import lab1proyectofinal.accesoADatos.SiniestroData;
-import lab1proyectofinal.accesoADatos.Utils;
 import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.entidades.Cuartel;
@@ -20,7 +19,68 @@ import lab1proyectofinal.entidades.Siniestro;
  *
  * @author Grupo-3
  */
-public class PruebaDefinitiva {
+public class PruebasN8A {
+
+    /* Utilitarios */
+    public static void imprimirListaBombero(List<Bombero> lista) {
+        if (lista.isEmpty()) {
+            System.out.println("No se ha encontrado ningún elemento");
+        }
+        for (Bombero bom : lista) {
+            System.out.println(bom.debugToString());
+        }
+    }
+
+    public static void imprimirListaSiniestro(List<Siniestro> lista) {
+        if (lista.isEmpty()) {
+            System.out.println("No se ha encontrado ningún elemento");
+        }
+        for (Siniestro sin : lista) {
+            System.out.println(sin.debugToString());
+        }
+    }
+
+    public static void imprimirListaBrigada(List<Brigada> lista) {
+        if (lista.isEmpty()) {
+            System.out.println("No se ha encontrado ningún elemento");
+        }
+        for (Brigada bri : lista) {
+            System.out.println(bri.debugToString());
+        }
+    }
+
+    public static void imprimirListaCuartel(List<Cuartel> lista) {
+        if (lista.isEmpty()) {
+            System.out.println("No se ha encontrado ningún elemento");
+        }
+        for (Cuartel cru : lista) {
+            System.out.println(cru.debugToString());
+        }
+    }
+
+    public static void imprimirResultadoBombero(Bombero bombero) {
+        if (bombero != null) {
+            System.out.println("Mostrando:\n" + bombero.debugToString());
+        }
+    }
+
+    public static void imprimirResultadoSiniestro(Siniestro siniestro) {
+        if (siniestro != null) {
+            System.out.println("Mostrando:\n" + siniestro.debugToString());
+        }
+    }
+
+    public static void imprimirResultadoBrigada(Brigada brigada) {
+        if (brigada != null) {
+            System.out.println("Mostrando:\n" + brigada.debugToString());
+        }
+    }
+
+    public static void imprimirResultadoCuartel(Cuartel cuartel) {
+        if (cuartel != null) {
+            System.out.println("Mostrando:\n" + cuartel.debugToString());
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -33,6 +93,8 @@ public class PruebaDefinitiva {
             System.out.println("[Error] No se pudo conectar a base de datos. Abortando ejecución");
             return;
         }
+        
+        SiniestroData.inicializar();
 
         // Clases Data
         CuartelData cuartelData = new CuartelData();
@@ -64,12 +126,13 @@ public class PruebaDefinitiva {
         Siniestro siniestro2 = new Siniestro("Derrumbe", LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 0), 20, 20, "Mucho escombro");
         Siniestro siniestro3 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 0), 30, 30, "Al desarmadero");
         Siniestro siniestro4 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 20, 12, 0), 40, 40, "Al desarmadero");      // siniestro con fechaI posterior a la actual
-        Siniestro siniestro5 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), 50, 50, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), -1);    // siniestro con fechaR no "nula", pero puntuación "nula" 
-        Siniestro siniestro6 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 6, 16, 0), 60, 60, "Al desarmadero", null, 5);       // siniestro con puntuación no nula, pero fechaR nula
-        Siniestro siniestro7 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 7, 16, 0), 70, 70, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), 10);    // siniestro con fechaI posterior a la fechaR
-        Siniestro siniestro8 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 8, 16, 0), 80, 80, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 9, 14, 0), 11);    // siniestro con puntuación fuera del rango válido
-        Siniestro siniestro9 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 0), 70, 70, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 30, 14, 0), 10);    // siniestro con fechaR posterior a la fecha actual
-        Siniestro siniestros[] = new Siniestro[]{siniestro1, siniestro2, siniestro3, siniestro4, siniestro5, siniestro6, siniestro7, siniestro8, siniestro9};
+        //Siniestro siniestro5 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), 50, 50, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), -1);    // siniestro con fechaR no "nula", pero puntuación "nula" 
+        //Siniestro siniestro6 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 6, 16, 0), 60, 60, "Al desarmadero", null, 5);       // siniestro con puntuación no nula, pero fechaR nula
+        //Siniestro siniestro7 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 7, 16, 0), 70, 70, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), 10);    // siniestro con fechaI posterior a la fechaR
+        //Siniestro siniestro8 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 8, 16, 0), 80, 80, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 9, 14, 0), 11);    // siniestro con puntuación fuera del rango válido
+        //Siniestro siniestro9 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 0), 70, 70, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 30, 14, 0), 10);    // siniestro con fechaR posterior a la fecha actual
+        //Siniestro siniestros[] = new Siniestro[]{siniestro1, siniestro2, siniestro3, siniestro4, siniestro5, siniestro6, siniestro7, siniestro8, siniestro9};
+        Siniestro siniestros[] = new Siniestro[]{siniestro1, siniestro2, siniestro3, siniestro4};
 
         // Brigadas
         Brigada brigada2 = new Brigada("Grupo 2", "Quien sabe", true, cuartel2);
@@ -109,8 +172,8 @@ public class PruebaDefinitiva {
 
         // para cubrir casos en los que no hay brigadas disponibles para atender emergencias
         System.out.println("\n--------------- CARGADO DE CUARTEL Y BRIGADA NULL ---------------\n");
-        cuartelData.insertarCuartelNull();
-        brigadaData.insertarBrigadaNull();
+        //cuartelData.insertarCuartelNull();
+        //brigadaData.insertarBrigadaNull();
 
         //
         // ************ GUARDAR DATOS *************
@@ -149,63 +212,63 @@ public class PruebaDefinitiva {
 
         System.out.println("\n----- Listar todos los bomberos -----");
         listaBombero = bomberoData.listarBomberos();
-        Utils.imprimirListaBombero(listaBombero);
+        imprimirListaBombero(listaBombero);
 
         System.out.println("\n----- Listar todos los bomberos del cuartel '" + cuartel2.getNombreCuartel() + "' -----");
         listaBombero = cuartelData.listarBomberosDelCuartel(cuartel2);
-        Utils.imprimirListaBombero(listaBombero);
+        imprimirListaBombero(listaBombero);
 
         System.out.println("\n----- Listar todos los bomberos de la brigada '" + brigada4.getNombreBrigada() + "' -----");
         listaBombero = brigadaData.listarBomberosDeBrigada(brigada4);
-        Utils.imprimirListaBombero(listaBombero);
+        imprimirListaBombero(listaBombero);
 
         System.out.println("\n----- Listar todos los siniestros -----");
         listaSiniestro = siniestroData.listarSiniestros();
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros resueltos -----");
         listaSiniestro = siniestroData.listarSiniestrosResueltos();
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros NO resueltos -----");
         listaSiniestro = siniestroData.listarSiniestrosSinResolucion();
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros que se iniciaron y terminaron en el siguiente intervalo (" + fecha1 + " hasta " + fecha2 + ")-----");
-        listaSiniestro = siniestroData.listarSiniestrosEntreFechas(fecha1, fecha2);
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        listaSiniestro = siniestroData.listarSiniestrosInicioFinEntreFechas(fecha1, fecha2);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros que se iniciaron en el siguiente intervalo (" + fecha1 + " hasta " + fecha2 + ")-----");
-        listaSiniestro = siniestroData.listarSiniestrosInicioEntreFechas(fecha1, fecha2);
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        listaSiniestro = siniestroData.listarSiniestrosEntreFechas(fecha1, fecha2);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todas las brigadas -----");
         listaBrigada = brigadaData.listarBrigadas();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas del cuartel '" + cuartel2.getNombreCuartel() + "' -----");
-        listaBrigada = cuartelData.listarBrigadasDelCuartel(cuartel2);
-        Utils.imprimirListaBrigada(listaBrigada);
+        listaBrigada = cuartelData.listarBrigadasDelCuartel(cuartel2.getCodigoCuartel());
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas asignables (disponible, con cantidad de bomberos igual a 5 y la brigada no está atendiendo una emergencia) -----");
         listaBrigada = brigadaData.listarBrigadasAsignables();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas NO asignables (brigada activa que no está disponible o tiene menos de 5 bomberos o está atendiendo una emergencia) -----");
         listaBrigada = brigadaData.listarBrigadasNoAsignables();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas que están atendiendo una emergencia -----");
         listaBrigada = brigadaData.listarBrigadasAtendiendoEmergencia();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas incompletas (que tienen menos de 5 miembros activos) -----");
         listaBrigada = brigadaData.listarBrigadasIncompletas();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todos los cuarteles -----");
         listaCuartel = cuartelData.listarCuarteles();
-        Utils.imprimirListaCuartel(listaCuartel);
+        imprimirListaCuartel(listaCuartel);
 
         System.out.println("\n--------------- FIN LISTAR DATOS (PRIMERA PARTE) ---------------\n\n");
         //
@@ -227,31 +290,31 @@ public class PruebaDefinitiva {
 
         System.out.println("\n----- Buscar cuartel (activo) por código (" + codigoCuartelBuscar + ") -----");
         cuartelAux = cuartelData.buscarCuartel(codigoCuartelBuscar);
-        Utils.imprimirResultadoCuartel(cuartelAux);
+        imprimirResultadoCuartel(cuartelAux);
 
         System.out.println("\n----- Buscar cuartel (activo) por nombre (" + nombreCuartelBuscar + ") -----");
         cuartelAux = cuartelData.buscarCuartelPorNombre(nombreCuartelBuscar);
-        Utils.imprimirResultadoCuartel(cuartelAux);
+        imprimirResultadoCuartel(cuartelAux);
 
         System.out.println("\n----- Buscar brigada (activa) por código (" + codigoBrigadaBuscar + ") -----");
         brigadaAux = brigadaData.buscarBrigada(codigoBrigadaBuscar);
-        Utils.imprimirResultadoBrigada(brigadaAux);
+        imprimirResultadoBrigada(brigadaAux);
 
         System.out.println("\n----- Buscar brigada (activa) por nombre (" + nombreBrigadaBuscar + ") -----");
         brigadaAux = brigadaData.buscarBrigadaPorNombre(nombreBrigadaBuscar);
-        Utils.imprimirResultadoBrigada(brigadaAux);
+        imprimirResultadoBrigada(brigadaAux);
 
         System.out.println("\n----- Buscar bombero (activo) por id (" + idBomberoBuscar + ")-----");
         bomberoAux = bomberoData.buscarBombero(idBomberoBuscar);
-        Utils.imprimirResultadoBombero(bomberoAux);
+        imprimirResultadoBombero(bomberoAux);
 
         System.out.println("\n----- Buscar bombero (activo) por dni (" + dniBomberoBuscar + ") -----");
         bomberoAux = bomberoData.buscarBomberoPorDni(dniBomberoBuscar);
-        Utils.imprimirResultadoBombero(bomberoAux);
+        imprimirResultadoBombero(bomberoAux);
 
         System.out.println("\n----- Buscar siniestro por código (" + codigoSiniestroBuscar + ") -----");
         siniestroAux = siniestroData.buscarSiniestro(codigoSiniestroBuscar);
-        Utils.imprimirResultadoSiniestro(siniestroAux);
+        imprimirResultadoSiniestro(siniestroAux);
 
         System.out.println("\n--------------- FIN BUSCAR DATOS (PRIMERA PARTE) ---------------\n\n");
         //
@@ -313,35 +376,35 @@ public class PruebaDefinitiva {
 
         System.out.println("\n----- Listar todos los siniestros -----");
         listaSiniestro = siniestroData.listarSiniestros();
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros resueltos -----");
         listaSiniestro = siniestroData.listarSiniestrosResueltos();
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros NO resueltos -----");
         listaSiniestro = siniestroData.listarSiniestrosSinResolucion();
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros que se iniciaron y terminaron en el siguiente intervalo (" + fecha1 + " hasta " + fecha2 + ")-----");
-        listaSiniestro = siniestroData.listarSiniestrosEntreFechas(fecha1, fecha2);
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        listaSiniestro = siniestroData.listarSiniestrosInicioFinEntreFechas(fecha1, fecha2);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros que se iniciaron en el siguiente intervalo (" + fecha1 + " hasta " + fecha2 + ")-----");
-        listaSiniestro = siniestroData.listarSiniestrosInicioEntreFechas(fecha1, fecha2);
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        listaSiniestro = siniestroData.listarSiniestrosEntreFechas(fecha1, fecha2);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todas las brigadas asignables (disponible, con cantidad de bomberos igual a 5 y la brigada no está atendiendo una emergencia) -----");
         listaBrigada = brigadaData.listarBrigadasAsignables();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas NO asignables (brigada activa que no está disponible o tiene menos de 5 bomberos o está atendiendo una emergencia) -----");
         listaBrigada = brigadaData.listarBrigadasNoAsignables();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas que están atendiendo una emergencia -----");
         listaBrigada = brigadaData.listarBrigadasAtendiendoEmergencia();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n--------------- FIN LISTAR DATOS (SEGUNDA PARTE) ---------------\n\n");
         //
@@ -358,31 +421,31 @@ public class PruebaDefinitiva {
 
         System.out.println("\n----- Buscar cuartel (activo) por código (" + codigoCuartelBuscar + ") -----");
         cuartelAux = cuartelData.buscarCuartel(codigoCuartelBuscar);
-        Utils.imprimirResultadoCuartel(cuartelAux);
+        imprimirResultadoCuartel(cuartelAux);
 
         System.out.println("\n----- Buscar cuartel (activo) por nombre (" + nombreCuartelBuscar + ") -----");
         cuartelAux = cuartelData.buscarCuartelPorNombre(nombreCuartelBuscar);
-        Utils.imprimirResultadoCuartel(cuartelAux);
+        imprimirResultadoCuartel(cuartelAux);
 
         System.out.println("\n----- Buscar brigada (activa) por código (" + codigoBrigadaBuscar + ") -----");
         brigadaAux = brigadaData.buscarBrigada(codigoBrigadaBuscar);
-        Utils.imprimirResultadoBrigada(brigadaAux);
+        imprimirResultadoBrigada(brigadaAux);
 
         System.out.println("\n----- Buscar brigada (activa) por nombre (" + nombreBrigadaBuscar + ") -----");
         brigadaAux = brigadaData.buscarBrigadaPorNombre(nombreBrigadaBuscar);
-        Utils.imprimirResultadoBrigada(brigadaAux);
+        imprimirResultadoBrigada(brigadaAux);
 
         System.out.println("\n----- Buscar bombero (activo) por id (" + idBomberoBuscar + ")-----");
         bomberoAux = bomberoData.buscarBombero(idBomberoBuscar);
-        Utils.imprimirResultadoBombero(bomberoAux);
+        imprimirResultadoBombero(bomberoAux);
 
         System.out.println("\n----- Buscar bombero (activo) por dni (" + dniBomberoBuscar + ") -----");
         bomberoAux = bomberoData.buscarBomberoPorDni(dniBomberoBuscar);
-        Utils.imprimirResultadoBombero(bomberoAux);
+        imprimirResultadoBombero(bomberoAux);
 
         System.out.println("\n----- Buscar siniestro por código (" + codigoSiniestroBuscar + ") -----");
         siniestroAux = siniestroData.buscarSiniestro(codigoSiniestroBuscar);
-        Utils.imprimirResultadoSiniestro(siniestroAux);
+        imprimirResultadoSiniestro(siniestroAux);
 
         System.out.println("\n--------------- FIN BUSCAR DATOS (SEGUNDA PARTE) ---------------\n\n");
         //
@@ -412,9 +475,9 @@ public class PruebaDefinitiva {
         System.out.println("\n----- Eliminar bombero (que forma parte de una brigada que está atendiendo una emergencia) por dni (" + bombero7.getDni() + ")");
         bomberoData.eliminarBomberoPorDni(bombero7.getDni());
 
-        System.out.println("\n----- Asignando resolución a un siniestro (código de siniestro: " + siniestro2.getCodigoSiniestro() + ") -----");
-        siniestroData.asignarResolucion(siniestro2, LocalDateTime.of(2023, Month.NOVEMBER, 3, 12, 0), 8);
-
+        // TODO: cambiar por modificar
+        //System.out.println("\n----- Asignando resolución a un siniestro (código de siniestro: " + siniestro2.getCodigoSiniestro() + ") -----");
+        //siniestroData.asignarResolucion(siniestro2, LocalDateTime.of(2023, Month.NOVEMBER, 3, 12, 0), 8);
         System.out.println("\n--------------- FIN ELIMINAR DATOS (PRIMERA PARTE) ---------------\n\n");
         //
         // ************ FIN ELIMINAR DATOS *************
@@ -427,35 +490,35 @@ public class PruebaDefinitiva {
 
         System.out.println("\n----- Listar todos los siniestros -----");
         listaSiniestro = siniestroData.listarSiniestros();
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros resueltos -----");
         listaSiniestro = siniestroData.listarSiniestrosResueltos();
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros NO resueltos -----");
         listaSiniestro = siniestroData.listarSiniestrosSinResolucion();
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros que se iniciaron y terminaron en el siguiente intervalo (" + fecha1 + " hasta " + fecha2 + ")-----");
-        listaSiniestro = siniestroData.listarSiniestrosEntreFechas(fecha1, fecha2);
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        listaSiniestro = siniestroData.listarSiniestrosInicioFinEntreFechas(fecha1, fecha2);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todos los siniestros que se iniciaron en el siguiente intervalo (" + fecha1 + " hasta " + fecha2 + ")-----");
-        listaSiniestro = siniestroData.listarSiniestrosInicioEntreFechas(fecha1, fecha2);
-        Utils.imprimirListaSiniestro(listaSiniestro);
+        listaSiniestro = siniestroData.listarSiniestrosEntreFechas(fecha1, fecha2);
+        imprimirListaSiniestro(listaSiniestro);
 
         System.out.println("\n----- Listar todas las brigadas asignables (disponible, con cantidad de bomberos igual a 5 y la brigada no está atendiendo una emergencia) -----");
         listaBrigada = brigadaData.listarBrigadasAsignables();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas NO asignables (brigada activa que no está disponible o tiene menos de 5 bomberos o está atendiendo una emergencia) -----");
         listaBrigada = brigadaData.listarBrigadasNoAsignables();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas que están atendiendo una emergencia -----");
         listaBrigada = brigadaData.listarBrigadasAtendiendoEmergencia();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n--------------- FIN LISTAR DATOS (TERCERA PARTE) ---------------\n\n");
         //
@@ -519,41 +582,41 @@ public class PruebaDefinitiva {
 
         System.out.println("\n----- Listar todos los bomberos -----");
         listaBombero = bomberoData.listarBomberos();
-        Utils.imprimirListaBombero(listaBombero);
+        imprimirListaBombero(listaBombero);
 
         System.out.println("\n----- Listar todos los bomberos del cuartel '" + cuartel3.getNombreCuartel() + "' (inactivo) -----");   // CAMBIAR CUARTEL Y LUEGO CAMBIAR BRIGADA ABAJO!!!!
         listaBombero = cuartelData.listarBomberosDelCuartel(cuartel3);
-        Utils.imprimirListaBombero(listaBombero);
+        imprimirListaBombero(listaBombero);
 
         System.out.println("\n----- Listar todos los bomberos del cuartel '" + cuartel4.getNombreCuartel() + "' (inactivo) -----");   // CAMBIAR CUARTEL Y LUEGO CAMBIAR BRIGADA ABAJO!!!!
         listaBombero = cuartelData.listarBomberosDelCuartel(cuartel4);
-        Utils.imprimirListaBombero(listaBombero);
+        imprimirListaBombero(listaBombero);
 
         System.out.println("\n----- Listar todos los bomberos de la brigada '" + brigada3.getNombreBrigada() + "' (inactivo) -----");
         listaBombero = brigadaData.listarBomberosDeBrigada(brigada3);
-        Utils.imprimirListaBombero(listaBombero);
+        imprimirListaBombero(listaBombero);
         System.out.println("\n----- Listar todos los bomberos de la brigada '" + brigada5.getNombreBrigada() + "' (inactivo) -----");
         listaBombero = brigadaData.listarBomberosDeBrigada(brigada5);
-        Utils.imprimirListaBombero(listaBombero);
+        imprimirListaBombero(listaBombero);
 
         System.out.println("\n----- Listar todas las brigadas -----");
         listaBrigada = brigadaData.listarBrigadas();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas del cuartel '" + cuartel3.getNombreCuartel() + "' (inactivo) -----");
-        listaBrigada = cuartelData.listarBrigadasDelCuartel(cuartel3);
-        Utils.imprimirListaBrigada(listaBrigada);
+        listaBrigada = cuartelData.listarBrigadasDelCuartel(cuartel3.getCodigoCuartel());
+        imprimirListaBrigada(listaBrigada);
         System.out.println("\n----- Listar todas las brigadas del cuartel '" + cuartel4.getNombreCuartel() + "' (inactivo) -----");
-        listaBrigada = cuartelData.listarBrigadasDelCuartel(cuartel4);
-        Utils.imprimirListaBrigada(listaBrigada);
+        listaBrigada = cuartelData.listarBrigadasDelCuartel(cuartel4.getCodigoCuartel());
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todas las brigadas incompletas (que tienen menos de 5 miembros activos) -----");
         listaBrigada = brigadaData.listarBrigadasIncompletas();
-        Utils.imprimirListaBrigada(listaBrigada);
+        imprimirListaBrigada(listaBrigada);
 
         System.out.println("\n----- Listar todos los cuarteles -----");
         listaCuartel = cuartelData.listarCuarteles();
-        Utils.imprimirListaCuartel(listaCuartel);
+        imprimirListaCuartel(listaCuartel);
 
         System.out.println("\n--------------- FIN LISTAR DATOS ---------------\n\n");
         //
@@ -574,27 +637,27 @@ public class PruebaDefinitiva {
 
         System.out.println("\n----- Buscar cuartel (inactivo) por código (" + codigoCuartelBuscar + ") -----");
         cuartelAux = cuartelData.buscarCuartel(codigoCuartelBuscar);
-        Utils.imprimirResultadoCuartel(cuartelAux);
+        imprimirResultadoCuartel(cuartelAux);
 
         System.out.println("\n----- Buscar cuartel (inactivo) por nombre (" + nombreCuartelBuscar + ") -----");
         cuartelAux = cuartelData.buscarCuartelPorNombre(nombreCuartelBuscar);
-        Utils.imprimirResultadoCuartel(cuartelAux);
+        imprimirResultadoCuartel(cuartelAux);
 
         System.out.println("\n----- Buscar brigada (inactiva) por código (" + codigoBrigadaBuscar + ") -----");
         brigadaAux = brigadaData.buscarBrigada(codigoBrigadaBuscar);
-        Utils.imprimirResultadoBrigada(brigadaAux);
+        imprimirResultadoBrigada(brigadaAux);
 
         System.out.println("\n----- Buscar brigada (inactiva) por nombre (" + nombreBrigadaBuscar + ") -----");
         brigadaAux = brigadaData.buscarBrigadaPorNombre(nombreBrigadaBuscar);
-        Utils.imprimirResultadoBrigada(brigadaAux);
+        imprimirResultadoBrigada(brigadaAux);
 
         System.out.println("\n----- Buscar bombero (inactivo) por id (" + idBomberoBuscar + ")-----");
         bomberoAux = bomberoData.buscarBombero(idBomberoBuscar);
-        Utils.imprimirResultadoBombero(bomberoAux);
+        imprimirResultadoBombero(bomberoAux);
 
         System.out.println("\n----- Buscar bombero (inactivo) por dni (" + dniBomberoBuscar + ") -----");
         bomberoAux = bomberoData.buscarBomberoPorDni(dniBomberoBuscar);
-        Utils.imprimirResultadoBombero(bomberoAux);
+        imprimirResultadoBombero(bomberoAux);
 
         System.out.println("\n--------------- FIN BUSCAR DATOS ---------------\n\n");
         //

@@ -10,13 +10,10 @@ import lab1proyectofinal.entidades.Cuartel;
 
 /**
  *
- * @author Falic
+ * @author Grupo-3
  */
 public class GestionBrigada extends javax.swing.JInternalFrame {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
     private final CuartelData cuartelData;
     private final BrigadaData brigadaData;
 
@@ -38,13 +35,19 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         setFieldsEnabled(false);
     }
 
+    private void setFieldsEditable(boolean flag) {
+        nombreTF.setEditable(flag);
+        especialidadCB.setEnabled(flag); // No hay un ineditable
+        cuartelCB.setEnabled(flag);      // No hay un ineditable
+        disponibleChB.setEnabled(flag);  // No hay un ineditable
+        BtnGuardar.setEnabled(flag);
+    }
+
     private void setFieldsEnabled(boolean flag) {
         nombreTF.setEnabled(flag);
-        especialidadCB.setEnabled(flag);
-        cuartelCB.setEnabled(flag);
-        disponibleChB.setEnabled(flag);
-        BtnGuardar.setEnabled(flag);
-        BtnEditar.setEnabled(!flag);
+        //especialidadCB.setEnabled(flag);
+        //cuartelCB.setEnabled(flag);
+        //disponibleChB.setEnabled(flag);
     }
 
     /**
@@ -73,7 +76,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        setTitle("Gestion Brigada");
+        setTitle("Gestión Brigada");
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameActivated(evt);
@@ -151,7 +154,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
                         .addComponent(BtnGuardar)
                         .addGap(18, 18, 18)
                         .addComponent(BtnEliminar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 215, Short.MAX_VALUE)
                         .addComponent(BtnSalir))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,36 +211,47 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
         brigadaCB.removeAllItems();
+        cuartelCB.removeAllItems();
         List<Brigada> brigadas = brigadaData.listarBrigadas();
-        if (!brigadas.isEmpty()) {
-            for (Brigada brigada : brigadas) {
-                brigadaCB.addItem(brigada);
-                cuartelCB.addItem(brigada.getCuartel());
-            }
-            brigadaCB.setEnabled(true);
-        } else {
-            brigadaCB.setEnabled(false);
+        for (Brigada brigada : brigadas) {
+            brigadaCB.addItem(brigada);
         }
-
-        limpiarCampos();
-        setFieldsEnabled(false);
+        List<Cuartel> cuarteles = cuartelData.listarCuarteles();
+        for (Cuartel cuartel : cuarteles) {
+            cuartelCB.addItem(cuartel);
+        }
+        brigadaCB.setSelectedIndex(-1);
     }//GEN-LAST:event_formInternalFrameActivated
 
     private void brigadaCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brigadaCBActionPerformed
+        setFieldsEditable(false);
         Brigada brigadaSeleccionada = (Brigada) brigadaCB.getSelectedItem();
         if (brigadaSeleccionada != null) {
-            setFieldsEnabled(false);
             nombreTF.setText(brigadaSeleccionada.getNombreBrigada());
             especialidadCB.setSelectedItem(brigadaSeleccionada.getEspecialidad());
             cuartelCB.setSelectedItem(brigadaSeleccionada.getCuartel());
             disponibleChB.setSelected(brigadaSeleccionada.isDisponible());
+            BtnEditar.setEnabled(true);
+            BtnEliminar.setEnabled(true);
+            setFieldsEnabled(true);
+        } else {
+            limpiarCampos();
+            BtnEditar.setEnabled(false);
+            BtnEliminar.setEnabled(false);
+            setFieldsEnabled(false);
+            if (brigadaCB.getItemCount() == 0) {
+                brigadaCB.setEnabled(false);
+            } else {
+                brigadaCB.setEnabled(true);
+            }
         }
     }//GEN-LAST:event_brigadaCBActionPerformed
 
     private void BtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditarActionPerformed
         Brigada brigadaSeleccionada = (Brigada) brigadaCB.getSelectedItem();
         if (brigadaSeleccionada != null) {
-            setFieldsEnabled(true);
+            BtnEditar.setEnabled(false);
+            setFieldsEditable(true);
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione primero una brigada a editar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -276,17 +290,17 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
         Brigada brigadaSeleccionada = (Brigada) brigadaCB.getSelectedItem();
         if (brigadaSeleccionada == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione primero un cuartel a eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Seleccione primero una brigada a eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         int option = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar esta brigada?", "Confirmar eliminacion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (option == JOptionPane.YES_OPTION) {
-            if (brigadaData.eliminarBrigada(brigadaSeleccionada.getCodigoBrigada())){
+            if (brigadaData.eliminarBrigada(brigadaSeleccionada.getCodigoBrigada())) {
+                JOptionPane.showMessageDialog(this, "Brigada eliminada.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 brigadaCB.removeItem(brigadaSeleccionada);
-                JOptionPane.showMessageDialog(this, "Cuartel eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "No se pudo eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No se pudo eliminar.\nAsegurese de que no haya bomberos asociados a esta brigada ni que la misma esté atentiendo un siniestro.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_BtnEliminarActionPerformed

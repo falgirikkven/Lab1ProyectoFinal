@@ -2,8 +2,12 @@ package lab1proyectofinal.accesoADatos;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.regex.Pattern;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.entidades.Cuartel;
@@ -15,11 +19,7 @@ import lab1proyectofinal.entidades.Siniestro;
  */
 public class Utils {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
-    public static final int TIPO_SINIESTRO_CANTIDAD = 6;
-    private static final Pattern p = Pattern.compile("^\\d+$");
+    public static final int NIL = -1;
 
     public static String[] obtenerEspecialidades() {
         String[] s = new String[]{
@@ -33,64 +33,18 @@ public class Utils {
         return s;
     }
 
-    public static void imprimirListaBombero(List<Bombero> lista) {
-        if (lista.isEmpty()) {
-            System.out.println("No se ha encontrado ningún elemento");
-        }
-        for (Bombero bom : lista) {
-            System.out.println(bom.debugToString());
-        }
-    }
-
-    public static void imprimirListaSiniestro(List<Siniestro> lista) {
-        if (lista.isEmpty()) {
-            System.out.println("No se ha encontrado ningún elemento");
-        }
-        for (Siniestro sin : lista) {
-            System.out.println(sin.debugToString());
-        }
-    }
-
-    public static void imprimirListaBrigada(List<Brigada> lista) {
-        if (lista.isEmpty()) {
-            System.out.println("No se ha encontrado ningún elemento");
-        }
-        for (Brigada bri : lista) {
-            System.out.println(bri.debugToString());
-        }
-    }
-
-    public static void imprimirListaCuartel(List<Cuartel> lista) {
-        if (lista.isEmpty()) {
-            System.out.println("No se ha encontrado ningún elemento");
-        }
-        for (Cuartel cru : lista) {
-            System.out.println(cru.debugToString());
-        }
-    }
-
-    public static void imprimirResultadoBombero(Bombero bombero) {
-        if (bombero != null) {
-            System.out.println("Mostrando:\n" + bombero.debugToString());
-        }
-    }
-
-    public static void imprimirResultadoSiniestro(Siniestro siniestro) {
-        if (siniestro != null) {
-            System.out.println("Mostrando:\n" + siniestro.debugToString());
-        }
-    }
-
-    public static void imprimirResultadoBrigada(Brigada brigada) {
-        if (brigada != null) {
-            System.out.println("Mostrando:\n" + brigada.debugToString());
-        }
-    }
-
-    public static void imprimirResultadoCuartel(Cuartel cuartel) {
-        if (cuartel != null) {
-            System.out.println("Mostrando:\n" + cuartel.debugToString());
-        }
+    public static String[] obtenerGrupoSanguineo() {
+        String[] s = new String[]{
+            "A+",
+            "B+",
+            "AB+",
+            "O+",
+            "A-",
+            "B-",
+            "AB-",
+            "O-"
+        };
+        return s;
     }
 
     public static boolean esTelefonoValido(String telefono) {
@@ -173,7 +127,7 @@ public class Utils {
         siniestro.setCoordenadaY(rs.getInt("coordenadaY"));
         siniestro.setDetalles(rs.getString("detalles"));
         siniestro.setBrigada(brigada);
-        if (rs.getInt("puntuacion") != Siniestro.PUNTUACION_NIL) {
+        if (rs.getInt("puntuacion") != Utils.NIL) {
             siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
         } else {
             siniestro.setFechaHoraResolucion(null);
@@ -191,13 +145,27 @@ public class Utils {
         siniestro.setCoordenadaY(rs.getInt("coordenadaY"));
         siniestro.setDetalles(rs.getString("detalles"));
         siniestro.setBrigada(brigada);
-        if (rs.getInt("puntuacion") != Siniestro.PUNTUACION_NIL) {
+        if (rs.getInt("puntuacion") != Utils.NIL) {
             siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
         } else {
             siniestro.setFechaHoraResolucion(null);
         }
         siniestro.setPuntuacion(rs.getInt("puntuacion"));
         return siniestro;
+    }
+
+    // LocalDate -> Calendar
+    public static Calendar localDateToCalendar(LocalDate ldate) {
+        ZonedDateTime zonedDateTime = ldate.atStartOfDay(ZoneId.systemDefault());
+        Instant instant = zonedDateTime.toInstant();
+        Date date = Date.from(instant);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
+
+    public static LocalDate dateToLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
 }

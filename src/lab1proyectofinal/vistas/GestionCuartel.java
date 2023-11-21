@@ -12,9 +12,6 @@ import lab1proyectofinal.entidades.Cuartel;
  */
 public class GestionCuartel extends javax.swing.JInternalFrame {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
     private final CuartelData cuartelData;
 
     /**
@@ -37,7 +34,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         setFieldsEnabled(false);
     }
 
-    private void setFieldsEnabled(boolean flag) {
+    private void setFieldsEditable(boolean flag) {
         nombreTF.setEditable(flag);
         direccionTF.setEditable(flag);
         telefonoTF.setEditable(flag);
@@ -45,7 +42,15 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         coordenadaXTF.setEditable(flag);
         coordenadaYTF.setEditable(flag);
         BtnGuardar.setEnabled(flag);
-        BtnEditar.setEnabled(!flag);
+    }
+
+    private void setFieldsEnabled(boolean flag) {
+        nombreTF.setEnabled(flag);
+        direccionTF.setEnabled(flag);
+        telefonoTF.setEnabled(flag);
+        correoTF.setEnabled(flag);
+        coordenadaXTF.setEnabled(flag);
+        coordenadaYTF.setEnabled(flag);
     }
 
     /**
@@ -78,7 +83,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        setTitle("Gestionar Cuartel");
+        setTitle("Gestión Cuartel");
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameActivated(evt);
@@ -161,18 +166,6 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(BtnSalir))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(direccionLabel)
-                            .addComponent(nombreLabel)
-                            .addComponent(telefonoLabel)
-                            .addComponent(cuartelLabel))
-                        .addGap(66, 66, 66)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cuartelCB, 0, 257, Short.MAX_VALUE)
-                            .addComponent(direccionTF)
-                            .addComponent(nombreTF)
-                            .addComponent(telefonoTF)))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(coordenadaXLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(coordenadaXTF, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -181,9 +174,19 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(coordenadaYTF, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(correoLabel)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(direccionLabel)
+                            .addComponent(nombreLabel)
+                            .addComponent(telefonoLabel)
+                            .addComponent(cuartelLabel)
+                            .addComponent(correoLabel))
                         .addGap(18, 18, 18)
-                        .addComponent(correoTF)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(correoTF)
+                            .addComponent(cuartelCB, 0, 407, Short.MAX_VALUE)
+                            .addComponent(direccionTF)
+                            .addComponent(nombreTF)
+                            .addComponent(telefonoTF))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -230,7 +233,8 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     private void BtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditarActionPerformed
         Cuartel cuartelSeleccionado = (Cuartel) cuartelCB.getSelectedItem();
         if (cuartelSeleccionado != null) {
-            setFieldsEnabled(true);
+            BtnEditar.setEnabled(false);
+            setFieldsEditable(true);
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione primero un cuartel a editar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -302,10 +306,10 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         int option = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este cuartel?", "Confirmar eliminacion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (option == JOptionPane.YES_OPTION) {
             if (cuartelData.eliminarCuartel(cuartelSeleccionado.getCodigoCuartel())) {
-                cuartelCB.removeItem(cuartelSeleccionado);
                 JOptionPane.showMessageDialog(this, "Cuartel eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                cuartelCB.removeItem(cuartelSeleccionado);
             } else {
-                JOptionPane.showMessageDialog(this, "No se pudo eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No se pudo eliminar.\nAsegurese de que no haya brigadas ni bomberos asociados a este cuartel.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_BtnEliminarActionPerformed
@@ -317,29 +321,35 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
         cuartelCB.removeAllItems();
         List<Cuartel> cuarteles = cuartelData.listarCuarteles();
-        if (!cuarteles.isEmpty()) {
-            for (Cuartel cuartel : cuarteles) {
-                cuartelCB.addItem(cuartel);
-            }
-            cuartelCB.setEnabled(true);
-        } else {
-            cuartelCB.setEnabled(false);
+        for (Cuartel cuartel : cuarteles) {
+            cuartelCB.addItem(cuartel);
         }
-
-        limpiarCampos();
-        setFieldsEnabled(false);
+        cuartelCB.setSelectedIndex(-1);
     }//GEN-LAST:event_formInternalFrameActivated
 
     private void cuartelCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cuartelCBActionPerformed
+        setFieldsEditable(false);
         Cuartel cuartelSeleccionado = (Cuartel) cuartelCB.getSelectedItem();
         if (cuartelSeleccionado != null) {
-            setFieldsEnabled(false);
             nombreTF.setText(cuartelSeleccionado.getNombreCuartel());
             direccionTF.setText(cuartelSeleccionado.getDireccion());
             telefonoTF.setText(cuartelSeleccionado.getTelefono());
             correoTF.setText(cuartelSeleccionado.getCorreo());
             coordenadaXTF.setText(Integer.toString(cuartelSeleccionado.getCoordenadaX()));
             coordenadaYTF.setText(Integer.toString(cuartelSeleccionado.getCoordenadaY()));
+            BtnEditar.setEnabled(true);
+            BtnEliminar.setEnabled(true);
+            setFieldsEnabled(true);
+        } else {
+            limpiarCampos();
+            BtnEditar.setEnabled(false);
+            BtnEliminar.setEnabled(false);
+            setFieldsEnabled(false);
+            if (cuartelCB.getItemCount() == 0) {
+                cuartelCB.setEnabled(false);
+            } else {
+                cuartelCB.setEnabled(true);
+            }
         }
     }//GEN-LAST:event_cuartelCBActionPerformed
 

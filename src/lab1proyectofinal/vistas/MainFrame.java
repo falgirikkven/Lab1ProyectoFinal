@@ -2,8 +2,10 @@ package lab1proyectofinal.vistas;
 
 import java.beans.PropertyVetoException;
 import javax.swing.JInternalFrame;
+import lab1proyectofinal.accesoADatos.BomberoData;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.CuartelData;
+import lab1proyectofinal.accesoADatos.SiniestroData;
 
 /**
  *
@@ -11,17 +13,21 @@ import lab1proyectofinal.accesoADatos.CuartelData;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    /**
-     * SUJETO A CAMBIOS
-     */
     private JInternalFrame focusedFrame = null;
-    private final FormularioCuartel formularioCuartel;
-    private final GestionCuartelNuevaVersion gestionCuartel;
+    private final FormularioBombero formularioBombero;
     private final FormularioBrigada formularioBrigada;
+    private final FormularioCuartel formularioCuartel;
+    private final FormularioSiniestro formularioSiniestro;
+    private final GestionBombero gestionBombero;
     private final GestionBrigada gestionBrigada;
+    private final GestionCuartel gestionCuartel;
+    private final GestionSiniestro gestionSiniestro;
+    private final TratamientoEmergencia tratamientoEmergencia;
 
-    private final CuartelData cuartelData;
+    private final BomberoData bomberoData;
     private final BrigadaData brigadaData;
+    private final CuartelData cuartelData;
+    private final SiniestroData siniestroData;
 
     /**
      * Creates new form MainFrame
@@ -29,15 +35,17 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
 
-        this.cuartelData = new CuartelData();
+        this.bomberoData = new BomberoData();
         this.brigadaData = new BrigadaData();
+        this.cuartelData = new CuartelData();
+        this.siniestroData = new SiniestroData();
 
         // Formulario Cuartel
         this.formularioCuartel = new FormularioCuartel(cuartelData);
         DesktopPane.add(this.formularioCuartel);
 
         // Gestion Cuartel
-        this.gestionCuartel = new GestionCuartelNuevaVersion(cuartelData);
+        this.gestionCuartel = new GestionCuartel(cuartelData);
         DesktopPane.add(this.gestionCuartel);
 
         // Formulario Brigada
@@ -47,6 +55,26 @@ public class MainFrame extends javax.swing.JFrame {
         // Gestion Brigada
         this.gestionBrigada = new GestionBrigada(cuartelData, brigadaData);
         DesktopPane.add(this.gestionBrigada);
+
+        // Formulario Bombero
+        this.formularioBombero = new FormularioBombero(cuartelData, brigadaData, bomberoData);
+        DesktopPane.add(this.formularioBombero);
+
+        // Gestion Bombero
+        this.gestionBombero = new GestionBombero(cuartelData, brigadaData, bomberoData);
+        DesktopPane.add(this.gestionBombero);
+
+        // Formulario Siniestro
+        this.formularioSiniestro = new FormularioSiniestro(siniestroData);
+        DesktopPane.add(this.formularioSiniestro);
+
+        // Gestion Siniestro
+        this.gestionSiniestro = new GestionSiniestro(siniestroData, brigadaData);
+        DesktopPane.add(this.gestionSiniestro);
+
+        // Tratamiento Emergencia
+        this.tratamientoEmergencia = new TratamientoEmergencia(siniestroData);
+        DesktopPane.add(this.tratamientoEmergencia);
     }
 
     private void focusIFrame(JInternalFrame iFrame) {
@@ -88,22 +116,24 @@ public class MainFrame extends javax.swing.JFrame {
         bomberoMenu = new javax.swing.JMenu();
         formularioBomberoMI = new javax.swing.JMenuItem();
         gestionBomberoMI = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
+        siniestroMenu = new javax.swing.JMenu();
+        formularioSiniestroMI = new javax.swing.JMenuItem();
+        gestionSiniestroMI = new javax.swing.JMenuItem();
+        tratamientoEmergenciaMI = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestión Bomberos");
-
-        DesktopPane.setPreferredSize(new java.awt.Dimension(670, 750));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
         javax.swing.GroupLayout DesktopPaneLayout = new javax.swing.GroupLayout(DesktopPane);
         DesktopPane.setLayout(DesktopPaneLayout);
         DesktopPaneLayout.setHorizontalGroup(
             DesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 670, Short.MAX_VALUE)
+            .addGap(0, 640, Short.MAX_VALUE)
         );
         DesktopPaneLayout.setVerticalGroup(
             DesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 750, Short.MAX_VALUE)
+            .addGap(0, 457, Short.MAX_VALUE)
         );
 
         cuartelMenu.setText("Cuartel");
@@ -149,15 +179,50 @@ public class MainFrame extends javax.swing.JFrame {
         bomberoMenu.setText("Bombero");
 
         formularioBomberoMI.setText("Formulario Bombero");
+        formularioBomberoMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formularioBomberoMIActionPerformed(evt);
+            }
+        });
         bomberoMenu.add(formularioBomberoMI);
 
         gestionBomberoMI.setText("Gestión Bombero");
+        gestionBomberoMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gestionBomberoMIActionPerformed(evt);
+            }
+        });
         bomberoMenu.add(gestionBomberoMI);
 
         MenuBar.add(bomberoMenu);
 
-        jMenu1.setText("Siniestro");
-        MenuBar.add(jMenu1);
+        siniestroMenu.setText("Siniestro");
+
+        formularioSiniestroMI.setText("Formulario Siniestro");
+        formularioSiniestroMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formularioSiniestroMIActionPerformed(evt);
+            }
+        });
+        siniestroMenu.add(formularioSiniestroMI);
+
+        gestionSiniestroMI.setText("Gestión Siniestro");
+        gestionSiniestroMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gestionSiniestroMIActionPerformed(evt);
+            }
+        });
+        siniestroMenu.add(gestionSiniestroMI);
+
+        tratamientoEmergenciaMI.setText("Tratamiento de Emergencia");
+        tratamientoEmergenciaMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tratamientoEmergenciaMIActionPerformed(evt);
+            }
+        });
+        siniestroMenu.add(tratamientoEmergenciaMI);
+
+        MenuBar.add(siniestroMenu);
 
         setJMenuBar(MenuBar);
 
@@ -165,11 +230,11 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(DesktopPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(DesktopPane, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(DesktopPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(DesktopPane, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pack();
@@ -190,6 +255,26 @@ public class MainFrame extends javax.swing.JFrame {
     private void gestionBrigadaMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionBrigadaMIActionPerformed
         focusIFrame(gestionBrigada);
     }//GEN-LAST:event_gestionBrigadaMIActionPerformed
+
+    private void formularioBomberoMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioBomberoMIActionPerformed
+        focusIFrame(formularioBombero);
+    }//GEN-LAST:event_formularioBomberoMIActionPerformed
+
+    private void gestionBomberoMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionBomberoMIActionPerformed
+        focusIFrame(gestionBombero);
+    }//GEN-LAST:event_gestionBomberoMIActionPerformed
+
+    private void formularioSiniestroMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioSiniestroMIActionPerformed
+        focusIFrame(formularioSiniestro);
+    }//GEN-LAST:event_formularioSiniestroMIActionPerformed
+
+    private void gestionSiniestroMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionSiniestroMIActionPerformed
+        focusIFrame(gestionSiniestro);
+    }//GEN-LAST:event_gestionSiniestroMIActionPerformed
+
+    private void tratamientoEmergenciaMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tratamientoEmergenciaMIActionPerformed
+        focusIFrame(tratamientoEmergencia);
+    }//GEN-LAST:event_tratamientoEmergenciaMIActionPerformed
 
     /**
      * @param args the command line arguments
@@ -235,9 +320,12 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem formularioBomberoMI;
     private javax.swing.JMenuItem formularioBrigadaMI;
     private javax.swing.JMenuItem formularioCuartelMI;
+    private javax.swing.JMenuItem formularioSiniestroMI;
     private javax.swing.JMenuItem gestionBomberoMI;
     private javax.swing.JMenuItem gestionBrigadaMI;
     private javax.swing.JMenuItem gestionCuartelMI;
-    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem gestionSiniestroMI;
+    private javax.swing.JMenu siniestroMenu;
+    private javax.swing.JMenuItem tratamientoEmergenciaMI;
     // End of variables declaration//GEN-END:variables
 }
