@@ -121,6 +121,33 @@ public class CuartelData {
     }
 
     // revisado
+    public boolean buscarNombreEntreInactivos(String nombreCuartel) {
+        boolean resultado = false;
+        try {
+            String sql = "SELECT nombreCuartel FROM cuartel "
+                    + "WHERE cuartel.nombreCuartel = ? "
+                    + "AND cuartel.estado = false;";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, nombreCuartel);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                resultado = true;
+                System.out.println("[CuartelData.buscarNombreEntreInactivos] "
+                        + "Se encontró con nombre='" + nombreCuartel + "'");
+            } else {
+                System.out.println("[CuartelData.buscarNombreEntreInactivos] "
+                        + "No se encontró con nombre='" + nombreCuartel + "'");
+            }
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("[CuartelData.buscarNombreEntreInactivos] "
+                    + "Error " + e.getErrorCode() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
+    // revisado
     public List<Cuartel> listarCuarteles() {
         List<Cuartel> cuarteles = null;
         try {
@@ -145,16 +172,16 @@ public class CuartelData {
     }
 
     // revisado
-    public List<Brigada> listarBrigadasDelCuartel(int codigoCuartel) {
+    public List<Brigada> listarBrigadasDelCuartel(Cuartel cuartel) {
         List<Brigada> brigadas = null;
         try {
             String sql = "SELECT * FROM brigada "
-                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel "                    
+                    + "JOIN cuartel ON (brigada.codigoCuartel = cuartel.codigoCuartel "
                     + "AND cuartel.codigoCuartel = ? "
                     + "AND cuartel.estado = true "
                     + "AND brigada.estado = true); ";
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, codigoCuartel);
+            ps.setInt(1, cuartel.getCodigoCuartel());
             ResultSet rs = ps.executeQuery();
             brigadas = new ArrayList();
             while (rs.next()) {
@@ -244,7 +271,7 @@ public class CuartelData {
     }
 
     // con el fin de asegurar la mayor similitud posible entre objeto java y registro en la BD, se crea este método que posibilita cambiar el estado del objeto java
-    public boolean eliminarCuartel(Cuartel cuartel) {   
+    public boolean eliminarCuartel(Cuartel cuartel) {
         boolean resultado = false;
         try {
             String sql = "UPDATE cuartel SET estado = false "
@@ -273,7 +300,7 @@ public class CuartelData {
         }
         return resultado;
     }
-    
+
     // revisado, potencialmente innecesario
     public boolean eliminarCuartelPorCodigo(int codigoCuartel) {
         boolean resultado = false;
