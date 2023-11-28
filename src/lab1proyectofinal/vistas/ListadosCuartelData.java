@@ -6,7 +6,6 @@ package lab1proyectofinal.vistas;
 
 import java.awt.Color;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import lab1proyectofinal.accesoADatos.CuartelData;
 import lab1proyectofinal.entidades.*;
@@ -22,6 +21,7 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
     private List<Brigada> brigadas;
     private List<Bombero> bomberos;
     private Cuartel cuartel;
+    private int filaSeleccionada;
     private DefaultTableModel modeloTablaCuarteles = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int i, int i1) {
@@ -94,12 +94,11 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
 
     private void cargarDatosTablaBrigadas(Cuartel cuartel) {
         brigadas = cuartelData.listarBrigadasDelCuartel(cuartel);
+        modeloTablaBrigadas.setRowCount(0);
         if (brigadas.isEmpty()) {
-            modeloTablaBrigadas.setRowCount(0);
             jLabelMensajeTablaBrigadas.setForeground(Color.RED);
             jLabelMensajeTablaBrigadas.setText("No hay brigadas registradas en el cuartel '" + cuartel.getNombreCuartel() + "'");
         } else {
-            modeloTablaBrigadas.setRowCount(0);
             for (Brigada brigada : brigadas) {
                 modeloTablaBrigadas.addRow(new Object[]{brigada.getNombreBrigada(), brigada.getEspecialidad(), brigada.isDisponible() ? "Disponible" : "No disponible"});
             }
@@ -110,12 +109,11 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
 
     private void cargarDatosTablaBomberos(Cuartel cuartel) {
         bomberos = cuartelData.listarBomberosDelCuartel(cuartel);
+        modeloTablaBomberos.setRowCount(0);
         if (bomberos.isEmpty()) {
-            modeloTablaBomberos.setRowCount(0);
             jLabelMensajeTablaBomberos.setForeground(Color.RED);
             jLabelMensajeTablaBomberos.setText("No hay bomberos registrados en el cuartel '" + cuartel.getNombreCuartel() + "'");
         } else {
-            modeloTablaBomberos.setRowCount(0);
             for (Bombero bombero : bomberos) {
                 modeloTablaBomberos.addRow(new Object[]{bombero.getDni(), bombero.getNombreCompleto(), bombero.getGrupoSanguineo(), bombero.getCelular(), bombero.getBrigada().getNombreBrigada()});
             }
@@ -146,8 +144,10 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         jLabelMensajeTablaCuarteles = new javax.swing.JLabel();
         jLabelMensajeTablaBomberos = new javax.swing.JLabel();
         jLabelMensajeTablaBrigadas = new javax.swing.JLabel();
+        jButtonSalir = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(1477, 750));
+        setPreferredSize(new java.awt.Dimension(1510, 750));
+        setRequestFocusEnabled(false);
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameActivated(evt);
@@ -157,6 +157,7 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameDeactivated(evt);
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
@@ -235,6 +236,14 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         jLabelMensajeTablaBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         getContentPane().add(jLabelMensajeTablaBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 410, 520, 32));
 
+        jButtonSalir.setText("Salir");
+        jButtonSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalirActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButtonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1430, 680, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -243,15 +252,35 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formInternalFrameActivated
 
     private void jTableTodosLosCuartelesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableTodosLosCuartelesMouseReleased
-        int filaSelec = jTableTodosLosCuarteles.getSelectedRow();
-        String nombreCuartel = (String) jTableTodosLosCuarteles.getValueAt(filaSelec, 0);
-        cuartel = cuartelData.buscarCuartelPorNombre(nombreCuartel);
+        filaSeleccionada = jTableTodosLosCuarteles.getSelectedRow();
+        cuartel = cuartelData.buscarCuartelPorNombre((String) jTableTodosLosCuarteles.getValueAt(filaSeleccionada, 0));
         cargarDatosTablaBrigadas(cuartel);
         cargarDatosTablaBomberos(cuartel);
     }//GEN-LAST:event_jTableTodosLosCuartelesMouseReleased
 
+    private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
+        this.hide();
+        jTableTodosLosCuarteles.removeRowSelectionInterval(0, jTableTodosLosCuarteles.getRowCount() - 1);
+        modeloTablaBrigadas.setRowCount(0);
+        jLabelMensajeTablaBrigadas.setForeground(Color.BLACK);
+        jLabelMensajeTablaBrigadas.setText("");
+        modeloTablaBomberos.setRowCount(0);
+        jLabelMensajeTablaBomberos.setForeground(Color.BLACK);
+        jLabelMensajeTablaBomberos.setText("");
+    }//GEN-LAST:event_jButtonSalirActionPerformed
+
+    private void formInternalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameDeactivated
+        modeloTablaBrigadas.setRowCount(0);
+        jLabelMensajeTablaBrigadas.setForeground(Color.BLACK);
+        jLabelMensajeTablaBrigadas.setText("");
+        modeloTablaBomberos.setRowCount(0);
+        jLabelMensajeTablaBomberos.setForeground(Color.BLACK);
+        jLabelMensajeTablaBomberos.setText("");
+    }//GEN-LAST:event_formInternalFrameDeactivated
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonSalir;
     private javax.swing.JLabel jLabelBomberosDelCuartel;
     private javax.swing.JLabel jLabelBrigadasDelCuartel;
     private javax.swing.JLabel jLabelMensajeTablaBomberos;

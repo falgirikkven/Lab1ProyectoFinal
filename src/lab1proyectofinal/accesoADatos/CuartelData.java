@@ -121,7 +121,7 @@ public class CuartelData {
     }
 
     // revisado
-    public boolean buscarNombreEntreInactivos(String nombreCuartel) {
+    public boolean estaNombreEntreInactivos(String nombreCuartel) {
         boolean resultado = false;
         try {
             String sql = "SELECT nombreCuartel FROM cuartel "
