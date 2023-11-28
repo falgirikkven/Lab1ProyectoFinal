@@ -285,7 +285,7 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
         jButtonLimpiar = new javax.swing.JButton();
         jLabelTelefono = new javax.swing.JLabel();
 
-        setPreferredSize(new java.awt.Dimension(1085, 516));
+        setPreferredSize(new java.awt.Dimension(1085, 560));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabelNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -293,6 +293,7 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
         getContentPane().add(jLabelNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 270, -1, -1));
 
         jTextFieldNombre.setColumns(20);
+        jTextFieldNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jTextFieldNombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jTextFieldNombreKeyTyped(evt);
@@ -300,6 +301,7 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
         });
         getContentPane().add(jTextFieldNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 200, -1));
 
+        jButtonGuardar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonGuardar.setText("Guardar");
         jButtonGuardar.setEnabled(false);
         jButtonGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -307,21 +309,23 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
                 jButtonGuardarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 430, -1, -1));
+        getContentPane().add(jButtonGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 470, -1, -1));
 
+        jButtonSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonSalir.setText("Salir");
         jButtonSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSalirActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 430, -1, -1));
+        getContentPane().add(jButtonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 470, -1, -1));
 
         jLabelGestionCuarteles.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabelGestionCuarteles.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelGestionCuarteles.setText("Gestión de cuarteles");
         getContentPane().add(jLabelGestionCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 1070, -1));
 
+        jButtonAgregar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonAgregar.setText("Agregar cuartel");
         jButtonAgregar.setEnabled(false);
         jButtonAgregar.addActionListener(new java.awt.event.ActionListener() {
@@ -329,8 +333,9 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
                 jButtonAgregarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 360, -1, -1));
+        getContentPane().add(jButtonAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, -1, -1));
 
+        jButtonModificar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonModificar.setText("Modificar cuartel");
         jButtonModificar.setEnabled(false);
         jButtonModificar.addActionListener(new java.awt.event.ActionListener() {
@@ -340,6 +345,7 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
         });
         getContentPane().add(jButtonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 360, -1, -1));
 
+        jButtonCancelar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.setEnabled(false);
         jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -347,8 +353,9 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
                 jButtonCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 430, -1, -1));
+        getContentPane().add(jButtonCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 470, -1, -1));
 
+        jButtonDarDeBaja.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonDarDeBaja.setText("Dar de baja cuartel");
         jButtonDarDeBaja.setEnabled(false);
         jButtonDarDeBaja.addActionListener(new java.awt.event.ActionListener() {
@@ -356,16 +363,17 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
                 jButtonDarDeBajaActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonDarDeBaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 360, -1, -1));
+        getContentPane().add(jButtonDarDeBaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 360, -1, -1));
 
         jlMensajeNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jlMensajeNombre.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jlMensajeNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 300, 340, 40));
+        getContentPane().add(jlMensajeNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 305, 340, 40));
 
         jLabelCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabelCuartel.setText("Cuartel:");
         getContentPane().add(jLabelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, -1, -1));
 
+        jComboBoxCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jComboBoxCuarteles.setMaximumRowCount(10);
         jComboBoxCuarteles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -375,7 +383,7 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
         getContentPane().add(jComboBoxCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 200, -1));
 
         jLabelBuscarConCB.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabelBuscarConCB.setText("Puede buscar un cuartel entre los que se encuentran registrados:");
+        jLabelBuscarConCB.setText("Puede seleccionar un cuartel de entre los registrados:");
         getContentPane().add(jLabelBuscarConCB, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
 
         jLabelBuscarConTF.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -386,6 +394,7 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
         jLabelDemasDatos.setText("Demás datos del cuartel:");
         getContentPane().add(jLabelDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, -1, -1));
 
+        jButtonBuscar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonBuscar.setText("Buscar");
         jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -396,121 +405,85 @@ public class GestionCuartelNV extends javax.swing.JInternalFrame {
 
         jlMensajeDemasDatos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jlMensajeDemasDatos.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jlMensajeDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 400, 450, 55));
+        getContentPane().add(jlMensajeDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 410, 450, 55));
 
         jlMensajeCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jlMensajeCuartel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jlMensajeCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(147, 160, 340, 40));
+        getContentPane().add(jlMensajeCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 165, 340, 40));
 
         jPanelDemasDatos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanelDemasDatos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jlMensajeCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPanelDemasDatos.add(jlMensajeCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 295, 250, 23));
 
         jLabelCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabelCoorX.setText("Coordenada X:");
+        jPanelDemasDatos.add(jLabelCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, -1, -1));
 
         jLabelDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabelDireccion.setText("Dirección:");
+        jPanelDemasDatos.add(jLabelDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
         jTextFieldDireccion.setEditable(false);
+        jTextFieldDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jTextFieldDireccion.setEnabled(false);
+        jPanelDemasDatos.add(jTextFieldDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 200, -1));
 
         jLabelCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabelCorreoElec.setText("Correo Electrónico:");
+        jPanelDemasDatos.add(jLabelCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
 
         jTextFieldCoorY.setEditable(false);
+        jTextFieldCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jTextFieldCoorY.setEnabled(false);
+        jPanelDemasDatos.add(jTextFieldCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, 75, -1));
+
+        jlMensajeCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPanelDemasDatos.add(jlMensajeCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 170, 250, 23));
 
         jTextFieldTelefono.setEditable(false);
+        jTextFieldTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jTextFieldTelefono.setEnabled(false);
+        jPanelDemasDatos.add(jTextFieldTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 80, 200, -1));
+
+        jlMensajeDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPanelDemasDatos.add(jlMensajeDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 50, 250, 23));
 
         jTextFieldCorreoElec.setEditable(false);
+        jTextFieldCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jTextFieldCorreoElec.setEnabled(false);
+        jPanelDemasDatos.add(jTextFieldCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, 200, -1));
 
         jTextFieldCoorX.setEditable(false);
+        jTextFieldCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jTextFieldCoorX.setEnabled(false);
+        jPanelDemasDatos.add(jTextFieldCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 200, 75, -1));
 
         jLabelCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabelCoorY.setText("Coordenada Y:");
+        jPanelDemasDatos.add(jLabelCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, -1));
 
+        jlMensajeTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPanelDemasDatos.add(jlMensajeTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 110, 250, 23));
+
+        jlMensajeCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPanelDemasDatos.add(jlMensajeCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 230, 250, 23));
+
+        jButtonLimpiar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonLimpiar.setText("Limpiar campos");
         jButtonLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLimpiarActionPerformed(evt);
             }
         });
+        jPanelDemasDatos.add(jButtonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 260, -1, -1));
 
         jLabelTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabelTelefono.setText("Teléfono:");
+        jPanelDemasDatos.add(jLabelTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
 
-        javax.swing.GroupLayout jPanelDemasDatosLayout = new javax.swing.GroupLayout(jPanelDemasDatos);
-        jPanelDemasDatos.setLayout(jPanelDemasDatosLayout);
-        jPanelDemasDatosLayout.setHorizontalGroup(
-            jPanelDemasDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelDemasDatosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelDemasDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelDireccion)
-                    .addComponent(jLabelTelefono)
-                    .addComponent(jLabelCorreoElec)
-                    .addComponent(jLabelCoorX)
-                    .addComponent(jLabelCoorY))
-                .addGap(18, 18, 18)
-                .addGroup(jPanelDemasDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelDemasDatosLayout.createSequentialGroup()
-                        .addGroup(jPanelDemasDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldCoorX, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jlMensajeCoorX, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jlMensajeCoorY, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldCorreoElec, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jlMensajeDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jlMensajeTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jlMensajeCorreoElec, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanelDemasDatosLayout.createSequentialGroup()
-                        .addComponent(jTextFieldCoorY, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
-                        .addComponent(jButtonLimpiar)
-                        .addGap(22, 22, 22))))
-        );
-        jPanelDemasDatosLayout.setVerticalGroup(
-            jPanelDemasDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelDemasDatosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelDemasDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelDireccion)
-                    .addComponent(jTextFieldDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addComponent(jlMensajeDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelDemasDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelTelefono)
-                    .addComponent(jTextFieldTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addComponent(jlMensajeTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelDemasDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelCorreoElec)
-                    .addComponent(jTextFieldCorreoElec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addComponent(jlMensajeCorreoElec, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelDemasDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelCoorX)
-                    .addComponent(jTextFieldCoorX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addComponent(jlMensajeCoorX, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelDemasDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelCoorY)
-                    .addComponent(jTextFieldCoorY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonLimpiar))
-                .addGap(3, 3, 3)
-                .addComponent(jlMensajeCoorY, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        getContentPane().add(jPanelDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, -1, -1));
+        getContentPane().add(jPanelDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 440, 330));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

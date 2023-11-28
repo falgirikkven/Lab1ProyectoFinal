@@ -146,7 +146,7 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         jLabelMensajeTablaBrigadas = new javax.swing.JLabel();
         jButtonSalir = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(1510, 750));
+        setPreferredSize(new java.awt.Dimension(1510, 769));
         setRequestFocusEnabled(false);
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
@@ -236,13 +236,14 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         jLabelMensajeTablaBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         getContentPane().add(jLabelMensajeTablaBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 410, 520, 32));
 
+        jButtonSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonSalir.setText("Salir");
         jButtonSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSalirActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1430, 680, -1, -1));
+        getContentPane().add(jButtonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1420, 690, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
