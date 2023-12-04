@@ -8,13 +8,14 @@ import java.awt.Color;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import lab1proyectofinal.accesoADatos.CuartelData;
+import lab1proyectofinal.accesoADatos.Utils;
 import lab1proyectofinal.entidades.*;
 
 /**
  *
  * @author nahue
  */
-public class ListadosCuartelData extends javax.swing.JInternalFrame {
+public class ListadosPorCuartel extends javax.swing.JInternalFrame {
 
     private final CuartelData cuartelData;
     private List<Cuartel> cuarteles;
@@ -41,13 +42,16 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         }
     };
 
-    public ListadosCuartelData(CuartelData cuartelData) {
+    public ListadosPorCuartel(CuartelData cuartelData) {
         initComponents();
         this.cuartelData = cuartelData;
         armarCabeceras();
     }
 
     private void armarCabeceras() {
+        jTableTodosLosCuarteles.getTableHeader().setFont(Utils.fuenteNegrita);
+        jTableBrigadasDelCuartel.getTableHeader().setFont(Utils.fuenteNegrita);
+        jTableBomberosDelCuartel.getTableHeader().setFont(Utils.fuenteNegrita);
         modeloTablaCuarteles.addColumn("Nombre");
         modeloTablaCuarteles.addColumn("Dirección");
         modeloTablaCuarteles.addColumn("Coordenadas");
@@ -62,16 +66,17 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         modeloTablaBomberos.addColumn("Nro de celular");
         modeloTablaBomberos.addColumn("Brigada");
         jTableTodosLosCuarteles.setModel(modeloTablaCuarteles);
+        // desconozco como funciona la asigmación del ancho a las columnas en su totalidad
         jTableTodosLosCuarteles.getColumnModel().getColumn(0).setPreferredWidth(80);
         jTableTodosLosCuarteles.getColumnModel().getColumn(1).setPreferredWidth(120);
         jTableTodosLosCuarteles.getColumnModel().getColumn(2).setPreferredWidth(20);
-        jTableTodosLosCuarteles.getColumnModel().getColumn(3).setPreferredWidth(10);
+        jTableTodosLosCuarteles.getColumnModel().getColumn(3).setPreferredWidth(5);
         jTableBrigadasDelCuartel.setModel(modeloTablaBrigadas);
         jTableBrigadasDelCuartel.getColumnModel().getColumn(0).setPreferredWidth(120);
         jTableBrigadasDelCuartel.getColumnModel().getColumn(1).setPreferredWidth(280);
         jTableBomberosDelCuartel.setModel(modeloTablaBomberos);
-        jTableBomberosDelCuartel.getColumnModel().getColumn(0).setPreferredWidth(50);
-        jTableBomberosDelCuartel.getColumnModel().getColumn(1).setPreferredWidth(150);
+        jTableBomberosDelCuartel.getColumnModel().getColumn(0).setPreferredWidth(5);
+        jTableBomberosDelCuartel.getColumnModel().getColumn(1).setPreferredWidth(165);
         jTableBomberosDelCuartel.getColumnModel().getColumn(2).setPreferredWidth(20);
         jTableBomberosDelCuartel.getColumnModel().getColumn(3).setPreferredWidth(20);
     }
@@ -80,15 +85,19 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         cuarteles = cuartelData.listarCuarteles();
         if (cuarteles.isEmpty()) {
             modeloTablaCuarteles.setRowCount(0);
-            jLabelMensajeTablaCuarteles.setForeground(Color.RED);
-            jLabelMensajeTablaCuarteles.setText("No hay cuarteles registrados");
+            jLabelMensajeTablaCuarteles.setForeground(Color.BLACK);
+            jLabelMensajeTablaCuarteles.setText("No hay cuarteles registrados.");
         } else {
             modeloTablaCuarteles.setRowCount(0);
             for (Cuartel cuartel : cuarteles) {
-                modeloTablaCuarteles.addRow(new Object[]{cuartel.getNombreCuartel(), cuartel.getDireccion(), "(" + cuartel.getCoordenadaX() + " ; " + cuartel.getCoordenadaY() + ")", cuartel.getTelefono(), cuartel.getCorreo()});
+                modeloTablaCuarteles.addRow(new Object[]{cuartel.getNombreCuartel(),
+                    cuartel.getDireccion(), "(" + cuartel.getCoordenadaX() + " ; "
+                    + cuartel.getCoordenadaY() + ")", cuartel.getTelefono(),
+                    cuartel.getCorreo()});
             }
-            jLabelMensajeTablaCuarteles.setForeground(Color.BLACK);
-            jLabelMensajeTablaCuarteles.setText("<html>Seleccione un cuartel de la tabla haciendo click en su fila para ver las brigadas y los bomberos vinculados al mismo</html>");
+            jLabelMensajeTablaCuarteles.setText("<html>Seleccione un cuartel de la tabla haciendo "
+                    + "click en su fila para ver las brigadas y los bomberos vinculados al mismo."
+                    + "</html>");
         }
     }
 
@@ -97,10 +106,13 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         modeloTablaBrigadas.setRowCount(0);
         if (brigadas.isEmpty()) {
             jLabelMensajeTablaBrigadas.setForeground(Color.RED);
-            jLabelMensajeTablaBrigadas.setText("No hay brigadas registradas en el cuartel '" + cuartel.getNombreCuartel() + "'");
+            jLabelMensajeTablaBrigadas.setText("No hay brigadas registradas en el cuartel '"
+                    + cuartel.getNombreCuartel() + "'.");
         } else {
             for (Brigada brigada : brigadas) {
-                modeloTablaBrigadas.addRow(new Object[]{brigada.getNombreBrigada(), brigada.getEspecialidad(), brigada.isDisponible() ? "Disponible" : "No disponible"});
+                modeloTablaBrigadas.addRow(new Object[]{brigada.getNombreBrigada(),
+                    brigada.getEspecialidad(), brigada.isDisponible() ? "Disponible" : "No "
+                    + "disponible"});
             }
             jLabelMensajeTablaBrigadas.setForeground(Color.BLACK);
             jLabelMensajeTablaBrigadas.setText("");
@@ -112,10 +124,13 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         modeloTablaBomberos.setRowCount(0);
         if (bomberos.isEmpty()) {
             jLabelMensajeTablaBomberos.setForeground(Color.RED);
-            jLabelMensajeTablaBomberos.setText("No hay bomberos registrados en el cuartel '" + cuartel.getNombreCuartel() + "'");
+            jLabelMensajeTablaBomberos.setText("No hay bomberos registrados en el cuartel '"
+                    + cuartel.getNombreCuartel() + "'.");
         } else {
             for (Bombero bombero : bomberos) {
-                modeloTablaBomberos.addRow(new Object[]{bombero.getDni(), bombero.getNombreCompleto(), bombero.getGrupoSanguineo(), bombero.getCelular(), bombero.getBrigada().getNombreBrigada()});
+                modeloTablaBomberos.addRow(new Object[]{bombero.getDni(),
+                    bombero.getNombreCompleto(), bombero.getGrupoSanguineo(), bombero.getCelular(),
+                    bombero.getBrigada().getNombreBrigada()});
             }
             jLabelMensajeTablaBomberos.setForeground(Color.BLACK);
             jLabelMensajeTablaBomberos.setText("");
@@ -123,9 +138,8 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * This method is called from within the constructor to initialize the form. WARNING: Do NOT
+     * modify this code. The content of this method is always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -146,7 +160,7 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         jLabelMensajeTablaBrigadas = new javax.swing.JLabel();
         jButtonSalir = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(1510, 769));
+        setPreferredSize(new java.awt.Dimension(1140, 765));
         setRequestFocusEnabled(false);
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
@@ -168,6 +182,7 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jTableTodosLosCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jTableTodosLosCuarteles.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
         jTableTodosLosCuarteles.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jTableTodosLosCuarteles.getTableHeader().setResizingAllowed(false);
@@ -179,13 +194,14 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
         });
         jScrollPaneTodosLosCuarteles.setViewportView(jTableTodosLosCuarteles);
 
-        getContentPane().add(jScrollPaneTodosLosCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 160, 810, 170));
+        getContentPane().add(jScrollPaneTodosLosCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 140, 940, 130));
 
         jLabelTodosLosCuarteles.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabelTodosLosCuarteles.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelTodosLosCuarteles.setText("Todos los cuarteles");
-        getContentPane().add(jLabelTodosLosCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 80, 810, -1));
+        getContentPane().add(jLabelTodosLosCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 940, -1));
 
+        jTableBomberosDelCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jTableBomberosDelCuartel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -195,15 +211,19 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
             }
         ));
         jTableBomberosDelCuartel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        jTableBomberosDelCuartel.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTableBomberosDelCuartel.getTableHeader().setResizingAllowed(false);
+        jTableBomberosDelCuartel.getTableHeader().setReorderingAllowed(false);
         jScrollPaneBomberosDelCuartel.setViewportView(jTableBomberosDelCuartel);
 
-        getContentPane().add(jScrollPaneBomberosDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 450, 780, 220));
+        getContentPane().add(jScrollPaneBomberosDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 580, 940, 130));
 
         jLabelBomberosDelCuartel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabelBomberosDelCuartel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelBomberosDelCuartel.setText("Bomberos del cuartel seleccionado");
-        getContentPane().add(jLabelBomberosDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 370, 780, -1));
+        getContentPane().add(jLabelBomberosDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 520, 940, -1));
 
+        jTableBrigadasDelCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jTableBrigadasDelCuartel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -213,28 +233,31 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
             }
         ));
         jTableBrigadasDelCuartel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        jTableBrigadasDelCuartel.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTableBrigadasDelCuartel.getTableHeader().setResizingAllowed(false);
+        jTableBrigadasDelCuartel.getTableHeader().setReorderingAllowed(false);
         jScrollPaneBrigadasDelCuartel.setViewportView(jTableBrigadasDelCuartel);
 
-        getContentPane().add(jScrollPaneBrigadasDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 450, 540, 220));
+        getContentPane().add(jScrollPaneBrigadasDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 360, 660, 130));
 
         jLabelBrigadasDelCuartel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabelBrigadasDelCuartel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelBrigadasDelCuartel.setText("Brigadas del cuartel selecionado");
-        getContentPane().add(jLabelBrigadasDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 370, 540, -1));
+        getContentPane().add(jLabelBrigadasDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 300, 660, -1));
 
         jLabelTituloPrincipal.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabelTituloPrincipal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelTituloPrincipal.setText("Listados relacionados con cuarteles");
-        getContentPane().add(jLabelTituloPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, 1400, -1));
+        jLabelTituloPrincipal.setText("Listados por cuartel");
+        getContentPane().add(jLabelTituloPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 940, -1));
 
         jLabelMensajeTablaCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabelMensajeTablaCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 120, 790, 32));
+        getContentPane().add(jLabelMensajeTablaCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 115, 920, 20));
 
         jLabelMensajeTablaBomberos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabelMensajeTablaBomberos, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 410, 760, 32));
+        getContentPane().add(jLabelMensajeTablaBomberos, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 555, 920, 20));
 
         jLabelMensajeTablaBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabelMensajeTablaBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 410, 520, 32));
+        getContentPane().add(jLabelMensajeTablaBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 335, 640, 20));
 
         jButtonSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonSalir.setText("Salir");
@@ -243,7 +266,7 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
                 jButtonSalirActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1420, 690, -1, -1));
+        getContentPane().add(jButtonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 670, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -254,14 +277,16 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
 
     private void jTableTodosLosCuartelesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableTodosLosCuartelesMouseReleased
         filaSeleccionada = jTableTodosLosCuarteles.getSelectedRow();
-        cuartel = cuartelData.buscarCuartelPorNombre((String) jTableTodosLosCuarteles.getValueAt(filaSeleccionada, 0));
+        cuartel = cuartelData.buscarCuartelPorNombre(
+                (String) jTableTodosLosCuarteles.getValueAt(filaSeleccionada, 0));
         cargarDatosTablaBrigadas(cuartel);
         cargarDatosTablaBomberos(cuartel);
     }//GEN-LAST:event_jTableTodosLosCuartelesMouseReleased
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
         this.hide();
-        jTableTodosLosCuarteles.removeRowSelectionInterval(0, jTableTodosLosCuarteles.getRowCount() - 1);
+        jTableTodosLosCuarteles.removeRowSelectionInterval(0, jTableTodosLosCuarteles.getRowCount()
+                - 1);
         modeloTablaBrigadas.setRowCount(0);
         jLabelMensajeTablaBrigadas.setForeground(Color.BLACK);
         jLabelMensajeTablaBrigadas.setText("");
@@ -271,6 +296,8 @@ public class ListadosCuartelData extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
     private void formInternalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameDeactivated
+        jTableTodosLosCuarteles.removeRowSelectionInterval(0, jTableTodosLosCuarteles.getRowCount()
+                - 1);
         modeloTablaBrigadas.setRowCount(0);
         jLabelMensajeTablaBrigadas.setForeground(Color.BLACK);
         jLabelMensajeTablaBrigadas.setText("");

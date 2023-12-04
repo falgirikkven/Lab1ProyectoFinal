@@ -1,5 +1,6 @@
 package lab1proyectofinal.accesoADatos;
 
+import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -20,6 +21,9 @@ import lab1proyectofinal.entidades.Siniestro;
 public class Utils {
 
     public static final int NIL = -1;
+    
+    public static final Font fuentePlana = new Font("Dialog", 0, 14);
+    public static final Font fuenteNegrita = new Font("Dialog", 1, 14);
 
     public static String[] obtenerEspecialidades() {
         String[] s = new String[]{

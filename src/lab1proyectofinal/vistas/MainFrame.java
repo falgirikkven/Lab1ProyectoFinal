@@ -1,8 +1,12 @@
 package lab1proyectofinal.vistas;
 
+import java.awt.Dimension;
+import java.awt.Font;
 import java.beans.PropertyVetoException;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import lab1proyectofinal.accesoADatos.BomberoData;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.CuartelData;
@@ -15,17 +19,11 @@ import lab1proyectofinal.accesoADatos.SiniestroData;
 public class MainFrame extends javax.swing.JFrame {
 
     private JInternalFrame focusedFrame = null;
-//    private final FormularioBombero formularioBombero;
-//    private final FormularioBrigada formularioBrigada;
-//    private final FormularioCuartel formularioCuartel;
-//    private final FormularioSiniestro formularioSiniestro;
-//    private final GestionBombero gestionBombero;
-//    private final GestionBrigada gestionBrigada;
-//    private final GestionCuartel gestionCuartel;
-//    private final GestionSiniestro gestionSiniestro;
-//    private final TratamientoEmergencia tratamientoEmergencia;
-    private final GestionCuartelNV gestionCuartelNV;
-    private final ListadosCuartelData listadosCuartelData;
+    private final GestionCuartel gestionCuartelNV;
+    private final ListadosPorCuartel listadosPorCuartel;
+    private final GestionBrigada gestionBrigadaNV;
+    private final ListadosPorBrigada listadosPorBrigada;
+    private final BrigadasSegunSituacion brigadasSegunSituacion;
 
     private final BomberoData bomberoData;
     private final BrigadaData brigadaData;
@@ -43,53 +41,58 @@ public class MainFrame extends javax.swing.JFrame {
         this.cuartelData = new CuartelData();
         this.siniestroData = new SiniestroData();
 
-//        // Formulario Cuartel
-//        this.formularioCuartel = new FormularioCuartel(cuartelData);
-//        DesktopPane.add(this.formularioCuartel);
-//
-//        // Gestion Cuartel
-//        this.gestionCuartel = new GestionCuartel(cuartelData);
-//        DesktopPane.add(this.gestionCuartel);
-//
-//        // Formulario Brigada
-//        this.formularioBrigada = new FormularioBrigada(cuartelData, brigadaData);
-//        DesktopPane.add(this.formularioBrigada);
-//
-//        // Gestion Brigada
-//        this.gestionBrigada = new GestionBrigada(cuartelData, brigadaData);
-//        DesktopPane.add(this.gestionBrigada);
-//
-//        // Formulario Bombero
-//        this.formularioBombero = new FormularioBombero(cuartelData, brigadaData, bomberoData);
-//        DesktopPane.add(this.formularioBombero);
-//
-//        // Gestion Bombero
-//        this.gestionBombero = new GestionBombero(cuartelData, brigadaData, bomberoData);
-//        DesktopPane.add(this.gestionBombero);
-//
-//        // Formulario Siniestro
-//        this.formularioSiniestro = new FormularioSiniestro(siniestroData);
-//        DesktopPane.add(this.formularioSiniestro);
-//
-//        // Gestion Siniestro
-//        this.gestionSiniestro = new GestionSiniestro(siniestroData, brigadaData);
-//        DesktopPane.add(this.gestionSiniestro);
-//
-//        // Tratamiento Emergencia
-//        this.tratamientoEmergencia = new TratamientoEmergencia(siniestroData);
-//        DesktopPane.add(this.tratamientoEmergencia);
-        // Gestion CuartelNV
-        this.gestionCuartelNV = new GestionCuartelNV(cuartelData);
+        // Gestion Cuartel NV
+        this.gestionCuartelNV = new GestionCuartel(cuartelData);
         DesktopPane.add(this.gestionCuartelNV);
 
-        // Listados CuartelData
-        this.listadosCuartelData = new ListadosCuartelData(cuartelData);
-        DesktopPane.add(this.listadosCuartelData);
+        // Listados por cuartel
+        this.listadosPorCuartel = new ListadosPorCuartel(cuartelData);
+        DesktopPane.add(this.listadosPorCuartel);
+
+        // Gestión Brigada NV
+        this.gestionBrigadaNV = new GestionBrigada(cuartelData, brigadaData);
+        DesktopPane.add(this.gestionBrigadaNV);
+
+        // Listados por brigada
+        this.listadosPorBrigada = new ListadosPorBrigada(brigadaData);
+        DesktopPane.add(this.listadosPorBrigada);
+
+        // Brigadas según situación
+        this.brigadasSegunSituacion = new BrigadasSegunSituacion(brigadaData);
+        DesktopPane.add(this.brigadasSegunSituacion);
     }
 
     private void focusIFrame(JInternalFrame iFrame) {
 
+        // la primera vez que se ejecute este método focusedFrame será igual a null
         if (focusedFrame != null) {
+            // si se está llevando a cabo alguna operación en 'focusedFrame' y se quiere pasar a un
+            // JInternalFrame distinto sin antes haber terminado la operación
+            JLabel jl = new JLabel(
+                    """
+                    <html>Si elige salir de 'Gestión de brigadas' con una 
+                    operación en curso la operación se cancelará: 
+                    ¿desea salir de 'Gestión de brigadas'?</hmtl>""");
+            jl.setFont(new Font("Dialog", 0, 14));
+            Dimension dim = new Dimension(300, 60);
+            jl.setPreferredSize(dim);
+
+            if (focusedFrame instanceof GestionBrigada
+                    && !(iFrame instanceof GestionBrigada)
+                    && ((GestionBrigada) focusedFrame).isEnOperacion()) {
+                if (JOptionPane.showInternalConfirmDialog(focusedFrame,
+                        jl,
+                        "Advertencias",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
+                    return;
+                } else {
+                    // visualmente se ve mejor que se esconda el internalFrame antes del click 
+                    // programado en 'jButtonCancelar'                    
+                    focusedFrame.hide();
+                    ((GestionBrigada) focusedFrame).cancelarOperacion();
+                }
+            }
             focusedFrame.hide();
         }
 
@@ -103,32 +106,28 @@ public class MainFrame extends javax.swing.JFrame {
             System.out.println("[Main Frame Error]");
             e.printStackTrace();
         }
-
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * This method is called from within the constructor to initialize the form. WARNING: Do NOT
+     * modify this code. The content of this method is always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         DesktopPane = new javax.swing.JDesktopPane();
-        MenuBar = new javax.swing.JMenuBar();
-        cuartelMenu = new javax.swing.JMenu();
-        formularioCuartelMI = new javax.swing.JMenuItem();
-        gestionCuartelMI = new javax.swing.JMenuItem();
-        jmiListados = new javax.swing.JMenuItem();
-        brigadaMenu = new javax.swing.JMenu();
-        formularioBrigadaMI = new javax.swing.JMenuItem();
-        gestionBrigadaMI = new javax.swing.JMenuItem();
+        JMenuBarEntidades = new javax.swing.JMenuBar();
+        JMenuCuarteles = new javax.swing.JMenu();
+        JMenuItemGestionCuarteles = new javax.swing.JMenuItem();
+        JMenuItemListadosPorCuartel = new javax.swing.JMenuItem();
+        JMenuBrigada = new javax.swing.JMenu();
+        JMenuItemGestionBrigadas = new javax.swing.JMenuItem();
+        jMenuItemListadosPorBrigada = new javax.swing.JMenuItem();
+        jMenuItemBrigadasSegunSituacion = new javax.swing.JMenuItem();
         bomberoMenu = new javax.swing.JMenu();
-        formularioBomberoMI = new javax.swing.JMenuItem();
         gestionBomberoMI = new javax.swing.JMenuItem();
         siniestroMenu = new javax.swing.JMenu();
-        formularioSiniestroMI = new javax.swing.JMenuItem();
         gestionSiniestroMI = new javax.swing.JMenuItem();
         tratamientoEmergenciaMI = new javax.swing.JMenuItem();
 
@@ -146,66 +145,66 @@ public class MainFrame extends javax.swing.JFrame {
         );
         DesktopPaneLayout.setVerticalGroup(
             DesktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 900, Short.MAX_VALUE)
+            .addGap(0, 898, Short.MAX_VALUE)
         );
 
-        cuartelMenu.setText("Cuartel");
+        JMenuCuarteles.setText("Cuarteles");
+        JMenuCuarteles.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
-        formularioCuartelMI.setText("Formulario Cuartel");
-        formularioCuartelMI.addActionListener(new java.awt.event.ActionListener() {
+        JMenuItemGestionCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        JMenuItemGestionCuarteles.setText("Gestión de cuarteles");
+        JMenuItemGestionCuarteles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                formularioCuartelMIActionPerformed(evt);
+                JMenuItemGestionCuartelesActionPerformed(evt);
             }
         });
-        cuartelMenu.add(formularioCuartelMI);
+        JMenuCuarteles.add(JMenuItemGestionCuarteles);
 
-        gestionCuartelMI.setText("Gestión Cuartel");
-        gestionCuartelMI.addActionListener(new java.awt.event.ActionListener() {
+        JMenuItemListadosPorCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        JMenuItemListadosPorCuartel.setText("Listados por cuartel");
+        JMenuItemListadosPorCuartel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                gestionCuartelMIActionPerformed(evt);
+                JMenuItemListadosPorCuartelActionPerformed(evt);
             }
         });
-        cuartelMenu.add(gestionCuartelMI);
+        JMenuCuarteles.add(JMenuItemListadosPorCuartel);
 
-        jmiListados.setText("Listados ");
-        jmiListados.addActionListener(new java.awt.event.ActionListener() {
+        JMenuBarEntidades.add(JMenuCuarteles);
+
+        JMenuBrigada.setText("Brigada");
+        JMenuBrigada.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+
+        JMenuItemGestionBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        JMenuItemGestionBrigadas.setText("Gestión de brigadas");
+        JMenuItemGestionBrigadas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jmiListadosActionPerformed(evt);
+                JMenuItemGestionBrigadasActionPerformed(evt);
             }
         });
-        cuartelMenu.add(jmiListados);
+        JMenuBrigada.add(JMenuItemGestionBrigadas);
 
-        MenuBar.add(cuartelMenu);
-
-        brigadaMenu.setText("Brigada");
-
-        formularioBrigadaMI.setText("Formulario Brigada");
-        formularioBrigadaMI.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemListadosPorBrigada.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jMenuItemListadosPorBrigada.setText("Listados por brigada");
+        jMenuItemListadosPorBrigada.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                formularioBrigadaMIActionPerformed(evt);
+                jMenuItemListadosPorBrigadaActionPerformed(evt);
             }
         });
-        brigadaMenu.add(formularioBrigadaMI);
+        JMenuBrigada.add(jMenuItemListadosPorBrigada);
 
-        gestionBrigadaMI.setText("Gestión Brigada");
-        gestionBrigadaMI.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemBrigadasSegunSituacion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jMenuItemBrigadasSegunSituacion.setText("Brigadas según situación");
+        jMenuItemBrigadasSegunSituacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                gestionBrigadaMIActionPerformed(evt);
+                jMenuItemBrigadasSegunSituacionActionPerformed(evt);
             }
         });
-        brigadaMenu.add(gestionBrigadaMI);
+        JMenuBrigada.add(jMenuItemBrigadasSegunSituacion);
 
-        MenuBar.add(brigadaMenu);
+        JMenuBarEntidades.add(JMenuBrigada);
 
         bomberoMenu.setText("Bombero");
-
-        formularioBomberoMI.setText("Formulario Bombero");
-        formularioBomberoMI.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                formularioBomberoMIActionPerformed(evt);
-            }
-        });
-        bomberoMenu.add(formularioBomberoMI);
+        bomberoMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
         gestionBomberoMI.setText("Gestión Bombero");
         gestionBomberoMI.addActionListener(new java.awt.event.ActionListener() {
@@ -215,17 +214,10 @@ public class MainFrame extends javax.swing.JFrame {
         });
         bomberoMenu.add(gestionBomberoMI);
 
-        MenuBar.add(bomberoMenu);
+        JMenuBarEntidades.add(bomberoMenu);
 
         siniestroMenu.setText("Siniestro");
-
-        formularioSiniestroMI.setText("Formulario Siniestro");
-        formularioSiniestroMI.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                formularioSiniestroMIActionPerformed(evt);
-            }
-        });
-        siniestroMenu.add(formularioSiniestroMI);
+        siniestroMenu.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
         gestionSiniestroMI.setText("Gestión Siniestro");
         gestionSiniestroMI.addActionListener(new java.awt.event.ActionListener() {
@@ -243,9 +235,9 @@ public class MainFrame extends javax.swing.JFrame {
         });
         siniestroMenu.add(tratamientoEmergenciaMI);
 
-        MenuBar.add(siniestroMenu);
+        JMenuBarEntidades.add(siniestroMenu);
 
-        setJMenuBar(MenuBar);
+        setJMenuBar(JMenuBarEntidades);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -261,33 +253,13 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formularioCuartelMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioCuartelMIActionPerformed
-//        focusIFrame(formularioCuartel);
-    }//GEN-LAST:event_formularioCuartelMIActionPerformed
-
-    private void gestionCuartelMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionCuartelMIActionPerformed
+    private void JMenuItemGestionCuartelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMenuItemGestionCuartelesActionPerformed
         focusIFrame(gestionCuartelNV);
-    }//GEN-LAST:event_gestionCuartelMIActionPerformed
-
-    private void formularioBrigadaMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioBrigadaMIActionPerformed
-//        focusIFrame(formularioBrigada);
-    }//GEN-LAST:event_formularioBrigadaMIActionPerformed
-
-    private void gestionBrigadaMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionBrigadaMIActionPerformed
-//        focusIFrame(gestionBrigada);
-    }//GEN-LAST:event_gestionBrigadaMIActionPerformed
-
-    private void formularioBomberoMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioBomberoMIActionPerformed
-//        focusIFrame(formularioBombero);
-    }//GEN-LAST:event_formularioBomberoMIActionPerformed
+    }//GEN-LAST:event_JMenuItemGestionCuartelesActionPerformed
 
     private void gestionBomberoMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionBomberoMIActionPerformed
 //        focusIFrame(gestionBombero);
     }//GEN-LAST:event_gestionBomberoMIActionPerformed
-
-    private void formularioSiniestroMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formularioSiniestroMIActionPerformed
-//        focusIFrame(formularioSiniestro);
-    }//GEN-LAST:event_formularioSiniestroMIActionPerformed
 
     private void gestionSiniestroMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionSiniestroMIActionPerformed
 //        focusIFrame(gestionSiniestro);
@@ -297,9 +269,21 @@ public class MainFrame extends javax.swing.JFrame {
 //        focusIFrame(tratamientoEmergencia);
     }//GEN-LAST:event_tratamientoEmergenciaMIActionPerformed
 
-    private void jmiListadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiListadosActionPerformed
-        focusIFrame(listadosCuartelData);
-    }//GEN-LAST:event_jmiListadosActionPerformed
+    private void JMenuItemListadosPorCuartelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMenuItemListadosPorCuartelActionPerformed
+        focusIFrame(listadosPorCuartel);
+    }//GEN-LAST:event_JMenuItemListadosPorCuartelActionPerformed
+
+    private void JMenuItemGestionBrigadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMenuItemGestionBrigadasActionPerformed
+        focusIFrame(gestionBrigadaNV);
+    }//GEN-LAST:event_JMenuItemGestionBrigadasActionPerformed
+
+    private void jMenuItemBrigadasSegunSituacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemBrigadasSegunSituacionActionPerformed
+        focusIFrame(brigadasSegunSituacion);
+    }//GEN-LAST:event_jMenuItemBrigadasSegunSituacionActionPerformed
+
+    private void jMenuItemListadosPorBrigadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemListadosPorBrigadaActionPerformed
+        focusIFrame(listadosPorBrigada);
+    }//GEN-LAST:event_jMenuItemListadosPorBrigadaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -338,19 +322,17 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane DesktopPane;
-    private javax.swing.JMenuBar MenuBar;
+    private javax.swing.JMenuBar JMenuBarEntidades;
+    private javax.swing.JMenu JMenuBrigada;
+    private javax.swing.JMenu JMenuCuarteles;
+    private javax.swing.JMenuItem JMenuItemGestionBrigadas;
+    private javax.swing.JMenuItem JMenuItemGestionCuarteles;
+    private javax.swing.JMenuItem JMenuItemListadosPorCuartel;
     private javax.swing.JMenu bomberoMenu;
-    private javax.swing.JMenu brigadaMenu;
-    private javax.swing.JMenu cuartelMenu;
-    private javax.swing.JMenuItem formularioBomberoMI;
-    private javax.swing.JMenuItem formularioBrigadaMI;
-    private javax.swing.JMenuItem formularioCuartelMI;
-    private javax.swing.JMenuItem formularioSiniestroMI;
     private javax.swing.JMenuItem gestionBomberoMI;
-    private javax.swing.JMenuItem gestionBrigadaMI;
-    private javax.swing.JMenuItem gestionCuartelMI;
     private javax.swing.JMenuItem gestionSiniestroMI;
-    private javax.swing.JMenuItem jmiListados;
+    private javax.swing.JMenuItem jMenuItemBrigadasSegunSituacion;
+    private javax.swing.JMenuItem jMenuItemListadosPorBrigada;
     private javax.swing.JMenu siniestroMenu;
     private javax.swing.JMenuItem tratamientoEmergenciaMI;
     // End of variables declaration//GEN-END:variables

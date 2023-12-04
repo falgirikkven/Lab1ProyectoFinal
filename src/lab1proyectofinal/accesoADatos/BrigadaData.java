@@ -121,6 +121,33 @@ public class BrigadaData {
     }
 
     // revisado
+    public boolean estaNombreEntreInactivos(String nombreBrigada) {
+        boolean resultado = false;
+        try {
+            String sql = "SELECT nombreBrigada FROM brigada "
+                    + "WHERE nombreBrigada = ? "
+                    + "AND estado = false";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, nombreBrigada);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                resultado = true;
+                System.out.println("[BrigadaData.estaNombreEntreInactivos] "
+                        + "Encontrado el nombre: '" + nombreBrigada + "'");
+            } else {
+                System.out.println("[BrigadaData.estaNombreEntreInactivos] "
+                        + "No encontrado el nombre: '" + nombreBrigada + "'");
+            }
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("[BrigadaData.estaNombreEntreInactivos] "
+                    + "Error " + e.getErrorCode() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
+    // revisado
     public List<Brigada> listarBrigadas() {
         List<Brigada> brigadas = null;
         try {
@@ -276,10 +303,12 @@ public class BrigadaData {
         try {
             String sql = "SELECT * FROM bombero "
                     + "WHERE bombero.codigoBrigada = ? "
-                    + "AND bombero.estado = true"
-                    + "AND brigada.estado = true;";
+                    + "AND bombero.estado = true "
+                    + "AND (SELECT estado FROM brigada "
+                    + "WHERE codigoBrigada = ?) = true;";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, brigada.getCodigoBrigada());
+            ps.setInt(2, brigada.getCodigoBrigada());
             ResultSet rs = ps.executeQuery();
             bomberos = new ArrayList();
             while (rs.next()) {

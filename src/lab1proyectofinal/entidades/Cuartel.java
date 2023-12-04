@@ -100,7 +100,7 @@ public class Cuartel {
 
     @Override
     public String toString() {
-        return nombreCuartel + " (codigoCuartel=" + codigoCuartel + ")";
+        return nombreCuartel;
     }
 
     @Override
