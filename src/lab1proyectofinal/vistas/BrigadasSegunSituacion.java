@@ -10,7 +10,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.Utils;
-import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 
 /**
@@ -20,20 +19,20 @@ import lab1proyectofinal.entidades.Brigada;
 public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
 
     private final BrigadaData brigadaData;
-    private List<Brigada> brigadas;
-    private DefaultTableModel modeloTablaBrigadasAsignables = new DefaultTableModel() {
+    private List<Brigada> listaBrigada;
+    private DefaultTableModel modeloJTaAsignables = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int i, int i1) {
             return false;
         }
     };
-    private DefaultTableModel modeloTablaBrigadasAtendiendoEmerg = new DefaultTableModel() {
+    private DefaultTableModel modeloJTaAtendiendoEmerg = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int i, int i1) {
             return false;
         }
     };
-    private DefaultTableModel modeloTablaBrigadasIncompletas = new DefaultTableModel() {
+    private DefaultTableModel modeloJTaIncompletas = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int i, int i1) {
             return false;
@@ -43,12 +42,12 @@ public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
     public BrigadasSegunSituacion(BrigadaData brigadaData) {
         initComponents();
         this.brigadaData = brigadaData;
-        armarCabecera(jTableBrigadasAsignables, modeloTablaBrigadasAsignables);
-        armarCabecera(jTableBrigadasAtendiendoEmerg, modeloTablaBrigadasAtendiendoEmerg);
-        armarCabecera(jTableBrigadasIncompletas, modeloTablaBrigadasIncompletas);
+        configurarTablaBrigada(jTaAsignables, modeloJTaAsignables);
+        configurarTablaBrigada(jTaAtendiendoEmerg, modeloJTaAtendiendoEmerg);
+        configurarTablaBrigada(jTabIncompletas, modeloJTaIncompletas);
     }
 
-    private void armarCabecera(JTable jTable, DefaultTableModel dtm) {
+    private void configurarTablaBrigada(JTable jTable, DefaultTableModel dtm) {
         jTable.getTableHeader().setFont(Utils.fuenteNegrita);
         dtm.addColumn("Nombre");
         dtm.addColumn("Especialidad");
@@ -58,54 +57,56 @@ public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
         jTable.getColumnModel().getColumn(0).setPreferredWidth(70);
         jTable.getColumnModel().getColumn(1).setPreferredWidth(250);
         jTable.getColumnModel().getColumn(2).setPreferredWidth(5);
+
+        jTable.setRowHeight(20);
     }
 
-    private void cargarDatosTablaAsignables() {
-        brigadas = brigadaData.listarBrigadasAsignables();
-        modeloTablaBrigadasAsignables.setRowCount(0);
-        if (brigadas.isEmpty()) {
-            jLabelMensajeTablaAsignables.setForeground(Color.BLACK);
-            jLabelMensajeTablaAsignables.setText("Actualmente no hay ninguna brigada asignable.");
+    private void cargarDatosJTaAsignables() {
+        listaBrigada = brigadaData.listarBrigadasAsignables();
+        modeloJTaAsignables.setRowCount(0);
+        if (listaBrigada.isEmpty()) {
+            jLabMensajeTaAsignables.setForeground(Color.BLACK);
+            jLabMensajeTaAsignables.setText("Actualmente no hay ninguna brigada asignable.");
         } else {
-            for (Brigada bri : brigadas) {
-                modeloTablaBrigadasAsignables.addRow(new Object[]{bri.getNombreBrigada(),
+            for (Brigada bri : listaBrigada) {
+                modeloJTaAsignables.addRow(new Object[]{bri.getNombreBrigada(),
                     bri.getEspecialidad(), bri.isDisponible() ? "Si" : "No ",
                     bri.getCuartel().getNombreCuartel()});
             }
-            jLabelMensajeTablaAsignables.setText("");
+            jLabMensajeTaAsignables.setText("");
         }
     }
 
-    private void cargarDatosTablaAtendiendoEmerg() {
-        brigadas = brigadaData.listarBrigadasAtendiendoEmergencia();
-        modeloTablaBrigadasAtendiendoEmerg.setRowCount(0);
-        if (brigadas.isEmpty()) {
-            jLabelMensajeTablaAtendiendoEmerg.setForeground(Color.BLACK);
-            jLabelMensajeTablaAtendiendoEmerg.setText("Actualmente no hay ninguna brigada "
+    private void cargarDatosJTaAtendiendoEmerg() {
+        listaBrigada = brigadaData.listarBrigadasAtendiendoEmergencia();
+        modeloJTaAtendiendoEmerg.setRowCount(0);
+        if (listaBrigada.isEmpty()) {
+            jLabMensajeJTaAtendiendoEmerg.setForeground(Color.BLACK);
+            jLabMensajeJTaAtendiendoEmerg.setText("Actualmente no hay ninguna brigada "
                     + "atendiendo una emergencia.");
         } else {
-            for (Brigada bri : brigadas) {
-                modeloTablaBrigadasAtendiendoEmerg.addRow(new Object[]{bri.getNombreBrigada(),
+            for (Brigada bri : listaBrigada) {
+                modeloJTaAtendiendoEmerg.addRow(new Object[]{bri.getNombreBrigada(),
                     bri.getEspecialidad(), bri.isDisponible() ? "Si" : "No ",
                     bri.getCuartel().getNombreCuartel()});
             }
-            jLabelMensajeTablaAtendiendoEmerg.setText("");
+            jLabMensajeJTaAtendiendoEmerg.setText("");
         }
     }
 
-    private void cargarDatosTablaIncompletas() {
-        brigadas = brigadaData.listarBrigadasIncompletas();
-        modeloTablaBrigadasIncompletas.setRowCount(0);
-        if (brigadas.isEmpty()) {
-            jLabelMensajeTablaIncompletas.setForeground(Color.BLACK);
-            jLabelMensajeTablaIncompletas.setText("Actualmente no hay ninguna brigada incompleta.");
+    private void cargarDatosJTaIncompletas() {
+        listaBrigada = brigadaData.listarBrigadasIncompletas();
+        modeloJTaIncompletas.setRowCount(0);
+        if (listaBrigada.isEmpty()) {
+            jLabMensajeTaIncompletas.setForeground(Color.BLACK);
+            jLabMensajeTaIncompletas.setText("Actualmente no hay ninguna brigada incompleta.");
         } else {
-            for (Brigada bri : brigadas) {
-                modeloTablaBrigadasIncompletas.addRow(new Object[]{bri.getNombreBrigada(),
+            for (Brigada bri : listaBrigada) {
+                modeloJTaIncompletas.addRow(new Object[]{bri.getNombreBrigada(),
                     bri.getEspecialidad(), bri.isDisponible() ? "Si" : "No ",
                     bri.getCuartel().getNombreCuartel()});
             }
-            jLabelMensajeTablaIncompletas.setText("");
+            jLabMensajeTaIncompletas.setText("");
         }
     }
 
@@ -118,19 +119,19 @@ public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPaneTodosLosCuarteles = new javax.swing.JScrollPane();
-        jTableBrigadasAsignables = new javax.swing.JTable();
-        jLabelAsignables = new javax.swing.JLabel();
-        jLabelTituloPrincipal = new javax.swing.JLabel();
-        jLabelMensajeTablaAsignables = new javax.swing.JLabel();
+        jTaAsignables = new javax.swing.JTable();
+        jLabAsignables = new javax.swing.JLabel();
+        jLabBrigadasSegunSituacion = new javax.swing.JLabel();
+        jLabMensajeTaAsignables = new javax.swing.JLabel();
         jButtonSalir = new javax.swing.JButton();
         jScrollPaneTodosLosCuarteles1 = new javax.swing.JScrollPane();
-        jTableBrigadasAtendiendoEmerg = new javax.swing.JTable();
-        jLabelAtendiendoEmerg = new javax.swing.JLabel();
-        jLabelMensajeTablaAtendiendoEmerg = new javax.swing.JLabel();
+        jTaAtendiendoEmerg = new javax.swing.JTable();
+        jLabAtendiendoEmerg = new javax.swing.JLabel();
+        jLabMensajeJTaAtendiendoEmerg = new javax.swing.JLabel();
         jScrollPaneTodosLosCuarteles2 = new javax.swing.JScrollPane();
-        jTableBrigadasIncompletas = new javax.swing.JTable();
-        jLabelIncompletas = new javax.swing.JLabel();
-        jLabelMensajeTablaIncompletas = new javax.swing.JLabel();
+        jTabIncompletas = new javax.swing.JTable();
+        jLabIncompletas = new javax.swing.JLabel();
+        jLabMensajeTaIncompletas = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1140, 765));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
@@ -142,6 +143,7 @@ public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
             public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameDeactivated(evt);
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
@@ -152,27 +154,27 @@ public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTableBrigadasAsignables.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTableBrigadasAsignables.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
-        jTableBrigadasAsignables.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTableBrigadasAsignables.getTableHeader().setResizingAllowed(false);
-        jTableBrigadasAsignables.getTableHeader().setReorderingAllowed(false);
-        jScrollPaneTodosLosCuarteles.setViewportView(jTableBrigadasAsignables);
+        jTaAsignables.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTaAsignables.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        jTaAsignables.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTaAsignables.getTableHeader().setResizingAllowed(false);
+        jTaAsignables.getTableHeader().setReorderingAllowed(false);
+        jScrollPaneTodosLosCuarteles.setViewportView(jTaAsignables);
 
         getContentPane().add(jScrollPaneTodosLosCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 360, 940, 130));
 
-        jLabelAsignables.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabelAsignables.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelAsignables.setText("Asignables");
-        getContentPane().add(jLabelAsignables, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 300, 940, -1));
+        jLabAsignables.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabAsignables.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabAsignables.setText("Asignables");
+        getContentPane().add(jLabAsignables, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 300, 940, -1));
 
-        jLabelTituloPrincipal.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabelTituloPrincipal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelTituloPrincipal.setText("Brigadas según su situación");
-        getContentPane().add(jLabelTituloPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 940, -1));
+        jLabBrigadasSegunSituacion.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabBrigadasSegunSituacion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabBrigadasSegunSituacion.setText("Brigadas según su situación");
+        getContentPane().add(jLabBrigadasSegunSituacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 940, -1));
 
-        jLabelMensajeTablaAsignables.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabelMensajeTablaAsignables, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 330, 920, 20));
+        jLabMensajeTaAsignables.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        getContentPane().add(jLabMensajeTaAsignables, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 330, 920, 20));
 
         jButtonSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonSalir.setText("Salir");
@@ -183,81 +185,97 @@ public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
         });
         getContentPane().add(jButtonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 680, -1, -1));
 
-        jTableBrigadasAtendiendoEmerg.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTableBrigadasAtendiendoEmerg.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
-        jTableBrigadasAtendiendoEmerg.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTableBrigadasAtendiendoEmerg.getTableHeader().setResizingAllowed(false);
-        jTableBrigadasAtendiendoEmerg.getTableHeader().setReorderingAllowed(false);
-        jScrollPaneTodosLosCuarteles1.setViewportView(jTableBrigadasAtendiendoEmerg);
+        jTaAtendiendoEmerg.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTaAtendiendoEmerg.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        jTaAtendiendoEmerg.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTaAtendiendoEmerg.getTableHeader().setResizingAllowed(false);
+        jTaAtendiendoEmerg.getTableHeader().setReorderingAllowed(false);
+        jScrollPaneTodosLosCuarteles1.setViewportView(jTaAtendiendoEmerg);
 
         getContentPane().add(jScrollPaneTodosLosCuarteles1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 140, 940, 130));
 
-        jLabelAtendiendoEmerg.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabelAtendiendoEmerg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelAtendiendoEmerg.setText("Atendiendo una emergencia");
-        getContentPane().add(jLabelAtendiendoEmerg, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 940, -1));
+        jLabAtendiendoEmerg.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabAtendiendoEmerg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabAtendiendoEmerg.setText("Atendiendo una emergencia");
+        getContentPane().add(jLabAtendiendoEmerg, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 940, -1));
 
-        jLabelMensajeTablaAtendiendoEmerg.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabelMensajeTablaAtendiendoEmerg, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 115, 920, 20));
+        jLabMensajeJTaAtendiendoEmerg.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        getContentPane().add(jLabMensajeJTaAtendiendoEmerg, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 115, 920, 20));
 
-        jTableBrigadasIncompletas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTableBrigadasIncompletas.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
-        jTableBrigadasIncompletas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTableBrigadasIncompletas.getTableHeader().setResizingAllowed(false);
-        jTableBrigadasIncompletas.getTableHeader().setReorderingAllowed(false);
-        jScrollPaneTodosLosCuarteles2.setViewportView(jTableBrigadasIncompletas);
+        jTabIncompletas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTabIncompletas.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        jTabIncompletas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTabIncompletas.getTableHeader().setResizingAllowed(false);
+        jTabIncompletas.getTableHeader().setReorderingAllowed(false);
+        jScrollPaneTodosLosCuarteles2.setViewportView(jTabIncompletas);
 
         getContentPane().add(jScrollPaneTodosLosCuarteles2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 580, 940, 130));
 
-        jLabelIncompletas.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabelIncompletas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelIncompletas.setText("Incompletas");
-        getContentPane().add(jLabelIncompletas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 520, 940, -1));
+        jLabIncompletas.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabIncompletas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabIncompletas.setText("Incompletas");
+        getContentPane().add(jLabIncompletas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 520, 940, -1));
 
-        jLabelMensajeTablaIncompletas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabelMensajeTablaIncompletas, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 550, 920, 20));
+        jLabMensajeTaIncompletas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        getContentPane().add(jLabMensajeTaIncompletas, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 550, 920, 20));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
         this.hide();
-        if (jTableBrigadasAsignables.getRowCount() > 0) {
-            jTableBrigadasAsignables.removeRowSelectionInterval(0,
-                    jTableBrigadasAsignables.getRowCount() - 1);
+        if (jTaAsignables.getRowCount() > 0) {
+            jTaAsignables.removeRowSelectionInterval(0,
+                    jTaAsignables.getRowCount() - 1);
         }
-        if (jTableBrigadasAtendiendoEmerg.getRowCount() > 0) {
-            jTableBrigadasAtendiendoEmerg.removeRowSelectionInterval(0,
-                    jTableBrigadasAtendiendoEmerg.getRowCount() - 1);
+        if (jTaAtendiendoEmerg.getRowCount() > 0) {
+            jTaAtendiendoEmerg.removeRowSelectionInterval(0,
+                    jTaAtendiendoEmerg.getRowCount() - 1);
         }
 
-        if (jTableBrigadasIncompletas.getRowCount() > 0) {
-            jTableBrigadasIncompletas.removeRowSelectionInterval(0,
-                    jTableBrigadasIncompletas.getRowCount() - 1);
+        if (jTabIncompletas.getRowCount() > 0) {
+            jTabIncompletas.removeRowSelectionInterval(0,
+                    jTabIncompletas.getRowCount() - 1);
         }
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        cargarDatosTablaAsignables();
-        cargarDatosTablaAtendiendoEmerg();
-        cargarDatosTablaIncompletas();
+        cargarDatosJTaAsignables();
+        cargarDatosJTaAtendiendoEmerg();
+        cargarDatosJTaIncompletas();
     }//GEN-LAST:event_formInternalFrameActivated
+
+    private void formInternalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameDeactivated
+        if (jTaAsignables.getRowCount() > 0) {
+            jTaAsignables.removeRowSelectionInterval(0,
+                    jTaAsignables.getRowCount() - 1);
+        }
+        if (jTaAtendiendoEmerg.getRowCount() > 0) {
+            jTaAtendiendoEmerg.removeRowSelectionInterval(0,
+                    jTaAtendiendoEmerg.getRowCount() - 1);
+        }
+
+        if (jTabIncompletas.getRowCount() > 0) {
+            jTabIncompletas.removeRowSelectionInterval(0,
+                    jTabIncompletas.getRowCount() - 1);
+        }
+    }//GEN-LAST:event_formInternalFrameDeactivated
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonSalir;
-    private javax.swing.JLabel jLabelAsignables;
-    private javax.swing.JLabel jLabelAtendiendoEmerg;
-    private javax.swing.JLabel jLabelIncompletas;
-    private javax.swing.JLabel jLabelMensajeTablaAsignables;
-    private javax.swing.JLabel jLabelMensajeTablaAtendiendoEmerg;
-    private javax.swing.JLabel jLabelMensajeTablaIncompletas;
-    private javax.swing.JLabel jLabelTituloPrincipal;
+    private javax.swing.JLabel jLabAsignables;
+    private javax.swing.JLabel jLabAtendiendoEmerg;
+    private javax.swing.JLabel jLabBrigadasSegunSituacion;
+    private javax.swing.JLabel jLabIncompletas;
+    private javax.swing.JLabel jLabMensajeJTaAtendiendoEmerg;
+    private javax.swing.JLabel jLabMensajeTaAsignables;
+    private javax.swing.JLabel jLabMensajeTaIncompletas;
     private javax.swing.JScrollPane jScrollPaneTodosLosCuarteles;
     private javax.swing.JScrollPane jScrollPaneTodosLosCuarteles1;
     private javax.swing.JScrollPane jScrollPaneTodosLosCuarteles2;
-    private javax.swing.JTable jTableBrigadasAsignables;
-    private javax.swing.JTable jTableBrigadasAtendiendoEmerg;
-    private javax.swing.JTable jTableBrigadasIncompletas;
+    private javax.swing.JTable jTaAsignables;
+    private javax.swing.JTable jTaAtendiendoEmerg;
+    private javax.swing.JTable jTabIncompletas;
     // End of variables declaration//GEN-END:variables
 }

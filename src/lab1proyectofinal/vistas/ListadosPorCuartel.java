@@ -18,24 +18,24 @@ import lab1proyectofinal.entidades.*;
 public class ListadosPorCuartel extends javax.swing.JInternalFrame {
 
     private final CuartelData cuartelData;
-    private List<Cuartel> cuarteles;
-    private List<Brigada> brigadas;
-    private List<Bombero> bomberos;
+    private List<Cuartel> listaCuartel;
+    private List<Brigada> listaBrigada;
+    private List<Bombero> listaBombero;
     private Cuartel cuartel;
-    private int filaSeleccionada;
-    private DefaultTableModel modeloTablaCuarteles = new DefaultTableModel() {
+    private int filaSelec;
+    private DefaultTableModel modeloJTaCuarteles = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int i, int i1) {
             return false;
         }
     };
-    private DefaultTableModel modeloTablaBrigadas = new DefaultTableModel() {
+    private DefaultTableModel modeloJTaBrigadas = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int i, int i1) {
             return false;
         }
     };
-    private DefaultTableModel modeloTablaBomberos = new DefaultTableModel() {
+    private DefaultTableModel modeloJTaBomberos = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int i, int i1) {
             return false;
@@ -45,95 +45,99 @@ public class ListadosPorCuartel extends javax.swing.JInternalFrame {
     public ListadosPorCuartel(CuartelData cuartelData) {
         initComponents();
         this.cuartelData = cuartelData;
-        armarCabeceras();
+        configurarTablas();
     }
 
-    private void armarCabeceras() {
-        jTableTodosLosCuarteles.getTableHeader().setFont(Utils.fuenteNegrita);
-        jTableBrigadasDelCuartel.getTableHeader().setFont(Utils.fuenteNegrita);
-        jTableBomberosDelCuartel.getTableHeader().setFont(Utils.fuenteNegrita);
-        modeloTablaCuarteles.addColumn("Nombre");
-        modeloTablaCuarteles.addColumn("Dirección");
-        modeloTablaCuarteles.addColumn("Coordenadas");
-        modeloTablaCuarteles.addColumn("Teléfono");
-        modeloTablaCuarteles.addColumn("Correo");
-        modeloTablaBrigadas.addColumn("Nombre");
-        modeloTablaBrigadas.addColumn("Especialidad");
-        modeloTablaBrigadas.addColumn("Disponible");
-        modeloTablaBomberos.addColumn("DNI");
-        modeloTablaBomberos.addColumn("Nombre completo");
-        modeloTablaBomberos.addColumn("Grupo sanguíneo");
-        modeloTablaBomberos.addColumn("Nro de celular");
-        modeloTablaBomberos.addColumn("Brigada");
-        jTableTodosLosCuarteles.setModel(modeloTablaCuarteles);
-        // desconozco como funciona la asigmación del ancho a las columnas en su totalidad
-        jTableTodosLosCuarteles.getColumnModel().getColumn(0).setPreferredWidth(80);
-        jTableTodosLosCuarteles.getColumnModel().getColumn(1).setPreferredWidth(120);
-        jTableTodosLosCuarteles.getColumnModel().getColumn(2).setPreferredWidth(20);
-        jTableTodosLosCuarteles.getColumnModel().getColumn(3).setPreferredWidth(5);
-        jTableBrigadasDelCuartel.setModel(modeloTablaBrigadas);
-        jTableBrigadasDelCuartel.getColumnModel().getColumn(0).setPreferredWidth(120);
-        jTableBrigadasDelCuartel.getColumnModel().getColumn(1).setPreferredWidth(280);
-        jTableBomberosDelCuartel.setModel(modeloTablaBomberos);
-        jTableBomberosDelCuartel.getColumnModel().getColumn(0).setPreferredWidth(5);
-        jTableBomberosDelCuartel.getColumnModel().getColumn(1).setPreferredWidth(165);
-        jTableBomberosDelCuartel.getColumnModel().getColumn(2).setPreferredWidth(20);
-        jTableBomberosDelCuartel.getColumnModel().getColumn(3).setPreferredWidth(20);
+    private void configurarTablas() {
+        jTaTodosLosCuarteles.getTableHeader().setFont(Utils.fuenteNegrita);
+        jTaBrigadasDelCuartel.getTableHeader().setFont(Utils.fuenteNegrita);
+        jTaBomberosDelCuartel.getTableHeader().setFont(Utils.fuenteNegrita);
+        modeloJTaCuarteles.addColumn("Nombre");
+        modeloJTaCuarteles.addColumn("Dirección");
+        modeloJTaCuarteles.addColumn("Coordenadas");
+        modeloJTaCuarteles.addColumn("Teléfono");
+        modeloJTaCuarteles.addColumn("Correo");
+        modeloJTaBrigadas.addColumn("Nombre");
+        modeloJTaBrigadas.addColumn("Especialidad");
+        modeloJTaBrigadas.addColumn("Disponible");
+        modeloJTaBomberos.addColumn("DNI");
+        modeloJTaBomberos.addColumn("Nombre completo");
+        modeloJTaBomberos.addColumn("Grupo sanguíneo");
+        modeloJTaBomberos.addColumn("Nro de celular");
+        modeloJTaBomberos.addColumn("Brigada");
+        jTaTodosLosCuarteles.setModel(modeloJTaCuarteles);
+
+        // no conozco en su totalidad cómo funciona la asignación del ancho a las columnas pero el
+        // resultado es aceptable
+        jTaTodosLosCuarteles.getColumnModel().getColumn(0).setPreferredWidth(80);
+        jTaTodosLosCuarteles.getColumnModel().getColumn(1).setPreferredWidth(120);
+        jTaTodosLosCuarteles.getColumnModel().getColumn(2).setPreferredWidth(20);
+        jTaTodosLosCuarteles.getColumnModel().getColumn(3).setPreferredWidth(5);
+        jTaBrigadasDelCuartel.setModel(modeloJTaBrigadas);
+        jTaBrigadasDelCuartel.getColumnModel().getColumn(0).setPreferredWidth(120);
+        jTaBrigadasDelCuartel.getColumnModel().getColumn(1).setPreferredWidth(280);
+        jTaBomberosDelCuartel.setModel(modeloJTaBomberos);
+        jTaBomberosDelCuartel.getColumnModel().getColumn(0).setPreferredWidth(5);
+        jTaBomberosDelCuartel.getColumnModel().getColumn(1).setPreferredWidth(165);
+        jTaBomberosDelCuartel.getColumnModel().getColumn(2).setPreferredWidth(20);
+        jTaBomberosDelCuartel.getColumnModel().getColumn(3).setPreferredWidth(20);
+
+        jTaTodosLosCuarteles.setRowHeight(20);
+        jTaBrigadasDelCuartel.setRowHeight(20);
+        jTaBomberosDelCuartel.setRowHeight(20);
     }
 
-    private void cargarDatosTablaCuarteles() {
-        cuarteles = cuartelData.listarCuarteles();
-        if (cuarteles.isEmpty()) {
-            modeloTablaCuarteles.setRowCount(0);
-            jLabelMensajeTablaCuarteles.setForeground(Color.BLACK);
-            jLabelMensajeTablaCuarteles.setText("No hay cuarteles registrados.");
+    private void cargarDatosJTabCuarteles() {
+        listaCuartel = cuartelData.listarCuarteles();
+        modeloJTaCuarteles.setRowCount(0);
+        if (listaCuartel.isEmpty()) {
+            jLabMensajeTablaCuarteles.setForeground(Color.BLACK);
+            jLabMensajeTablaCuarteles.setText("No hay cuarteles registrados.");
         } else {
-            modeloTablaCuarteles.setRowCount(0);
-            for (Cuartel cuartel : cuarteles) {
-                modeloTablaCuarteles.addRow(new Object[]{cuartel.getNombreCuartel(),
+            for (Cuartel cuartel : listaCuartel) {
+                modeloJTaCuarteles.addRow(new Object[]{cuartel.getNombreCuartel(),
                     cuartel.getDireccion(), "(" + cuartel.getCoordenadaX() + " ; "
                     + cuartel.getCoordenadaY() + ")", cuartel.getTelefono(),
                     cuartel.getCorreo()});
             }
-            jLabelMensajeTablaCuarteles.setText("<html>Seleccione un cuartel de la tabla haciendo "
-                    + "click en su fila para ver las brigadas y los bomberos vinculados al mismo."
-                    + "</html>");
+            jLabMensajeTablaCuarteles.setForeground(Color.BLACK);
+            jLabMensajeTablaCuarteles.setText("<html>Seleccione un cuartel de la tabla haciendo "
+                    + "click en su fila para ver las brigadas y los bomberos vinculados al "
+                    + "mismo.</html>");
         }
     }
 
-    private void cargarDatosTablaBrigadas(Cuartel cuartel) {
-        brigadas = cuartelData.listarBrigadasDelCuartel(cuartel);
-        modeloTablaBrigadas.setRowCount(0);
-        if (brigadas.isEmpty()) {
-            jLabelMensajeTablaBrigadas.setForeground(Color.RED);
-            jLabelMensajeTablaBrigadas.setText("No hay brigadas registradas en el cuartel '"
-                    + cuartel.getNombreCuartel() + "'.");
+    private void cargarDatosJTabBrigadas(Cuartel cuartel) {
+        listaBrigada = cuartelData.listarBrigadasDelCuartel(cuartel);
+        modeloJTaBrigadas.setRowCount(0);
+        if (listaBrigada.isEmpty()) {
+            jLabMensajeTablaBrigadas.setForeground(Color.BLACK);
+            jLabMensajeTablaBrigadas.setText("No hay brigadas registradas en el cuartel \""
+                    + cuartel.getNombreCuartel() + "\".");
         } else {
-            for (Brigada brigada : brigadas) {
-                modeloTablaBrigadas.addRow(new Object[]{brigada.getNombreBrigada(),
+            for (Brigada brigada : listaBrigada) {
+                modeloJTaBrigadas.addRow(new Object[]{brigada.getNombreBrigada(),
                     brigada.getEspecialidad(), brigada.isDisponible() ? "Disponible" : "No "
                     + "disponible"});
             }
-            jLabelMensajeTablaBrigadas.setForeground(Color.BLACK);
-            jLabelMensajeTablaBrigadas.setText("");
+            jLabMensajeTablaBrigadas.setText("");
         }
     }
 
-    private void cargarDatosTablaBomberos(Cuartel cuartel) {
-        bomberos = cuartelData.listarBomberosDelCuartel(cuartel);
-        modeloTablaBomberos.setRowCount(0);
-        if (bomberos.isEmpty()) {
-            jLabelMensajeTablaBomberos.setForeground(Color.RED);
-            jLabelMensajeTablaBomberos.setText("No hay bomberos registrados en el cuartel '"
-                    + cuartel.getNombreCuartel() + "'.");
+    private void cargarDatosJTabBomberos(Cuartel cuartel) {
+        listaBombero = cuartelData.listarBomberosDelCuartel(cuartel);
+        modeloJTaBomberos.setRowCount(0);
+        if (listaBombero.isEmpty()) {
+            jLabMensajeTablaBomberos.setForeground(Color.BLACK);
+            jLabMensajeTablaBomberos.setText("No hay bomberos registrados en el cuartel \""
+                    + cuartel.getNombreCuartel() + "\".");
         } else {
-            for (Bombero bombero : bomberos) {
-                modeloTablaBomberos.addRow(new Object[]{bombero.getDni(),
+            for (Bombero bombero : listaBombero) {
+                modeloJTaBomberos.addRow(new Object[]{bombero.getDni(),
                     bombero.getNombreCompleto(), bombero.getGrupoSanguineo(), bombero.getCelular(),
                     bombero.getBrigada().getNombreBrigada()});
             }
-            jLabelMensajeTablaBomberos.setForeground(Color.BLACK);
-            jLabelMensajeTablaBomberos.setText("");
+            jLabMensajeTablaBomberos.setText("");
         }
     }
 
@@ -145,20 +149,20 @@ public class ListadosPorCuartel extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPaneTodosLosCuarteles = new javax.swing.JScrollPane();
-        jTableTodosLosCuarteles = new javax.swing.JTable();
-        jLabelTodosLosCuarteles = new javax.swing.JLabel();
-        jScrollPaneBomberosDelCuartel = new javax.swing.JScrollPane();
-        jTableBomberosDelCuartel = new javax.swing.JTable();
-        jLabelBomberosDelCuartel = new javax.swing.JLabel();
-        jScrollPaneBrigadasDelCuartel = new javax.swing.JScrollPane();
-        jTableBrigadasDelCuartel = new javax.swing.JTable();
-        jLabelBrigadasDelCuartel = new javax.swing.JLabel();
-        jLabelTituloPrincipal = new javax.swing.JLabel();
-        jLabelMensajeTablaCuarteles = new javax.swing.JLabel();
-        jLabelMensajeTablaBomberos = new javax.swing.JLabel();
-        jLabelMensajeTablaBrigadas = new javax.swing.JLabel();
-        jButtonSalir = new javax.swing.JButton();
+        jScPTodosLosCuarteles = new javax.swing.JScrollPane();
+        jTaTodosLosCuarteles = new javax.swing.JTable();
+        jLabTodosLosCuarteles = new javax.swing.JLabel();
+        jScPBomberosDelCuartel = new javax.swing.JScrollPane();
+        jTaBomberosDelCuartel = new javax.swing.JTable();
+        jLabBomberosDelCuartel = new javax.swing.JLabel();
+        jScPBrigadasDelCuartel = new javax.swing.JScrollPane();
+        jTaBrigadasDelCuartel = new javax.swing.JTable();
+        jLabBrigadasDelCuartel = new javax.swing.JLabel();
+        jLabListadosPorCuartel = new javax.swing.JLabel();
+        jLabMensajeTablaCuarteles = new javax.swing.JLabel();
+        jLabMensajeTablaBomberos = new javax.swing.JLabel();
+        jLabMensajeTablaBrigadas = new javax.swing.JLabel();
+        jBSalir = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1140, 765));
         setRequestFocusEnabled(false);
@@ -182,27 +186,27 @@ public class ListadosPorCuartel extends javax.swing.JInternalFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTableTodosLosCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTableTodosLosCuarteles.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
-        jTableTodosLosCuarteles.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTableTodosLosCuarteles.getTableHeader().setResizingAllowed(false);
-        jTableTodosLosCuarteles.getTableHeader().setReorderingAllowed(false);
-        jTableTodosLosCuarteles.addMouseListener(new java.awt.event.MouseAdapter() {
+        jTaTodosLosCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTaTodosLosCuarteles.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        jTaTodosLosCuarteles.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTaTodosLosCuarteles.getTableHeader().setResizingAllowed(false);
+        jTaTodosLosCuarteles.getTableHeader().setReorderingAllowed(false);
+        jTaTodosLosCuarteles.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                jTableTodosLosCuartelesMouseReleased(evt);
+                jTaTodosLosCuartelesMouseReleased(evt);
             }
         });
-        jScrollPaneTodosLosCuarteles.setViewportView(jTableTodosLosCuarteles);
+        jScPTodosLosCuarteles.setViewportView(jTaTodosLosCuarteles);
 
-        getContentPane().add(jScrollPaneTodosLosCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 140, 940, 130));
+        getContentPane().add(jScPTodosLosCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 140, 940, 130));
 
-        jLabelTodosLosCuarteles.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabelTodosLosCuarteles.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelTodosLosCuarteles.setText("Todos los cuarteles");
-        getContentPane().add(jLabelTodosLosCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 940, -1));
+        jLabTodosLosCuarteles.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabTodosLosCuarteles.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabTodosLosCuarteles.setText("Todos los cuarteles");
+        getContentPane().add(jLabTodosLosCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 940, -1));
 
-        jTableBomberosDelCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTableBomberosDelCuartel.setModel(new javax.swing.table.DefaultTableModel(
+        jTaBomberosDelCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTaBomberosDelCuartel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -210,21 +214,21 @@ public class ListadosPorCuartel extends javax.swing.JInternalFrame {
 
             }
         ));
-        jTableBomberosDelCuartel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
-        jTableBomberosDelCuartel.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTableBomberosDelCuartel.getTableHeader().setResizingAllowed(false);
-        jTableBomberosDelCuartel.getTableHeader().setReorderingAllowed(false);
-        jScrollPaneBomberosDelCuartel.setViewportView(jTableBomberosDelCuartel);
+        jTaBomberosDelCuartel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        jTaBomberosDelCuartel.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTaBomberosDelCuartel.getTableHeader().setResizingAllowed(false);
+        jTaBomberosDelCuartel.getTableHeader().setReorderingAllowed(false);
+        jScPBomberosDelCuartel.setViewportView(jTaBomberosDelCuartel);
 
-        getContentPane().add(jScrollPaneBomberosDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 580, 940, 130));
+        getContentPane().add(jScPBomberosDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 580, 940, 130));
 
-        jLabelBomberosDelCuartel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabelBomberosDelCuartel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelBomberosDelCuartel.setText("Bomberos del cuartel seleccionado");
-        getContentPane().add(jLabelBomberosDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 520, 940, -1));
+        jLabBomberosDelCuartel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabBomberosDelCuartel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabBomberosDelCuartel.setText("Bomberos del cuartel seleccionado");
+        getContentPane().add(jLabBomberosDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 520, 940, -1));
 
-        jTableBrigadasDelCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTableBrigadasDelCuartel.setModel(new javax.swing.table.DefaultTableModel(
+        jTaBrigadasDelCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTaBrigadasDelCuartel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -232,95 +236,93 @@ public class ListadosPorCuartel extends javax.swing.JInternalFrame {
 
             }
         ));
-        jTableBrigadasDelCuartel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
-        jTableBrigadasDelCuartel.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTableBrigadasDelCuartel.getTableHeader().setResizingAllowed(false);
-        jTableBrigadasDelCuartel.getTableHeader().setReorderingAllowed(false);
-        jScrollPaneBrigadasDelCuartel.setViewportView(jTableBrigadasDelCuartel);
+        jTaBrigadasDelCuartel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        jTaBrigadasDelCuartel.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTaBrigadasDelCuartel.getTableHeader().setResizingAllowed(false);
+        jTaBrigadasDelCuartel.getTableHeader().setReorderingAllowed(false);
+        jScPBrigadasDelCuartel.setViewportView(jTaBrigadasDelCuartel);
 
-        getContentPane().add(jScrollPaneBrigadasDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 360, 660, 130));
+        getContentPane().add(jScPBrigadasDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 360, 660, 130));
 
-        jLabelBrigadasDelCuartel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabelBrigadasDelCuartel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelBrigadasDelCuartel.setText("Brigadas del cuartel selecionado");
-        getContentPane().add(jLabelBrigadasDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 300, 660, -1));
+        jLabBrigadasDelCuartel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabBrigadasDelCuartel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabBrigadasDelCuartel.setText("Brigadas del cuartel selecionado");
+        getContentPane().add(jLabBrigadasDelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 300, 660, -1));
 
-        jLabelTituloPrincipal.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabelTituloPrincipal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelTituloPrincipal.setText("Listados por cuartel");
-        getContentPane().add(jLabelTituloPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 940, -1));
+        jLabListadosPorCuartel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabListadosPorCuartel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabListadosPorCuartel.setText("Listados por cuartel");
+        getContentPane().add(jLabListadosPorCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 940, -1));
 
-        jLabelMensajeTablaCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabelMensajeTablaCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 115, 920, 20));
+        jLabMensajeTablaCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        getContentPane().add(jLabMensajeTablaCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 115, 920, 20));
 
-        jLabelMensajeTablaBomberos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabelMensajeTablaBomberos, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 555, 920, 20));
+        jLabMensajeTablaBomberos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        getContentPane().add(jLabMensajeTablaBomberos, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 555, 920, 20));
 
-        jLabelMensajeTablaBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabelMensajeTablaBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 335, 640, 20));
+        jLabMensajeTablaBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        getContentPane().add(jLabMensajeTablaBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 335, 640, 20));
 
-        jButtonSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButtonSalir.setText("Salir");
-        jButtonSalir.addActionListener(new java.awt.event.ActionListener() {
+        jBSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBSalir.setText("Salir");
+        jBSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSalirActionPerformed(evt);
+                jBSalirActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 670, -1, -1));
+        getContentPane().add(jBSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 670, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        cargarDatosTablaCuarteles();
+        cargarDatosJTabCuarteles();
     }//GEN-LAST:event_formInternalFrameActivated
 
-    private void jTableTodosLosCuartelesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableTodosLosCuartelesMouseReleased
-        filaSeleccionada = jTableTodosLosCuarteles.getSelectedRow();
+    private void jTaTodosLosCuartelesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTaTodosLosCuartelesMouseReleased
+        filaSelec = jTaTodosLosCuarteles.getSelectedRow();
         cuartel = cuartelData.buscarCuartelPorNombre(
-                (String) jTableTodosLosCuarteles.getValueAt(filaSeleccionada, 0));
-        cargarDatosTablaBrigadas(cuartel);
-        cargarDatosTablaBomberos(cuartel);
-    }//GEN-LAST:event_jTableTodosLosCuartelesMouseReleased
+                (String) jTaTodosLosCuarteles.getValueAt(filaSelec, 0));
+        cargarDatosJTabBrigadas(cuartel);
+        cargarDatosJTabBomberos(cuartel);
+    }//GEN-LAST:event_jTaTodosLosCuartelesMouseReleased
 
-    private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
+    private void jBSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSalirActionPerformed
         this.hide();
-        jTableTodosLosCuarteles.removeRowSelectionInterval(0, jTableTodosLosCuarteles.getRowCount()
-                - 1);
-        modeloTablaBrigadas.setRowCount(0);
-        jLabelMensajeTablaBrigadas.setForeground(Color.BLACK);
-        jLabelMensajeTablaBrigadas.setText("");
-        modeloTablaBomberos.setRowCount(0);
-        jLabelMensajeTablaBomberos.setForeground(Color.BLACK);
-        jLabelMensajeTablaBomberos.setText("");
-    }//GEN-LAST:event_jButtonSalirActionPerformed
+        jTaTodosLosCuarteles.removeRowSelectionInterval(0,
+                jTaTodosLosCuarteles.getRowCount() - 1);
+        modeloJTaBrigadas.setRowCount(0);
+        jLabMensajeTablaBrigadas.setText("");
+        modeloJTaBomberos.setRowCount(0);
+        jLabMensajeTablaBomberos.setText("");
+    }//GEN-LAST:event_jBSalirActionPerformed
 
     private void formInternalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameDeactivated
-        jTableTodosLosCuarteles.removeRowSelectionInterval(0, jTableTodosLosCuarteles.getRowCount()
-                - 1);
-        modeloTablaBrigadas.setRowCount(0);
-        jLabelMensajeTablaBrigadas.setForeground(Color.BLACK);
-        jLabelMensajeTablaBrigadas.setText("");
-        modeloTablaBomberos.setRowCount(0);
-        jLabelMensajeTablaBomberos.setForeground(Color.BLACK);
-        jLabelMensajeTablaBomberos.setText("");
+        if (jTaTodosLosCuarteles.getRowCount() > 0) {
+            jTaTodosLosCuarteles.removeRowSelectionInterval(0,
+                    jTaTodosLosCuarteles.getRowCount() - 1);
+        }
+        modeloJTaBrigadas.setRowCount(0);
+        jLabMensajeTablaBrigadas.setText("");
+        modeloJTaBomberos.setRowCount(0);
+        jLabMensajeTablaBomberos.setText("");
     }//GEN-LAST:event_formInternalFrameDeactivated
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonSalir;
-    private javax.swing.JLabel jLabelBomberosDelCuartel;
-    private javax.swing.JLabel jLabelBrigadasDelCuartel;
-    private javax.swing.JLabel jLabelMensajeTablaBomberos;
-    private javax.swing.JLabel jLabelMensajeTablaBrigadas;
-    private javax.swing.JLabel jLabelMensajeTablaCuarteles;
-    private javax.swing.JLabel jLabelTituloPrincipal;
-    private javax.swing.JLabel jLabelTodosLosCuarteles;
-    private javax.swing.JScrollPane jScrollPaneBomberosDelCuartel;
-    private javax.swing.JScrollPane jScrollPaneBrigadasDelCuartel;
-    private javax.swing.JScrollPane jScrollPaneTodosLosCuarteles;
-    private javax.swing.JTable jTableBomberosDelCuartel;
-    private javax.swing.JTable jTableBrigadasDelCuartel;
-    private javax.swing.JTable jTableTodosLosCuarteles;
+    private javax.swing.JButton jBSalir;
+    private javax.swing.JLabel jLabBomberosDelCuartel;
+    private javax.swing.JLabel jLabBrigadasDelCuartel;
+    private javax.swing.JLabel jLabListadosPorCuartel;
+    private javax.swing.JLabel jLabMensajeTablaBomberos;
+    private javax.swing.JLabel jLabMensajeTablaBrigadas;
+    private javax.swing.JLabel jLabMensajeTablaCuarteles;
+    private javax.swing.JLabel jLabTodosLosCuarteles;
+    private javax.swing.JScrollPane jScPBomberosDelCuartel;
+    private javax.swing.JScrollPane jScPBrigadasDelCuartel;
+    private javax.swing.JScrollPane jScPTodosLosCuarteles;
+    private javax.swing.JTable jTaBomberosDelCuartel;
+    private javax.swing.JTable jTaBrigadasDelCuartel;
+    private javax.swing.JTable jTaTodosLosCuarteles;
     // End of variables declaration//GEN-END:variables
 }

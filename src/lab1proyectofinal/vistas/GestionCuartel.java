@@ -24,77 +24,85 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     private Cuartel cuartel;
     private List<Cuartel> listaCuartel;
     private boolean enAgregacion;
+    private boolean enModificacion;
+    private boolean programaCambiandoJCBCuarteles;
     private String nombreRegEncontrado;
-    private JLabel jLabelAux = new JLabel();
-
-    ;                     
+    private JLabel jLabAux = Utils.jLabConfigurado();
 
     public GestionCuartel(CuartelData cuartelData) {
         initComponents();
         this.cuartelData = cuartelData;
-        configurarComboBox();
-        configurarJLabel();
+        configurarJCBCuarteles();
         modoPrevioABusqueda();
     }
 
-    private void configurarJLabel() {
-        jLabelAux.setFont(new Font("Dialog", 0, 14));
-        Dimension dim = new Dimension(300, 80);
-        jLabelAux.setPreferredSize(dim);
-    }
-
-    private void configurarComboBox() {
-        jLabelMensajeCuartel.setForeground(Color.BLACK);
-        jLabelMensajeCuartel.setText("");
-        jComboBoxCuarteles.removeAllItems();
+    private void configurarJCBCuarteles() {
+        jLabMensajeCuartel.setText("");
+        programaCambiandoJCBCuarteles = true;
+        jCBCuarteles.removeAllItems();
         listaCuartel = cuartelData.listarCuarteles();
         if (listaCuartel.isEmpty()) {
-            jLabelMensajeCuartel.setForeground(Color.RED);
-            jLabelMensajeCuartel.setText(
+            jLabMensajeCuartel.setForeground(Color.BLACK);
+            jLabMensajeCuartel.setText(
                     "<html>Advertencia: no hay cuarteles cargados en el sistema.</html>");
+            programaCambiandoJCBCuarteles = false;
             return;
         }
         for (Cuartel cuar : listaCuartel) {
-            jComboBoxCuarteles.addItem(cuar);
+            jCBCuarteles.addItem(cuar);
         }
-        // limpia el contenido que queda luego de la ejecución de 
-        // 'jComboBoxCuartelesActionPerformed' al agregarle el primer item 
-        jTextFieldNombre.setText("");
+        programaCambiandoJCBCuarteles = false;
+    }
+
+    private void setEnabledDemasDatos(boolean b) {
+        jTFCoorX.setEnabled(b);
+        jTFCoorY.setEnabled(b);
+        jTFCorreoElec.setEnabled(b);
+        jTFDireccion.setEnabled(b);
+        jTFTelefono.setEnabled(b);
+    }
+
+    private void setEditableDemasDatos(boolean b) {
+        jTFCoorX.setEditable(b);
+        jTFCoorY.setEditable(b);
+        jTFCorreoElec.setEditable(b);
+        jTFDireccion.setEditable(b);
+        jTFTelefono.setEditable(b);
     }
 
     private void limpiarCamposDistintosDeNombre() {
-        jTextFieldDireccion.setText("");
-        jTextFieldTelefono.setText("");
-        jTextFieldCorreoElec.setText("");
-        jTextFieldCoorX.setText("");
-        jTextFieldCoorY.setText("");
+        jTFDireccion.setText("");
+        jTFTelefono.setText("");
+        jTFCorreoElec.setText("");
+        jTFCoorX.setText("");
+        jTFCoorY.setText("");
     }
 
-    private void borrarMensajesMenosEnCuarteles() {
-        jLabelMensajeCoorX.setText("");
-        jLabelMensajeCoorY.setText("");
-        jLabelMensajeCorreoElec.setText("");
-        jLabelMensajeDemasDatos.setText("");
-        jLabelMensajeDireccion.setText("");
-        jLabelMensajeNombre.setText("");
-        jLabelMensajeTelefono.setText("");
+    private void borrarMensajesMenosEnJCBCuarteles() {
+        jLabMensajeCoorX.setText("");
+        jLabMensajeCoorY.setText("");
+        jLabMensajeCorreoElec.setText("");
+        jLabMensajeDemasDatos.setText("");
+        jLabMensajeDireccion.setText("");
+        jLabMensajeNombre.setText("");
+        jLabMensajeTelefono.setText("");
     }
 
     private void borrarMensajesDeDatos() {
-        jLabelMensajeCoorX.setText("");
-        jLabelMensajeCoorY.setText("");
-        jLabelMensajeCorreoElec.setText("");
-        jLabelMensajeDireccion.setText("");
-        jLabelMensajeTelefono.setText("");
-        jLabelMensajeNombre.setText("");
+        jLabMensajeCoorX.setText("");
+        jLabMensajeCoorY.setText("");
+        jLabMensajeCorreoElec.setText("");
+        jLabMensajeDireccion.setText("");
+        jLabMensajeTelefono.setText("");
+        jLabMensajeNombre.setText("");
     }
 
     private void borrarMensajesDeDemasDatos() {
-        jLabelMensajeCoorX.setText("");
-        jLabelMensajeCoorY.setText("");
-        jLabelMensajeCorreoElec.setText("");
-        jLabelMensajeDireccion.setText("");
-        jLabelMensajeTelefono.setText("");
+        jLabMensajeCoorX.setText("");
+        jLabMensajeCoorY.setText("");
+        jLabMensajeCorreoElec.setText("");
+        jLabMensajeDireccion.setText("");
+        jLabMensajeTelefono.setText("");
     }
 
     private void modoPrevioABusqueda() {
@@ -102,189 +110,141 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             Modo "previo a búsqueda", se aplica cuando:
         1) La primera vez que se utiliza este JInternalFrame 
         2) Inmediatamente luego de una operación llevada a cabo exitosamente
-        3) Se cambia el contenido de 'jTextFieldNombre', sin modificar un registro.
+        3) Se cambia el contenido de "jTextFieldNombre", sin modificar un registro.
          */
 
-        // si se tiene un item seleccionado en 'jComboBoxCuarteles' al momento de cambiar el
-        // contenido de 'jTextFieldNombre' es conveniente deseleccionar el item para evitar 
-        // discrepancia entre ambos componentes 
-        if (jComboBoxCuarteles.getSelectedIndex() != -1) {
-            jComboBoxCuarteles.setSelectedIndex(-1);
+        if (jCBCuarteles.getSelectedIndex() != -1) {
+            programaCambiandoJCBCuarteles = true;
+            jCBCuarteles.setSelectedIndex(-1);
+            programaCambiandoJCBCuarteles = false;
         }
+
         limpiarCamposDistintosDeNombre();
-        borrarMensajesMenosEnCuarteles();
+        borrarMensajesMenosEnJCBCuarteles();
 
-        jTextFieldCoorX.setEnabled(false);
-        jTextFieldCoorY.setEnabled(false);
-        jTextFieldCorreoElec.setEnabled(false);
-        jTextFieldDireccion.setEnabled(false);
-        jTextFieldTelefono.setEnabled(false);
-        jButtonAgregar.setEnabled(false);
-        jButtonModificar.setEnabled(false);
-        jButtonDarDeBaja.setEnabled(false);
-        jButtonLimpiar.setEnabled(false);
-        jButtonGuardar.setEnabled(false);
-        jButtonCancelar.setEnabled(false);
+        jBAgregar.setEnabled(false);
+        jBBuscar.setEnabled(true);
+        jBCancelar.setEnabled(false);
+        jBDarDeBaja.setEnabled(false);
+        jBGuardar.setEnabled(false);
+        jBLimpiar.setEnabled(false);
+        jBModificar.setEnabled(false);
+        jCBCuarteles.setEnabled(true);
+        jTFNombre.setEnabled(true);
+        setEnabledDemasDatos(false);
 
-        jComboBoxCuarteles.setEnabled(true);
-        jButtonBuscar.setEnabled(true);
-
-        // necesario para el caso en el que se agrega un registro (operación que vuelve ineditable
-        // a 'jTextFieldNombre') y se regresa al modo "previo a búsqueda"
-        jTextFieldNombre.setEditable(true);
+        jTFNombre.setEditable(true);
     }
 
     private void modoRegistroEncontrado() {
         /* 
             Modo "registro encontrado", se aplica cuando:
-        1) Se encuentra un registro mediante 'jComboBoxCuarteles' o 'jButtonBuscar'. 
+        1) Se encuentra un registro mediante "jComboBoxCuarteles" o "jButtonBuscar". 
         2) Se cancela la modificación de un registro.
          */
 
-        if (jComboBoxCuarteles.getSelectedIndex() == -1) {
-            jComboBoxCuarteles.setSelectedItem(cuartel);
+        if (jCBCuarteles.getSelectedIndex() == -1) {
+            programaCambiandoJCBCuarteles = true;
+            jCBCuarteles.setSelectedItem(cuartel);
+            programaCambiandoJCBCuarteles = false;
         }
 
-        // necesario para el caso en el que en el modo "operación" habían mensajes y, sin que 
-        // dicho mensajes hayan desparecido, se cancela la operación y se regresa al modo 
-        // "registro encontrado"
         borrarMensajesDeDemasDatos();
 
-        // indicaciones para el usuario
-        jLabelMensajeNombre.setForeground(Color.BLACK);
-        // el html se utiliza para poder escribir más de una línea en el label    
-        jLabelMensajeNombre.setText(
-                "<html>Hay un cuartel con este nombre entre los registrados.</html>");
-        jLabelMensajeDemasDatos.setForeground(Color.BLUE);
-        jLabelMensajeDemasDatos.setText(
-                "<html>Puede modificar el cuartel encontrado haciendo click en '"
-                + jButtonModificar.getText() + "' o darle de baja haciendo click en '"
-                + jButtonDarDeBaja.getText() + "'.</html>");
+        jLabMensajeNombre.setForeground(Color.BLACK);
+        jLabMensajeNombre.setText("<html>Hay un cuartel con este nombre entre los "
+                + "registrados.</html>");
+        jLabMensajeDemasDatos.setForeground(Color.BLUE);
+        jLabMensajeDemasDatos.setText("<html>Puede modificar el cuartel encontrado haciendo "
+                + "click en \"" + jBModificar.getText() + "\" o darle de baja haciendo click "
+                + "en \"" + jBDarDeBaja.getText() + "\".</html>");
 
-        jTextFieldNombre.setText(cuartel.getNombreCuartel());
-        jTextFieldDireccion.setText(cuartel.getDireccion());
-        jTextFieldTelefono.setText(cuartel.getTelefono());
-        jTextFieldCorreoElec.setText(cuartel.getCorreo());
-        jTextFieldCoorX.setText(String.valueOf(cuartel.getCoordenadaX()));
-        jTextFieldCoorY.setText(String.valueOf(cuartel.getCoordenadaY()));
+        jBAgregar.setEnabled(false);
+        jBBuscar.setEnabled(true);
+        jBCancelar.setEnabled(false);
+        jBDarDeBaja.setEnabled(true);
+        jBGuardar.setEnabled(false);
+        jBLimpiar.setEnabled(false);
+        jBModificar.setEnabled(true);
+        jCBCuarteles.setEnabled(true);
+        jTFNombre.setEnabled(true);
+        setEnabledDemasDatos(true);
 
-        // necesario para compararlo con una hipotética modificación de nombre, en cuyo caso se 
-        // debe de asegurar que el nuevo nombre no sea uno ya reservado (y distinto del que tenía 
-        // el registro previo a la modificación)
-        nombreRegEncontrado = jTextFieldNombre.getText();
+        jTFNombre.setEditable(true);
+        setEditableDemasDatos(false);
 
-        jTextFieldCoorX.setEnabled(true);
-        jTextFieldCoorY.setEnabled(true);
-        jTextFieldCorreoElec.setEnabled(true);
-        jTextFieldDireccion.setEnabled(true);
-        jTextFieldTelefono.setEnabled(true);
+        jTFNombre.setText(cuartel.getNombreCuartel());
+        jTFDireccion.setText(cuartel.getDireccion());
+        jTFTelefono.setText(cuartel.getTelefono());
+        jTFCorreoElec.setText(cuartel.getCorreo());
+        jTFCoorX.setText(String.valueOf(cuartel.getCoordenadaX()));
+        jTFCoorY.setText(String.valueOf(cuartel.getCoordenadaY()));
 
-        jTextFieldCoorX.setEditable(false);
-        jTextFieldCoorY.setEditable(false);
-        jTextFieldCorreoElec.setEditable(false);
-        jTextFieldDireccion.setEditable(false);
-        jTextFieldTelefono.setEditable(false);
-
-        // necesario para (al menos) el caso en el que se cancela la modificación de un registro 
-        // (operación que inhabilita estos componentes) y se regresa al modo "registro encontrado"         
-        jButtonModificar.setEnabled(true);
-        jButtonDarDeBaja.setEnabled(true);
-        jButtonBuscar.setEnabled(true);
-        jComboBoxCuarteles.setEnabled(true);
-
-        jButtonAgregar.setEnabled(false);
-        // necesario para (al menos) el caso en el que se cancela la modificación de un registro 
-        // (operación que inhabilita estos componentes) y se regresa al modo "registro encontrado"
-        jButtonGuardar.setEnabled(false);
-        jButtonCancelar.setEnabled(false);
-        jButtonLimpiar.setEnabled(false);
-
+        // necesario para compararlo con una hipotética modificación del contenido de 
+        // "jTextFieldNombre", en caso de que se proceda a modificar el registro
+        nombreRegEncontrado = jTFNombre.getText();
     }
 
     private void modoRegistroNoEncontrado() {
         /* 
             Modo "registro no encontrado", se aplica cuando: 
-        1) Se ha clickeado en 'jButtonBuscar' y el nombre ingresado no se corresponde con el de 
+        1) Se ha clickeado en "jButtonBuscar" y el nombre ingresado no se corresponde con el de 
         ningún registro en la BD (ni activo ni inactivo).
         2) Se cancela la agregación de un registro.        
          */
 
         limpiarCamposDistintosDeNombre();
-        // necesario para el caso en el que en el modo "operación" habían mensajes y, sin que 
-        // dicho mensajes hayan desparecido, se cancela la operación y se regresa al modo 
-        // "registro no encontrado"
         borrarMensajesDeDemasDatos();
 
-        // indicaciones al usuario
-        jLabelMensajeNombre.setForeground(Color.BLACK);
-        jLabelMensajeNombre.setText("<html>No existe un cuartel registrado con este nombre."
-                + "</html>");
-        jLabelMensajeDemasDatos.setForeground(Color.BLUE);
-        jLabelMensajeDemasDatos.setText("<html>Puede registrar un cuartel con el nombre ingresado "
-                + "haciendo click en '" + jButtonAgregar.getText() + "' e ingresando los demás "
+        jLabMensajeNombre.setForeground(Color.BLACK);
+        jLabMensajeNombre.setText("<html>No existe un cuartel registrado con este "
+                + "nombre.</html>");
+        jLabMensajeDemasDatos.setForeground(Color.BLUE);
+        jLabMensajeDemasDatos.setText("<html>Puede registrar un cuartel con el nombre ingresado "
+                + "haciendo click en \"" + jBAgregar.getText() + "\" e ingresando los demás "
                 + "datos.</html>");
 
-        // necesario para el caso en el que se cancela la agregación de un registro (operación que 
-        // vuelve ineditable a 'jTextFieldNombre') y se regresa al modo "registro no encontrado"
-        jTextFieldNombre.setEditable(true);
+        jBAgregar.setEnabled(true);
+        jBBuscar.setEnabled(true);
+        jBCancelar.setEnabled(false);
+        jBDarDeBaja.setEnabled(false);
+        jBGuardar.setEnabled(false);
+        jBLimpiar.setEnabled(false);
+        jBModificar.setEnabled(false);
+        jCBCuarteles.setEnabled(true);
+        jTFNombre.setEnabled(true);
+        setEnabledDemasDatos(false);
 
-        jTextFieldCoorX.setEnabled(false);
-        jTextFieldCoorY.setEnabled(false);
-        jTextFieldCorreoElec.setEnabled(false);
-        jTextFieldDireccion.setEnabled(false);
-        jTextFieldTelefono.setEnabled(false);
-        jButtonModificar.setEnabled(false);
-        jButtonDarDeBaja.setEnabled(false);
-        // necesario para (al menos) el caso en el que se cancela la agregación de un registro y se        
-        // regresa al modo "registro no encontrado" 
-        jButtonGuardar.setEnabled(false);
-        jButtonCancelar.setEnabled(false);
-        jButtonLimpiar.setEnabled(false);
-
-        // necesario para (al menos) el caso en el que se cancela la agregación de un registro y se
-        // regresa al modo "registro no encontrado" 
-        jButtonAgregar.setEnabled(true);
-        jButtonBuscar.setEnabled(true);
-        jComboBoxCuarteles.setEnabled(true);
+        jTFNombre.setEditable(true);
     }
 
     private void modoOperacion() {
         /* 
             Modo "operación", se aplica cuando: 
         1) Se está agregando o modificando un registro (no aplica para la baja, dado que esta 
-        última solo requiere del click en 'jbDarDeBaja' y de la confirmación o declinación de 
+        última solo requiere del click en "jbDarDeBaja" y de la confirmación o declinación de 
         la solicitud de confirmación posterior).
          */
 
-        // habilitar campos, necesario para la agregación de un registro, pues en el modo 
-        // "registro no encontrado" estos campos estaban inhabilitados
-        jTextFieldCoorX.setEnabled(true);
-        jTextFieldCoorY.setEnabled(true);
-        jTextFieldCorreoElec.setEnabled(true);
-        jTextFieldDireccion.setEnabled(true);
-        jTextFieldTelefono.setEnabled(true);
+        borrarMensajesDeDatos();
 
-        jTextFieldCoorX.setEditable(true);
-        jTextFieldCoorY.setEditable(true);
-        jTextFieldCorreoElec.setEditable(true);
-        jTextFieldDireccion.setEditable(true);
-        jTextFieldTelefono.setEditable(true);
+        jBAgregar.setEnabled(false);
+        jBBuscar.setEnabled(false);
+        jBCancelar.setEnabled(true);
+        jBDarDeBaja.setEnabled(false);
+        jBGuardar.setEnabled(true);
+        jBLimpiar.setEnabled(true);
+        jBModificar.setEnabled(false);
+        jCBCuarteles.setEnabled(false);
+        jTFNombre.setEnabled(true);
+        setEnabledDemasDatos(true);
 
         if (enAgregacion) {
-            jTextFieldNombre.setEditable(false);
-        } else {
-            jTextFieldNombre.setEditable(true);
+            jTFNombre.setEditable(false);
+        } else if (enModificacion) {
+            jTFNombre.setEditable(true);
         }
-
-        jButtonGuardar.setEnabled(true);
-        jButtonCancelar.setEnabled(true);
-        jButtonLimpiar.setEnabled(true);
-
-        jButtonBuscar.setEnabled(false);
-        jComboBoxCuarteles.setEnabled(false);
-        jButtonAgregar.setEnabled(false);
-        jButtonModificar.setEnabled(false);
-        jButtonDarDeBaja.setEnabled(false);
+        setEditableDemasDatos(true);
     }
 
     /**
@@ -295,402 +255,407 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabelNombre = new javax.swing.JLabel();
-        jTextFieldNombre = new javax.swing.JTextField();
-        jButtonGuardar = new javax.swing.JButton();
-        jButtonSalir = new javax.swing.JButton();
-        jLabelGestionCuarteles = new javax.swing.JLabel();
-        jButtonAgregar = new javax.swing.JButton();
-        jButtonModificar = new javax.swing.JButton();
-        jButtonCancelar = new javax.swing.JButton();
-        jButtonDarDeBaja = new javax.swing.JButton();
-        jLabelMensajeNombre = new javax.swing.JLabel();
-        jLabelCuartel = new javax.swing.JLabel();
-        jComboBoxCuarteles = new javax.swing.JComboBox<>();
-        jLabelBuscarConCB = new javax.swing.JLabel();
-        jLabelBuscarConTF = new javax.swing.JLabel();
-        jLabelDemasDatos = new javax.swing.JLabel();
-        jButtonBuscar = new javax.swing.JButton();
-        jLabelMensajeDemasDatos = new javax.swing.JLabel();
-        jLabelMensajeCuartel = new javax.swing.JLabel();
-        jPanelDemasDatos = new javax.swing.JPanel();
-        jLabelMensajeCoorY = new javax.swing.JLabel();
-        jLabelCoorX = new javax.swing.JLabel();
-        jLabelDireccion = new javax.swing.JLabel();
-        jTextFieldDireccion = new javax.swing.JTextField();
-        jLabelCorreoElec = new javax.swing.JLabel();
-        jTextFieldCoorY = new javax.swing.JTextField();
-        jLabelMensajeCorreoElec = new javax.swing.JLabel();
-        jTextFieldTelefono = new javax.swing.JTextField();
-        jLabelMensajeDireccion = new javax.swing.JLabel();
-        jTextFieldCorreoElec = new javax.swing.JTextField();
-        jTextFieldCoorX = new javax.swing.JTextField();
-        jLabelCoorY = new javax.swing.JLabel();
-        jLabelMensajeTelefono = new javax.swing.JLabel();
-        jLabelMensajeCoorX = new javax.swing.JLabel();
-        jButtonLimpiar = new javax.swing.JButton();
-        jLabelTelefono = new javax.swing.JLabel();
+        jLabNombre = new javax.swing.JLabel();
+        jTFNombre = new javax.swing.JTextField();
+        jBGuardar = new javax.swing.JButton();
+        jBSalir = new javax.swing.JButton();
+        jLabGestionCuarteles = new javax.swing.JLabel();
+        jBAgregar = new javax.swing.JButton();
+        jBModificar = new javax.swing.JButton();
+        jBCancelar = new javax.swing.JButton();
+        jBDarDeBaja = new javax.swing.JButton();
+        jLabMensajeNombre = new javax.swing.JLabel();
+        jLabCuartel = new javax.swing.JLabel();
+        jCBCuarteles = new javax.swing.JComboBox<>();
+        jLabSelecCuartel = new javax.swing.JLabel();
+        jLabBuscarCuartel = new javax.swing.JLabel();
+        jLabDemasDatos = new javax.swing.JLabel();
+        jBBuscar = new javax.swing.JButton();
+        jLabMensajeDemasDatos = new javax.swing.JLabel();
+        jLabMensajeCuartel = new javax.swing.JLabel();
+        jPDemasDatos = new javax.swing.JPanel();
+        jLabMensajeCoorY = new javax.swing.JLabel();
+        jLabCoorX = new javax.swing.JLabel();
+        jLabDireccion = new javax.swing.JLabel();
+        jTFDireccion = new javax.swing.JTextField();
+        jLabCorreoElec = new javax.swing.JLabel();
+        jTFCoorY = new javax.swing.JTextField();
+        jLabMensajeCorreoElec = new javax.swing.JLabel();
+        jTFTelefono = new javax.swing.JTextField();
+        jLabMensajeDireccion = new javax.swing.JLabel();
+        jTFCorreoElec = new javax.swing.JTextField();
+        jTFCoorX = new javax.swing.JTextField();
+        jLabCoorY = new javax.swing.JLabel();
+        jLabMensajeTelefono = new javax.swing.JLabel();
+        jLabMensajeCoorX = new javax.swing.JLabel();
+        jBLimpiar = new javax.swing.JButton();
+        jLabTelefono = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1085, 560));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabelNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabelNombre.setText("Nombre:");
-        getContentPane().add(jLabelNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 274, -1, -1));
+        jLabNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabNombre.setText("Nombre:");
+        getContentPane().add(jLabNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 274, -1, -1));
 
-        jTextFieldNombre.setColumns(20);
-        jTextFieldNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTextFieldNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+        jTFNombre.setColumns(20);
+        jTFNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFNombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextFieldNombreKeyTyped(evt);
+                jTFNombreKeyTyped(evt);
             }
         });
-        getContentPane().add(jTextFieldNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 200, -1));
+        getContentPane().add(jTFNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 200, -1));
 
-        jButtonGuardar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButtonGuardar.setText("Guardar");
-        jButtonGuardar.setEnabled(false);
-        jButtonGuardar.addActionListener(new java.awt.event.ActionListener() {
+        jBGuardar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBGuardar.setText("Guardar");
+        jBGuardar.setEnabled(false);
+        jBGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonGuardarActionPerformed(evt);
+                jBGuardarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 470, -1, -1));
+        getContentPane().add(jBGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 470, -1, -1));
 
-        jButtonSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButtonSalir.setText("Salir");
-        jButtonSalir.addActionListener(new java.awt.event.ActionListener() {
+        jBSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBSalir.setText("Salir");
+        jBSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSalirActionPerformed(evt);
+                jBSalirActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 470, -1, -1));
+        getContentPane().add(jBSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 470, -1, -1));
 
-        jLabelGestionCuarteles.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabelGestionCuarteles.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelGestionCuarteles.setText("Gestión de cuarteles");
-        getContentPane().add(jLabelGestionCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 1070, -1));
+        jLabGestionCuarteles.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabGestionCuarteles.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabGestionCuarteles.setText("Gestión de cuarteles");
+        getContentPane().add(jLabGestionCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 1070, -1));
 
-        jButtonAgregar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButtonAgregar.setText("Agregar cuartel");
-        jButtonAgregar.setEnabled(false);
-        jButtonAgregar.addActionListener(new java.awt.event.ActionListener() {
+        jBAgregar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBAgregar.setText("Agregar cuartel");
+        jBAgregar.setEnabled(false);
+        jBAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAgregarActionPerformed(evt);
+                jBAgregarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, -1, -1));
+        getContentPane().add(jBAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, -1, -1));
 
-        jButtonModificar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButtonModificar.setText("Modificar cuartel");
-        jButtonModificar.setEnabled(false);
-        jButtonModificar.addActionListener(new java.awt.event.ActionListener() {
+        jBModificar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBModificar.setText("Modificar cuartel");
+        jBModificar.setEnabled(false);
+        jBModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonModificarActionPerformed(evt);
+                jBModificarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 360, -1, -1));
+        getContentPane().add(jBModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 360, -1, -1));
 
-        jButtonCancelar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButtonCancelar.setText("Cancelar");
-        jButtonCancelar.setEnabled(false);
-        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
+        jBCancelar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBCancelar.setText("Cancelar");
+        jBCancelar.setEnabled(false);
+        jBCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCancelarActionPerformed(evt);
+                jBCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 470, -1, -1));
+        getContentPane().add(jBCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 470, -1, -1));
 
-        jButtonDarDeBaja.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButtonDarDeBaja.setText("Dar de baja cuartel");
-        jButtonDarDeBaja.setEnabled(false);
-        jButtonDarDeBaja.addActionListener(new java.awt.event.ActionListener() {
+        jBDarDeBaja.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBDarDeBaja.setText("Dar de baja cuartel");
+        jBDarDeBaja.setEnabled(false);
+        jBDarDeBaja.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDarDeBajaActionPerformed(evt);
+                jBDarDeBajaActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonDarDeBaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 360, -1, -1));
+        getContentPane().add(jBDarDeBaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 360, -1, -1));
 
-        jLabelMensajeNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabelMensajeNombre.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabelMensajeNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 305, 340, 40));
+        jLabMensajeNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabMensajeNombre.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        getContentPane().add(jLabMensajeNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 305, 340, 40));
 
-        jLabelCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabelCuartel.setText("Cuartel:");
-        getContentPane().add(jLabelCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 133, -1, -1));
+        jLabCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabCuartel.setText("Cuartel:");
+        getContentPane().add(jLabCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 133, -1, -1));
 
-        jComboBoxCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jComboBoxCuarteles.setMaximumRowCount(10);
-        jComboBoxCuarteles.addActionListener(new java.awt.event.ActionListener() {
+        jCBCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jCBCuarteles.setMaximumRowCount(10);
+        jCBCuarteles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxCuartelesActionPerformed(evt);
+                jCBCuartelesActionPerformed(evt);
             }
         });
-        getContentPane().add(jComboBoxCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 200, -1));
+        getContentPane().add(jCBCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 200, -1));
 
-        jLabelBuscarConCB.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabelBuscarConCB.setText("Puede seleccionar un cuartel de entre los registrados:");
-        getContentPane().add(jLabelBuscarConCB, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
+        jLabSelecCuartel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabSelecCuartel.setText("Puede seleccionar un cuartel de entre los registrados:");
+        getContentPane().add(jLabSelecCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
 
-        jLabelBuscarConTF.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabelBuscarConTF.setText("Puede ingresar un nombre de cuartel y ver si está registrado:");
-        getContentPane().add(jLabelBuscarConTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, -1, -1));
+        jLabBuscarCuartel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabBuscarCuartel.setText("Puede ingresar un nombre y ver si está registrado como cuartel:");
+        getContentPane().add(jLabBuscarCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, -1, -1));
 
-        jLabelDemasDatos.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabelDemasDatos.setText("Demás datos del cuartel:");
-        getContentPane().add(jLabelDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, -1, -1));
+        jLabDemasDatos.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabDemasDatos.setText("Demás datos del cuartel:");
+        getContentPane().add(jLabDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, -1, -1));
 
-        jButtonBuscar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButtonBuscar.setText("Buscar");
-        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
+        jBBuscar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBBuscar.setText("Buscar");
+        jBBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBuscarActionPerformed(evt);
+                jBBuscarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 270, -1, -1));
+        getContentPane().add(jBBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 270, -1, -1));
 
-        jLabelMensajeDemasDatos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabelMensajeDemasDatos.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabelMensajeDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 410, 450, 55));
+        jLabMensajeDemasDatos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabMensajeDemasDatos.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        getContentPane().add(jLabMensajeDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 410, 450, 55));
 
-        jLabelMensajeCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabelMensajeCuartel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabelMensajeCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 165, 340, 40));
+        jLabMensajeCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabMensajeCuartel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        getContentPane().add(jLabMensajeCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 165, 340, 40));
 
-        jPanelDemasDatos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanelDemasDatos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPDemasDatos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPDemasDatos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabelMensajeCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPanelDemasDatos.add(jLabelMensajeCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 295, 250, 23));
+        jLabMensajeCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 295, 250, 23));
 
-        jLabelCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabelCoorX.setText("Coordenada X:");
-        jPanelDemasDatos.add(jLabelCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 204, -1, -1));
+        jLabCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabCoorX.setText("Coordenada X:");
+        jPDemasDatos.add(jLabCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 204, -1, -1));
 
-        jLabelDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabelDireccion.setText("Dirección:");
-        jPanelDemasDatos.add(jLabelDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 24, -1, -1));
+        jLabDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabDireccion.setText("Dirección:");
+        jPDemasDatos.add(jLabDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 24, -1, -1));
 
-        jTextFieldDireccion.setEditable(false);
-        jTextFieldDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTextFieldDireccion.setEnabled(false);
-        jPanelDemasDatos.add(jTextFieldDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 200, -1));
+        jTFDireccion.setEditable(false);
+        jTFDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFDireccion.setEnabled(false);
+        jPDemasDatos.add(jTFDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 200, -1));
 
-        jLabelCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabelCorreoElec.setText("Correo Electrónico:");
-        jPanelDemasDatos.add(jLabelCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 144, -1, -1));
+        jLabCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabCorreoElec.setText("Correo Electrónico:");
+        jPDemasDatos.add(jLabCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 144, -1, -1));
 
-        jTextFieldCoorY.setEditable(false);
-        jTextFieldCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTextFieldCoorY.setEnabled(false);
-        jPanelDemasDatos.add(jTextFieldCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, 75, -1));
+        jTFCoorY.setEditable(false);
+        jTFCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFCoorY.setEnabled(false);
+        jPDemasDatos.add(jTFCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, 75, -1));
 
-        jLabelMensajeCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPanelDemasDatos.add(jLabelMensajeCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 170, 250, 23));
+        jLabMensajeCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 170, 250, 23));
 
-        jTextFieldTelefono.setEditable(false);
-        jTextFieldTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTextFieldTelefono.setEnabled(false);
-        jPanelDemasDatos.add(jTextFieldTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 80, 200, -1));
+        jTFTelefono.setEditable(false);
+        jTFTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFTelefono.setEnabled(false);
+        jPDemasDatos.add(jTFTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 80, 200, -1));
 
-        jLabelMensajeDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPanelDemasDatos.add(jLabelMensajeDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 50, 250, 23));
+        jLabMensajeDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 50, 250, 23));
 
-        jTextFieldCorreoElec.setEditable(false);
-        jTextFieldCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTextFieldCorreoElec.setEnabled(false);
-        jPanelDemasDatos.add(jTextFieldCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, 200, -1));
+        jTFCorreoElec.setEditable(false);
+        jTFCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFCorreoElec.setEnabled(false);
+        jPDemasDatos.add(jTFCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, 200, -1));
 
-        jTextFieldCoorX.setEditable(false);
-        jTextFieldCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTextFieldCoorX.setEnabled(false);
-        jPanelDemasDatos.add(jTextFieldCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 200, 75, -1));
+        jTFCoorX.setEditable(false);
+        jTFCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFCoorX.setEnabled(false);
+        jPDemasDatos.add(jTFCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 200, 75, -1));
 
-        jLabelCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabelCoorY.setText("Coordenada Y:");
-        jPanelDemasDatos.add(jLabelCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 264, -1, -1));
+        jLabCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabCoorY.setText("Coordenada Y:");
+        jPDemasDatos.add(jLabCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 264, -1, -1));
 
-        jLabelMensajeTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPanelDemasDatos.add(jLabelMensajeTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 110, 250, 23));
+        jLabMensajeTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 110, 250, 23));
 
-        jLabelMensajeCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPanelDemasDatos.add(jLabelMensajeCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 230, 250, 23));
+        jLabMensajeCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 230, 250, 23));
 
-        jButtonLimpiar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButtonLimpiar.setText("Limpiar campos");
-        jButtonLimpiar.addActionListener(new java.awt.event.ActionListener() {
+        jBLimpiar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBLimpiar.setText("Limpiar campos");
+        jBLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonLimpiarActionPerformed(evt);
+                jBLimpiarActionPerformed(evt);
             }
         });
-        jPanelDemasDatos.add(jButtonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 260, -1, -1));
+        jPDemasDatos.add(jBLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 260, -1, -1));
 
-        jLabelTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabelTelefono.setText("Teléfono:");
-        jPanelDemasDatos.add(jLabelTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 84, -1, -1));
+        jLabTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabTelefono.setText("Teléfono:");
+        jPDemasDatos.add(jLabTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 84, -1, -1));
 
-        getContentPane().add(jPanelDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 440, 330));
+        getContentPane().add(jPDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 440, 330));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLimpiarActionPerformed
+    private void jBLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimpiarActionPerformed
         limpiarCamposDistintosDeNombre();
-    }//GEN-LAST:event_jButtonLimpiarActionPerformed
+    }//GEN-LAST:event_jBLimpiarActionPerformed
 
-    private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
-        // se limpian posibles mensajes de una operación fallida
+    private void jBGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarActionPerformed
         borrarMensajesDeDatos();
 
         boolean entradasValidas = true;
 
-        String nombre = jTextFieldNombre.getText().trim();
-        // comprobar 'jTextFieldNombre', en caso de modificación
-        if (nombre.isBlank()) {
-            entradasValidas = false;
-            jLabelMensajeNombre.setForeground(Color.RED);
-            jLabelMensajeNombre.setText("<html>El nombre no puede estar compuesto solo por "
-                    + "espacios en blanco.</html>");
-        } else if (cuartelData.estaNombreEntreInactivos(nombre)) {
-            entradasValidas = false;
-            jLabelMensajeNombre.setForeground(Color.RED);
-            jLabelMensajeNombre.setText("<html>Este nombre se encuentra ocupado por un cuartel "
-                    + "dado de baja y no puede ser utilizado por otro.</html>");
-        } else {
-            Cuartel cuartelBuscado = cuartelData.buscarCuartelPorNombre(nombre);
-            if (cuartelBuscado != null) {
-                if (cuartelBuscado.getNombreCuartel().equals(nombreRegEncontrado)) {
-                    cuartel.setNombreCuartel(nombre);
+        String nombre = jTFNombre.getText().trim();
+        if (enModificacion) {
+            if (nombre.isBlank()) {
+                entradasValidas = false;
+                jLabMensajeNombre.setForeground(Color.RED);
+                jLabMensajeNombre.setText("<html>El nombre no puede estar compuesto solo por "
+                        + "espacios en blanco.</html>");
+            } else if (cuartelData.estaNombreEntreInactivos(nombre)) {
+                entradasValidas = false;
+                jLabMensajeNombre.setForeground(Color.RED);
+                jLabMensajeNombre.setText("<html>Este nombre se encuentra ocupado por un cuartel "
+                        + "dado de baja y no puede ser utilizado por otro.</html>");
+            } else {
+                Cuartel cuartelBuscado = cuartelData.buscarCuartelPorNombre(nombre);
+                if (cuartelBuscado != null) {
+                    if (cuartelBuscado.getNombreCuartel().equals(nombreRegEncontrado)) {
+                        cuartel.setNombreCuartel(nombre);
+                    } else {
+                        entradasValidas = false;
+                        jLabMensajeNombre.setForeground(Color.RED);
+                        jLabMensajeNombre.setText("<html>Este nombre se encuentra ocupado por un "
+                                + "cuartel y no puede ser utilizado por otro.</html>");
+                    }
                 } else {
-                    entradasValidas = false;
-                    jLabelMensajeNombre.setForeground(Color.RED);
-                    jLabelMensajeNombre.setText("<html>Este nombre se encuentra ocupado por un "
-                            + "cuartel y no puede ser utilizado por otro.</html>");
+                    cuartel.setNombreCuartel(nombre);
                 }
             }
+        } else {
             cuartel.setNombreCuartel(nombre);
         }
 
-        String direccion = jTextFieldDireccion.getText();
+        String direccion = jTFDireccion.getText();
         if (direccion.isBlank()) {
             entradasValidas = false;
-            jLabelMensajeDireccion.setForeground(Color.RED);
-            jLabelMensajeDireccion.setText("Debe completar este campo.");
+            jLabMensajeDireccion.setForeground(Color.RED);
+            jLabMensajeDireccion.setText("Debe completar este campo.");
         } else {
             cuartel.setDireccion(direccion);
         }
 
-        String telefono = jTextFieldTelefono.getText();
+        String telefono = jTFTelefono.getText();
         if (telefono.isBlank()) {
             entradasValidas = false;
-            jLabelMensajeTelefono.setForeground(Color.RED);
-            jLabelMensajeTelefono.setText("Debe completar este campo.");
+            jLabMensajeTelefono.setForeground(Color.RED);
+            jLabMensajeTelefono.setText("Debe completar este campo.");
         } else if (!Utils.esTelefonoValido(telefono)) {
             entradasValidas = false;
-            jLabelMensajeTelefono.setForeground(Color.RED);
-            jLabelMensajeTelefono.setText("Debe ingresar un número de teléfono válido.");
+            jLabMensajeTelefono.setForeground(Color.RED);
+            jLabMensajeTelefono.setText("Debe ingresar un número de teléfono válido.");
         } else {
             cuartel.setTelefono(telefono);
         }
 
-        String correoElec = jTextFieldCorreoElec.getText();
+        String correoElec = jTFCorreoElec.getText();
         if (correoElec.isBlank()) {
             entradasValidas = false;
-            jLabelMensajeCorreoElec.setForeground(Color.RED);
-            jLabelMensajeCorreoElec.setText("Debe completar este campo.");
+            jLabMensajeCorreoElec.setForeground(Color.RED);
+            jLabMensajeCorreoElec.setText("Debe completar este campo.");
         } else {
             cuartel.setCorreo(correoElec);
         }
 
         try {
-            int coorX = Integer.parseInt(jTextFieldCoorX.getText());
+            int coorX = Integer.parseInt(jTFCoorX.getText());
             cuartel.setCoordenadaX(coorX);
         } catch (NumberFormatException e) {
-            jLabelMensajeCoorX.setForeground(Color.RED);
-            jLabelMensajeCoorX.setText("Debe ingresar un número entero.");
+            jLabMensajeCoorX.setForeground(Color.RED);
+            jLabMensajeCoorX.setText("Debe ingresar un número entero.");
             entradasValidas = false;
         }
 
         try {
-            int coorY = Integer.parseInt(jTextFieldCoorY.getText());
+            int coorY = Integer.parseInt(jTFCoorY.getText());
             cuartel.setCoordenadaY(coorY);
         } catch (NumberFormatException e) {
-            jLabelMensajeCoorY.setForeground(Color.RED);
-            jLabelMensajeCoorY.setText("Debe ingresar un número entero.");
+            jLabMensajeCoorY.setForeground(Color.RED);
+            jLabMensajeCoorY.setText("Debe ingresar un número entero.");
             entradasValidas = false;
         }
 
         if (entradasValidas && enAgregacion) {
-
             if (cuartelData.guardarCuartel(cuartel)) {
-                jLabelAux.setText("<html>Se registró el cuartel " + "\"" + cuartel.getNombreCuartel()
-                        + "\".</html>");
-                JOptionPane.showMessageDialog(this, jLabelAux, "Información",
+                jLabAux.setText("<html>Se registró el cuartel \""
+                        + cuartel.getNombreCuartel() + "\".</html>");
+                JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
-                configurarComboBox();
+                configurarJCBCuarteles();
                 modoPrevioABusqueda();
+                jTFNombre.setText("");
+                enAgregacion = false;
             } else {
-                jLabelAux.setText("<html>No se pudo registrar el cuartel \"" + cuartel.getNombreCuartel()
-                        + "\".</html>");
-                JOptionPane.showMessageDialog(this, jLabelAux, "Error", JOptionPane.ERROR_MESSAGE);
+                jLabAux.setText("<html>No se pudo registrar el cuartel \""
+                        + cuartel.getNombreCuartel() + "\".</html>");
+                JOptionPane.showMessageDialog(this, jLabAux, "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } // si las entradas son válidas y se está modificando un cuartel 
-        else if (entradasValidas && !enAgregacion) {
+        } else if (entradasValidas && enModificacion) {
             if (cuartelData.modificarCuartel(cuartel)) {
-                jLabelAux.setText("<html>Se modificó el cuartel \"" + cuartel.getNombreCuartel()
+                jLabAux.setText("<html>Se modificó el cuartel \"" + cuartel.getNombreCuartel()
                         + "\".</html>");
-                JOptionPane.showMessageDialog(this, jLabelAux, "Información",
+                JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
-                configurarComboBox();
+                configurarJCBCuarteles();
                 modoPrevioABusqueda();
+                jTFNombre.setText("");
+                enModificacion = false;
             } else {
-                jLabelAux.setText("<html>No se pudo modificar el cuartel \"" + cuartel.getNombreCuartel()
-                        + "\".</html>");
-                JOptionPane.showMessageDialog(this, jLabelAux, "Error", JOptionPane.ERROR_MESSAGE);
+                jLabAux.setText("<html>No se pudo modificar el cuartel \""
+                        + cuartel.getNombreCuartel() + "\".</html>");
+                JOptionPane.showMessageDialog(this, jLabAux, "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }//GEN-LAST:event_jButtonGuardarActionPerformed
+    }//GEN-LAST:event_jBGuardarActionPerformed
 
-    private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
+    private void jBSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSalirActionPerformed
         this.hide();
-    }//GEN-LAST:event_jButtonSalirActionPerformed
+    }//GEN-LAST:event_jBSalirActionPerformed
 
-    private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
-        enAgregacion = false;
+    private void jBModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBModificarActionPerformed
+        enModificacion = true;
         modoOperacion();
 
-        jLabelMensajeNombre.setText("");
-        jLabelMensajeDemasDatos.setForeground(Color.BLUE);
-        jLabelMensajeDemasDatos.setText("<html>Modifique los datos que desee. También puede "
+        jLabMensajeNombre.setText("");
+        jLabMensajeDemasDatos.setForeground(Color.BLUE);
+        jLabMensajeDemasDatos.setText("<html>Modifique los datos que desee. También puede "
                 + "modificar el nombre.</html>");
-    }//GEN-LAST:event_jButtonModificarActionPerformed
+    }//GEN-LAST:event_jBModificarActionPerformed
 
-    private void jComboBoxCuartelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCuartelesActionPerformed
-        cuartel = (Cuartel) jComboBoxCuarteles.getSelectedItem();
-        // por si se generó un actionEvent a causa de un 'jComboBoxCuarteles' actualizado (lo cual 
-        // deja un índice seleccionado = -1 y, por tanto, un elemento null)
-        if (cuartel != null) {
+    private void jCBCuartelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBCuartelesActionPerformed
+        cuartel = (Cuartel) jCBCuarteles.getSelectedItem();
+
+        // evita que el programa entre en modo "registro encontrado" cada vez que se genera un 
+        // actionEvent en "jCBCuarteles" sin la intervención del usuario y, además, el índice 
+        // seleccionado en dicho componente es distinto de -1 (situación que ocurre al agregar el 
+        // primer item a "jCBCuarteles" en "configurarJCBCuarteles")
+        if (cuartel != null && programaCambiandoJCBCuarteles == false) {
             modoRegistroEncontrado();
         }
-    }//GEN-LAST:event_jComboBoxCuartelesActionPerformed
+    }//GEN-LAST:event_jCBCuartelesActionPerformed
 
-    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
-        String nombreCuartel = jTextFieldNombre.getText().trim();
+    private void jBBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBuscarActionPerformed
+        String nombreCuartel = jTFNombre.getText().trim();
 
         if (nombreCuartel.isBlank()) {
-            // necesario para evitar que quede un mensaje ahí en el caso en que se busca un 
-            // nombre, se encuentra algo e inmediatamente se vuelve a buscar otro nombre
-            jLabelMensajeDemasDatos.setText("");
-            jLabelMensajeNombre.setForeground(Color.RED);
-            jLabelMensajeNombre.setText("<html>El nombre no puede estar compuesto solo por "
+            jLabMensajeDemasDatos.setText("");
+            jLabMensajeNombre.setForeground(Color.RED);
+            jLabMensajeNombre.setText("<html>El nombre no puede estar compuesto solo por "
                     + "espacios en blanco.</html>");
             return;
         }
-
         if (cuartelData.estaNombreEntreInactivos(nombreCuartel)) {
-            jLabelMensajeDemasDatos.setText("");
-            jLabelMensajeNombre.setForeground(Color.RED);
-            jLabelMensajeNombre.setText("<html>Este nombre ya se encuentra ocupado por un "
+            jLabMensajeDemasDatos.setText("");
+            jLabMensajeNombre.setForeground(Color.RED);
+            jLabMensajeNombre.setText("<html>Este nombre ya se encuentra ocupado por un "
                     + "cuartel dado de baja. Por favor, ingrese otro.</html>");
             return;
         }
@@ -702,91 +667,91 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             cuartel = new Cuartel();
             modoRegistroNoEncontrado();
         }
-    }//GEN-LAST:event_jButtonBuscarActionPerformed
+    }//GEN-LAST:event_jBBuscarActionPerformed
 
-    private void jButtonAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarActionPerformed
+    private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
         enAgregacion = true;
         modoOperacion();
 
-        jLabelMensajeNombre.setText("");
-        jLabelMensajeDemasDatos.setForeground(Color.BLUE);
-        jLabelMensajeDemasDatos.setText("<html>Complete los campos de los demás datos del cuartel."
-                + "</html>");
-    }//GEN-LAST:event_jButtonAgregarActionPerformed
+        jLabMensajeNombre.setText("");
+        jLabMensajeDemasDatos.setForeground(Color.BLUE);
+        jLabMensajeDemasDatos.setText("<html>Complete los campos de los demás datos del "
+                + "cuartel.</html>");
+    }//GEN-LAST:event_jBAgregarActionPerformed
 
-    private void jButtonDarDeBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDarDeBajaActionPerformed
+    private void jBDarDeBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBDarDeBajaActionPerformed
         String nombreCuartel = cuartel.getNombreCuartel();
 
-        jLabelAux.setText("<html>¿Está seguro de querer dar de baja al cuartel '" + nombreCuartel
-                + "'?</html>");
-        if (JOptionPane.showConfirmDialog(this, jLabelAux, "Advertencia", JOptionPane.YES_NO_OPTION)
+        jLabAux.setText("<html>¿Está seguro de querer dar de baja al cuartel \"" + nombreCuartel
+                + "\"?</html>");
+        if (JOptionPane.showConfirmDialog(this, jLabAux, "Advertencia", JOptionPane.YES_NO_OPTION)
                 == JOptionPane.YES_OPTION) {
-            jLabelAux.setText("Se dió de baja al cuartel \"" + nombreCuartel + "\".");
+            jLabAux.setText("Se dió de baja al cuartel \"" + nombreCuartel + "\".");
             if (cuartelData.eliminarCuartelPorNombre(nombreCuartel)) {
-                JOptionPane.showMessageDialog(this, jLabelAux, "Información",
+                JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
-                configurarComboBox();
+                configurarJCBCuarteles();
+                jTFNombre.setText("");
                 modoPrevioABusqueda();
             } else {
-                jLabelAux.setText("<html>No se pudo dar de baja al cuartel \"" + nombreCuartel + "\". "
-                        + "Asegurese de que no hay brigadas activas en este cuartel antes de "
+                jLabAux.setText("<html>No se pudo dar de baja al cuartel \"" + nombreCuartel
+                        + "\". Asegurese de que no hay brigadas activas en este cuartel antes de "
                         + "intentar darle de baja.</html>");
-                JOptionPane.showMessageDialog(this, jLabelAux, "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, jLabAux, "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }//GEN-LAST:event_jButtonDarDeBajaActionPerformed
+    }//GEN-LAST:event_jBDarDeBajaActionPerformed
 
-    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
+    private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
         if (enAgregacion) {
             modoRegistroNoEncontrado();
-        } else {
+        } else if (enModificacion) {
             modoRegistroEncontrado();
         }
-    }//GEN-LAST:event_jButtonCancelarActionPerformed
+    }//GEN-LAST:event_jBCancelarActionPerformed
 
-    private void jTextFieldNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNombreKeyTyped
-        // si no se está modificando un cuartel, volver al modo "previo a búsqueda"
-        if (!jButtonGuardar.isEnabled()) {
+    private void jTFNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFNombreKeyTyped
+        if (!enModificacion) {
             modoPrevioABusqueda();
         }
-    }//GEN-LAST:event_jTextFieldNombreKeyTyped
+    }//GEN-LAST:event_jTFNombreKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAgregar;
-    private javax.swing.JButton jButtonBuscar;
-    private javax.swing.JButton jButtonCancelar;
-    private javax.swing.JButton jButtonDarDeBaja;
-    private javax.swing.JButton jButtonGuardar;
-    private javax.swing.JButton jButtonLimpiar;
-    private javax.swing.JButton jButtonModificar;
-    private javax.swing.JButton jButtonSalir;
-    private javax.swing.JComboBox<Cuartel> jComboBoxCuarteles;
-    private javax.swing.JLabel jLabelBuscarConCB;
-    private javax.swing.JLabel jLabelBuscarConTF;
-    private javax.swing.JLabel jLabelCoorX;
-    private javax.swing.JLabel jLabelCoorY;
-    private javax.swing.JLabel jLabelCorreoElec;
-    private javax.swing.JLabel jLabelCuartel;
-    private javax.swing.JLabel jLabelDemasDatos;
-    private javax.swing.JLabel jLabelDireccion;
-    private javax.swing.JLabel jLabelGestionCuarteles;
-    private javax.swing.JLabel jLabelMensajeCoorX;
-    private javax.swing.JLabel jLabelMensajeCoorY;
-    private javax.swing.JLabel jLabelMensajeCorreoElec;
-    private javax.swing.JLabel jLabelMensajeCuartel;
-    private javax.swing.JLabel jLabelMensajeDemasDatos;
-    private javax.swing.JLabel jLabelMensajeDireccion;
-    private javax.swing.JLabel jLabelMensajeNombre;
-    private javax.swing.JLabel jLabelMensajeTelefono;
-    private javax.swing.JLabel jLabelNombre;
-    private javax.swing.JLabel jLabelTelefono;
-    private javax.swing.JPanel jPanelDemasDatos;
-    private javax.swing.JTextField jTextFieldCoorX;
-    private javax.swing.JTextField jTextFieldCoorY;
-    private javax.swing.JTextField jTextFieldCorreoElec;
-    private javax.swing.JTextField jTextFieldDireccion;
-    private javax.swing.JTextField jTextFieldNombre;
-    private javax.swing.JTextField jTextFieldTelefono;
+    private javax.swing.JButton jBAgregar;
+    private javax.swing.JButton jBBuscar;
+    private javax.swing.JButton jBCancelar;
+    private javax.swing.JButton jBDarDeBaja;
+    private javax.swing.JButton jBGuardar;
+    private javax.swing.JButton jBLimpiar;
+    private javax.swing.JButton jBModificar;
+    private javax.swing.JButton jBSalir;
+    private javax.swing.JComboBox<Cuartel> jCBCuarteles;
+    private javax.swing.JLabel jLabBuscarCuartel;
+    private javax.swing.JLabel jLabCoorX;
+    private javax.swing.JLabel jLabCoorY;
+    private javax.swing.JLabel jLabCorreoElec;
+    private javax.swing.JLabel jLabCuartel;
+    private javax.swing.JLabel jLabDemasDatos;
+    private javax.swing.JLabel jLabDireccion;
+    private javax.swing.JLabel jLabGestionCuarteles;
+    private javax.swing.JLabel jLabMensajeCoorX;
+    private javax.swing.JLabel jLabMensajeCoorY;
+    private javax.swing.JLabel jLabMensajeCorreoElec;
+    private javax.swing.JLabel jLabMensajeCuartel;
+    private javax.swing.JLabel jLabMensajeDemasDatos;
+    private javax.swing.JLabel jLabMensajeDireccion;
+    private javax.swing.JLabel jLabMensajeNombre;
+    private javax.swing.JLabel jLabMensajeTelefono;
+    private javax.swing.JLabel jLabNombre;
+    private javax.swing.JLabel jLabSelecCuartel;
+    private javax.swing.JLabel jLabTelefono;
+    private javax.swing.JPanel jPDemasDatos;
+    private javax.swing.JTextField jTFCoorX;
+    private javax.swing.JTextField jTFCoorY;
+    private javax.swing.JTextField jTFCorreoElec;
+    private javax.swing.JTextField jTFDireccion;
+    private javax.swing.JTextField jTFNombre;
+    private javax.swing.JTextField jTFTelefono;
     // End of variables declaration//GEN-END:variables
 }

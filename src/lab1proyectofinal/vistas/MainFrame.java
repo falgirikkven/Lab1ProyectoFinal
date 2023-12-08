@@ -11,6 +11,7 @@ import lab1proyectofinal.accesoADatos.BomberoData;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.CuartelData;
 import lab1proyectofinal.accesoADatos.SiniestroData;
+import lab1proyectofinal.accesoADatos.Utils;
 
 /**
  *
@@ -19,11 +20,14 @@ import lab1proyectofinal.accesoADatos.SiniestroData;
 public class MainFrame extends javax.swing.JFrame {
 
     private JInternalFrame focusedFrame = null;
-    private final GestionCuartel gestionCuartelNV;
+    private final GestionCuartel gestionCuartel;
     private final ListadosPorCuartel listadosPorCuartel;
-    private final GestionBrigada gestionBrigadaNV;
+    private final GestionBrigada gestionBrigada;
     private final ListadosPorBrigada listadosPorBrigada;
     private final BrigadasSegunSituacion brigadasSegunSituacion;
+    private final GestionBombero gestionBombero;
+    private final ListadoDeBomberos listadoDeBomberos;
+    private JLabel jLabAux = Utils.jLabConfigurado();
 
     private final BomberoData bomberoData;
     private final BrigadaData brigadaData;
@@ -41,17 +45,17 @@ public class MainFrame extends javax.swing.JFrame {
         this.cuartelData = new CuartelData();
         this.siniestroData = new SiniestroData();
 
-        // Gestion Cuartel NV
-        this.gestionCuartelNV = new GestionCuartel(cuartelData);
-        DesktopPane.add(this.gestionCuartelNV);
+        // Gestion Cuartel 
+        this.gestionCuartel = new GestionCuartel(cuartelData);
+        DesktopPane.add(this.gestionCuartel);
 
         // Listados por cuartel
         this.listadosPorCuartel = new ListadosPorCuartel(cuartelData);
         DesktopPane.add(this.listadosPorCuartel);
 
-        // Gestión Brigada NV
-        this.gestionBrigadaNV = new GestionBrigada(cuartelData, brigadaData);
-        DesktopPane.add(this.gestionBrigadaNV);
+        // Gestión Brigada 
+        this.gestionBrigada = new GestionBrigada(cuartelData, brigadaData);
+        DesktopPane.add(this.gestionBrigada);
 
         // Listados por brigada
         this.listadosPorBrigada = new ListadosPorBrigada(brigadaData);
@@ -60,28 +64,32 @@ public class MainFrame extends javax.swing.JFrame {
         // Brigadas según situación
         this.brigadasSegunSituacion = new BrigadasSegunSituacion(brigadaData);
         DesktopPane.add(this.brigadasSegunSituacion);
+
+        // Gestión Bomberos
+        this.gestionBombero = new GestionBombero(cuartelData, brigadaData, bomberoData);
+        DesktopPane.add(this.gestionBombero);
+        
+        // Listado de bomberos
+        this.listadoDeBomberos = new ListadoDeBomberos(bomberoData);
+        DesktopPane.add(this.listadoDeBomberos);
     }
 
     private void focusIFrame(JInternalFrame iFrame) {
 
         // la primera vez que se ejecute este método focusedFrame será igual a null
         if (focusedFrame != null) {
-            // si se está llevando a cabo alguna operación en 'focusedFrame' y se quiere pasar a un
-            // JInternalFrame distinto sin antes haber terminado la operación
-            JLabel jl = new JLabel(
-                    """
-                    <html>Si elige salir de 'Gestión de brigadas' con una 
-                    operación en curso la operación se cancelará: 
-                    ¿desea salir de 'Gestión de brigadas'?</hmtl>""");
-            jl.setFont(new Font("Dialog", 0, 14));
-            Dimension dim = new Dimension(300, 60);
-            jl.setPreferredSize(dim);
 
+            // si se está llevando a cabo alguna operación en 'focusedFrame' y se quiere pasar a un
+            // JInternalFrame distinto sin antes haber terminado la operación 
             if (focusedFrame instanceof GestionBrigada
                     && !(iFrame instanceof GestionBrigada)
                     && ((GestionBrigada) focusedFrame).isEnOperacion()) {
+                jLabAux.setText("""
+                    <html>Si elige salir de 'Gestión de brigadas' con una 
+                    operación en curso la operación se cancelará: 
+                    ¿desea salir de 'Gestión de brigadas'?</hmtl>""");
                 if (JOptionPane.showInternalConfirmDialog(focusedFrame,
-                        jl,
+                        jLabAux,
                         "Advertencias",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
@@ -91,6 +99,24 @@ public class MainFrame extends javax.swing.JFrame {
                     // programado en 'jButtonCancelar'                    
                     focusedFrame.hide();
                     ((GestionBrigada) focusedFrame).cancelarOperacion();
+                }
+            }
+            if (focusedFrame instanceof GestionBombero
+                    && !(iFrame instanceof GestionBombero)
+                    && ((GestionBombero) focusedFrame).isEnOperacion()) {
+                jLabAux.setText("""
+                    <html>Si elige salir de 'Gestión de bomberos' con una 
+                    operación en curso la operación se cancelará: 
+                    ¿desea salir de 'Gestión de bomberos'?</hmtl>""");
+                if (JOptionPane.showInternalConfirmDialog(focusedFrame,
+                        jLabAux,
+                        "Advertencias",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
+                    return;
+                } else {
+                    focusedFrame.hide();
+                    ((GestionBombero) focusedFrame).cancelarOperacion();
                 }
             }
             focusedFrame.hide();
@@ -127,6 +153,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuItemBrigadasSegunSituacion = new javax.swing.JMenuItem();
         bomberoMenu = new javax.swing.JMenu();
         gestionBomberoMI = new javax.swing.JMenuItem();
+        jMIListadoDeBomberos = new javax.swing.JMenuItem();
         siniestroMenu = new javax.swing.JMenu();
         gestionSiniestroMI = new javax.swing.JMenuItem();
         tratamientoEmergenciaMI = new javax.swing.JMenuItem();
@@ -214,6 +241,14 @@ public class MainFrame extends javax.swing.JFrame {
         });
         bomberoMenu.add(gestionBomberoMI);
 
+        jMIListadoDeBomberos.setText("Listado de bomberos");
+        jMIListadoDeBomberos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIListadoDeBomberosActionPerformed(evt);
+            }
+        });
+        bomberoMenu.add(jMIListadoDeBomberos);
+
         JMenuBarEntidades.add(bomberoMenu);
 
         siniestroMenu.setText("Siniestro");
@@ -254,11 +289,11 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void JMenuItemGestionCuartelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMenuItemGestionCuartelesActionPerformed
-        focusIFrame(gestionCuartelNV);
+        focusIFrame(gestionCuartel);
     }//GEN-LAST:event_JMenuItemGestionCuartelesActionPerformed
 
     private void gestionBomberoMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionBomberoMIActionPerformed
-//        focusIFrame(gestionBombero);
+        focusIFrame(gestionBombero);
     }//GEN-LAST:event_gestionBomberoMIActionPerformed
 
     private void gestionSiniestroMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionSiniestroMIActionPerformed
@@ -274,7 +309,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_JMenuItemListadosPorCuartelActionPerformed
 
     private void JMenuItemGestionBrigadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMenuItemGestionBrigadasActionPerformed
-        focusIFrame(gestionBrigadaNV);
+        focusIFrame(gestionBrigada);
     }//GEN-LAST:event_JMenuItemGestionBrigadasActionPerformed
 
     private void jMenuItemBrigadasSegunSituacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemBrigadasSegunSituacionActionPerformed
@@ -284,6 +319,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void jMenuItemListadosPorBrigadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemListadosPorBrigadaActionPerformed
         focusIFrame(listadosPorBrigada);
     }//GEN-LAST:event_jMenuItemListadosPorBrigadaActionPerformed
+
+    private void jMIListadoDeBomberosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIListadoDeBomberosActionPerformed
+        focusIFrame(listadoDeBomberos);
+    }//GEN-LAST:event_jMIListadoDeBomberosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -331,6 +370,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu bomberoMenu;
     private javax.swing.JMenuItem gestionBomberoMI;
     private javax.swing.JMenuItem gestionSiniestroMI;
+    private javax.swing.JMenuItem jMIListadoDeBomberos;
     private javax.swing.JMenuItem jMenuItemBrigadasSegunSituacion;
     private javax.swing.JMenuItem jMenuItemListadosPorBrigada;
     private javax.swing.JMenu siniestroMenu;

@@ -101,7 +101,7 @@ public class Bombero {
 
     @Override
     public String toString() {
-        return nombreCompleto + " (dni=" + dni + ", codigoBrigada=" + brigada.getCodigoBrigada() + ", codigoCuartel=" + brigada.getCuartel().getCodigoCuartel() + ")";
+        return dni + ", " + nombreCompleto;
     }
 
     @Override

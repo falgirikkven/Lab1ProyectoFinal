@@ -114,7 +114,7 @@ public class BomberoData {
     }
 
     // revisado
-    public Bombero buscarBomberoPorDni(int dni) {
+    public Bombero buscarBomberoPorDNI(int dni) {
         Bombero bombero = null;
         try {
 //            String sql = "SELECT * FROM bombero "
@@ -146,6 +146,32 @@ public class BomberoData {
             e.printStackTrace();
         }
         return bombero;
+    }
+
+    public boolean estaDNIentreInactivos(int dni) {
+        boolean resultado = false;
+        try {
+            String sql = "SELECT estado FROM bombero "
+                    + "WHERE dni = ? "
+                    + "AND estado = false";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, dni);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                resultado = true;
+                System.out.println("[BomberoData.estaDNIentreInactivos] "
+                        + "Encontrado el DNI: " + dni);
+            } else {
+                System.out.println("[BomberoData.estaDNIentreInactivos] "
+                        + "No encontrado el DNI: " + dni);
+            }
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("[BomberoData.estaDNIentreInactivos] "
+                    + "Error " + e.getErrorCode() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return resultado;
     }
 
     // revisado
@@ -257,7 +283,7 @@ public class BomberoData {
                     + "WHERE puntuacion = -1);";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, idBombero);
-            if (ps.executeUpdate() > 0) {                
+            if (ps.executeUpdate() > 0) {
                 resultado = true;
                 System.out.println("[BomberoData.eliminarBombero] "
                         + "Eliminado: idBombero=" + idBombero);
@@ -275,7 +301,7 @@ public class BomberoData {
     }
 
     // revisado, potencialmente innecesario
-    public boolean eliminarBomberoPorDni(int dni) {
+    public boolean eliminarBomberoPorDNI(int dni) {
         boolean resultado = false;
         try {
             String sql = "UPDATE bombero SET estado = false "

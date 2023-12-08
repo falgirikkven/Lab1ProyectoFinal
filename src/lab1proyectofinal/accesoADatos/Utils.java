@@ -1,5 +1,6 @@
 package lab1proyectofinal.accesoADatos;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +10,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import javax.swing.JLabel;
 import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.entidades.Cuartel;
@@ -21,9 +23,17 @@ import lab1proyectofinal.entidades.Siniestro;
 public class Utils {
 
     public static final int NIL = -1;
-    
+
     public static final Font fuentePlana = new Font("Dialog", 0, 14);
     public static final Font fuenteNegrita = new Font("Dialog", 1, 14);
+
+    public static JLabel jLabConfigurado() {
+        JLabel jLab = new JLabel();
+        jLab.setFont(fuentePlana);
+        Dimension dim = new Dimension(300, 80);
+        jLab.setPreferredSize(dim);
+        return jLab;
+    }
 
     public static String[] obtenerEspecialidades() {
         String[] s = new String[]{
