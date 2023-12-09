@@ -70,7 +70,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         jTFTelefono.setEditable(b);
     }
 
-    private void limpiarCamposDistintosDeNombre() {
+    private void limpiarEntradasDeJPDemasDatos() {
         jTFDireccion.setText("");
         jTFTelefono.setText("");
         jTFCorreoElec.setText("");
@@ -119,7 +119,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             programaCambiandoJCBCuarteles = false;
         }
 
-        limpiarCamposDistintosDeNombre();
+        limpiarEntradasDeJPDemasDatos();
         borrarMensajesMenosEnJCBCuarteles();
 
         jBAgregar.setEnabled(false);
@@ -193,7 +193,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         2) Se cancela la agregación de un registro.        
          */
 
-        limpiarCamposDistintosDeNombre();
+        limpiarEntradasDeJPDemasDatos();
         borrarMensajesDeDemasDatos();
 
         jLabMensajeNombre.setForeground(Color.BLACK);
@@ -495,7 +495,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimpiarActionPerformed
-        limpiarCamposDistintosDeNombre();
+        limpiarEntradasDeJPDemasDatos();
     }//GEN-LAST:event_jBLimpiarActionPerformed
 
     private void jBGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarActionPerformed

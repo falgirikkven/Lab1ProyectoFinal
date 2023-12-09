@@ -28,7 +28,7 @@ import lab1proyectofinal.accesoADatos.*;
  * @author nahue
  */
 public class GestionBombero extends javax.swing.JInternalFrame {
-    
+
     private final CuartelData cuartelData;
     private final BrigadaData brigadaData;
     private final BomberoData bomberoData;
@@ -49,7 +49,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
     private MouseListener[] mouseListenersJDCFechaNacimientoJTC;
     private MouseListener[] mouseListenersJDCFechaNacimientoAB;
     private JLabel jLabAux = Utils.jLabConfigurado();
-    
+
     public GestionBombero(CuartelData cuartelData, BrigadaData brigadaData, BomberoData bomberoData) {
         initComponents();
         this.cuartelData = cuartelData;
@@ -60,18 +60,18 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         configurarJDCFechaNacimiento();
         modoPrevioABusqueda();
     }
-    
+
     boolean isEnOperacion() {
         return enOperacion;
     }
-    
+
     void cancelarOperacion() {
         jBCancelar.doClick();
     }
-    
+
     private void configurarJCBBomberos() {
         jLabMensajeBombero.setText("");
-        
+
         programaCambiandoJCBBomberos = true;
         jCBBomberos.removeAllItems();
         listaBombero = bomberoData.listarBomberos();
@@ -87,17 +87,17 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         }
         programaCambiandoJCBBomberos = false;
     }
-    
+
     private void configurarJCBGruposSanguineos() {
         String gruposSanguineos[] = Utils.obtenerGrupoSanguineo();
         for (String gruposSanguineo : gruposSanguineos) {
             jCBGrupoSanguineo.addItem(gruposSanguineo);
         }
     }
-    
+
     private void configurarJCBBrigadas() {
         jLabMensajeBrigada.setText("");
-        
+
         jCBBrigadas.removeAllItems();
         listaBrigada = brigadaData.listarBrigadas();
         if (listaBrigada.isEmpty()) {
@@ -123,7 +123,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         }
         jCBBrigadas.setSelectedIndex(-1);
     }
-    
+
     private void configurarJDCFechaNacimiento() {
         Component[] comps = jDCFechaNacimiento.getComponents();
         for (Component c : comps) {
@@ -143,15 +143,15 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             }
         }
     }
-    
-    private void limpiarEntradasDistintasDeNombre() {
+
+    private void limpiarEntradasDeJPDemasDatos() {
         jTFNombreCompleto.setText("");
         jCBGrupoSanguineo.setSelectedIndex(-1);
         jDCFechaNacimiento.setDate(null);
         jTFCelular.setText("");
         jCBBrigadas.setSelectedIndex(-1);
     }
-    
+
     private void borrarMensajesMenosEnJCBBomberos() {
         jLabMensajeDNI.setText("");
         jLabMensajeDemasDatos.setText("");
@@ -161,7 +161,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jLabMensajeCelular.setText("");
         jLabMensajeBrigada.setText("");
     }
-    
+
     private void borrarMensajesDeDatos() {
         jLabMensajeDNI.setText("");
         jLabMensajeNomCompleto.setText("");
@@ -170,7 +170,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jLabMensajeCelular.setText("");
         jLabMensajeBrigada.setText("");
     }
-    
+
     private void borrarMensajesDeDemasDatos() {
         jLabMensajeNomCompleto.setText("");
         jLabMensajeGrupoSanguineo.setText("");
@@ -182,7 +182,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
     // los métodos de "solo lectura" y "lectura-escritura" han sido (en gran medida) copiados de 
     // internet (pueden haber efectos secundarios que no tenga contemplados)                          
     private void soloLecturaJCBGruposSanguineos(boolean b) {
-        
+
         if (b) {
             if (jCBGrupoSanguineo.getMouseListeners().length > 0) {
                 mouseListenersJCBGruposSanguineos = jCBGrupoSanguineo.getMouseListeners();
@@ -197,7 +197,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                 }
             }
         }
-        
+
         Component[] comps = jCBGrupoSanguineo.getComponents();
         for (Component c : comps) {
             if (c instanceof AbstractButton) {
@@ -221,7 +221,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             }
         }
     }
-    
+
     private void soloLecturaJCBBrigadas(boolean b) {
         if (b) {
             if (jCBBrigadas.getMouseListeners().length > 0) {
@@ -237,7 +237,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                 }
             }
         }
-        
+
         Component[] comps = jCBBrigadas.getComponents();
         for (Component c : comps) {
             if (c instanceof AbstractButton) {
@@ -260,8 +260,8 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                 }
             }
         }
-    }    
-    
+    }
+
     private void soloLecturaJDCBotonFechaNacimiento(boolean b) {
         Component[] comps = jDCFechaNacimiento.getComponents();
         for (Component c : comps) {
@@ -286,7 +286,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             }
         }
     }
-    
+
     private void setEnabledDemasDatos(boolean b) {
         jCBBrigadas.setEnabled(b);
         jCBGrupoSanguineo.setEnabled(b);
@@ -294,7 +294,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jTFCelular.setEnabled(b);
         jTFNombreCompleto.setEnabled(b);
     }
-    
+
     private void soloLecturaDemasDatos(boolean b) {
         if (b) {
             jTFNombreCompleto.setEditable(false);
@@ -324,14 +324,14 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         Instant instant = zonedDateTime.toInstant();
         return Date.from(instant);
     }
-    
+
     private void modoInhabilitado() {
         /*
             Modo "inhabilitado", se aplica cuando:
         1) No existen brigadas activas y, por tanto, no se puede agregar, modificar o dar de baja a 
         un bombero, pues no existe ninguno activo.
          */
-        
+
         jBAgregar.setEnabled(false);
         jBBuscar.setEnabled(false);
         jBCancelar.setEnabled(false);
@@ -342,10 +342,10 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jCBBomberos.setEnabled(false);
         jTFDNI.setEnabled(false);
         setEnabledDemasDatos(false);
-        
+
         jBSalir.requestFocusInWindow();
     }
-    
+
     private void modoPrevioABusqueda() {
         /* 
             Modo "previo a búsqueda", se aplica cuando:
@@ -353,17 +353,17 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         2) Inmediatamente luego de una operación llevada a cabo exitosamente
         3) Se cambia el contenido de "jTextFieldDNI", sin modificar un registro.
          */
-        
+
         dniRegEncontrado = null;
-        
+
         if (jCBBomberos.getSelectedIndex() != -1) {
             programaCambiandoJCBBomberos = true;
             jCBBomberos.setSelectedIndex(-1);
             programaCambiandoJCBBomberos = false;
         }
-        limpiarEntradasDistintasDeNombre();
+        limpiarEntradasDeJPDemasDatos();
         borrarMensajesMenosEnJCBBomberos();
-        
+
         jBAgregar.setEnabled(false);
         jBBuscar.setEnabled(true);
         jBCancelar.setEnabled(false);
@@ -374,25 +374,25 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jCBBomberos.setEnabled(true);
         jTFDNI.setEnabled(true);
         setEnabledDemasDatos(false);
-        
+
         jTFDNI.setEditable(true);
     }
-    
+
     private void modoRegistroEncontrado() {
         /* 
             Modo "registro encontrado", se aplica cuando:
         1) Se encuentra un registro mediante "jCBBomberos" o "jBBuscar". 
         2) Se cancela la modificación de un registro.
          */
-        
+
         if (jCBBomberos.getSelectedIndex() == -1) {
             programaCambiandoJCBBomberos = true;
             jCBBomberos.setSelectedItem(bombero);
             programaCambiandoJCBBomberos = false;
         }
-        
+
         borrarMensajesDeDemasDatos();
-        
+
         jLabMensajeDNI.setForeground(Color.BLACK);
         jLabMensajeDNI.setText("<html>Hay un bombero con este DNI entre los "
                 + "registrados.</html>");
@@ -400,35 +400,10 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jLabMensajeDemasDatos.setText("<html>Puede modificar al bombero encontrado haciendo "
                 + "click en \"" + jBModificar.getText() + "\" o darle de baja haciendo click en "
                 + "\"" + jBDarDeBaja.getText() + "\".</html>");
-        
+
         jTFDNI.setText(String.valueOf(bombero.getDni()));
         jTFNombreCompleto.setText(bombero.getNombreCompleto());
-        switch (bombero.getGrupoSanguineo()) {
-            case "A+":
-                jCBGrupoSanguineo.setSelectedItem("A+");
-                break;
-            case "B+":
-                jCBGrupoSanguineo.setSelectedItem("B+");
-                break;
-            case "AB+":
-                jCBGrupoSanguineo.setSelectedItem("AB+");
-                break;
-            case "O+":
-                jCBGrupoSanguineo.setSelectedItem("O+");
-                break;
-            case "A-":
-                jCBGrupoSanguineo.setSelectedItem("A-");
-                break;
-            case "B-":
-                jCBGrupoSanguineo.setSelectedItem("B-");
-                break;
-            case "AB-":
-                jCBGrupoSanguineo.setSelectedItem("AB-");
-                break;
-            case "O-":
-                jCBGrupoSanguineo.setSelectedItem("O-");
-                break;
-        }
+        jCBGrupoSanguineo.setSelectedItem(bombero.getGrupoSanguineo());
         jDCFechaNacimiento.setDate(localDateToDate(bombero.getFechaNacimiento()));      // nota: verificar si funciona
         jTFCelular.setText(bombero.getCelular());
         for (int i = 0; i < jCBBrigadas.getItemCount(); i++) {
@@ -441,7 +416,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         // necesario para compararlo con una hipotética modificación del contenido de 
         // "jTFDNI", en caso de que se proceda a modificar el registro
         dniRegEncontrado = Integer.parseInt(jTFDNI.getText());
-        
+
         jBAgregar.setEnabled(false);
         jBBuscar.setEnabled(true);
         jBCancelar.setEnabled(false);
@@ -452,11 +427,11 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jCBBomberos.setEnabled(true);
         jTFDNI.setEnabled(true);
         setEnabledDemasDatos(true);
-        
+
         jTFDNI.setEditable(true);
         soloLecturaDemasDatos(true);
     }
-    
+
     private void modoRegistroNoEncontrado() {
         /* 
             Modo "registro no encontrado", se aplica cuando: 
@@ -464,10 +439,10 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         ningún registro en la BD (ni activo ni inactivo).
         2) Se cancela la agregación de un registro.
          */
-        
-        limpiarEntradasDistintasDeNombre();
+
+        limpiarEntradasDeJPDemasDatos();
         borrarMensajesDeDemasDatos();
-        
+
         jLabMensajeDNI.setForeground(Color.BLACK);
         jLabMensajeDNI.setText("<html>No existe un bombero registrado con este "
                 + "DNI.</html>");
@@ -475,7 +450,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jLabMensajeDemasDatos.setText("<html>Puede registrar un bombero con el DNI ingresado "
                 + "haciendo click en \"" + jBAgregar.getText() + "\" e ingresando los demás "
                 + "datos.</html>");
-        
+
         jBAgregar.setEnabled(true);
         jBBuscar.setEnabled(true);
         jBCancelar.setEnabled(false);
@@ -486,10 +461,10 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jCBBomberos.setEnabled(true);
         jTFDNI.setEnabled(true);
         setEnabledDemasDatos(false);
-        
+
         jTFDNI.setEditable(true);
     }
-    
+
     private void modoOperacion() {
         /* 
             Modo "operación", se aplica cuando: 
@@ -497,11 +472,11 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         última solo requiere del click en "jbDarDeBaja" y de la confirmación o declinación de 
         la solicitud de confirmación posterior).
          */
-        
+
         borrarMensajesDeDatos();
-        
+
         enOperacion = true;
-        
+
         jBAgregar.setEnabled(false);
         jBBuscar.setEnabled(false);
         jBCancelar.setEnabled(true);
@@ -512,7 +487,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jCBBomberos.setEnabled(false);
         jTFDNI.setEnabled(true);
         setEnabledDemasDatos(true);
-        
+
         if (enAgregacion) {
             jTFDNI.setEditable(false);
         } else if (enModificacion) {
@@ -733,7 +708,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jPDemasDatos.add(jLabMensajeBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 360, 320, 40));
 
         jCBBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jCBBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 320, 200, -1));
+        jPDemasDatos.add(jCBBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 320, 240, -1));
 
         jLabNombreCompleto.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabNombreCompleto.setText("Nombre Completo:");
@@ -762,11 +737,6 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jDCFechaNacimiento.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jDCFechaNacimiento.setMaxSelectableDate(Date.from(((LocalDate.now()).atStartOfDay(ZoneId.systemDefault())).toInstant()));
         jDCFechaNacimiento.setMinSelectableDate(Date.from(((LocalDate.now().minusYears(70)).atStartOfDay(ZoneId.systemDefault())).toInstant()));
-        jDCFechaNacimiento.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                jDCFechaNacimientoMouseMoved(evt);
-            }
-        });
         jPDemasDatos.add(jDCFechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 180, 140, 30));
 
         jLabMensajeFechaNacimiento.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -788,31 +758,31 @@ public class GestionBombero extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimpiarActionPerformed
-        limpiarEntradasDistintasDeNombre();
+        limpiarEntradasDeJPDemasDatos();
     }//GEN-LAST:event_jBLimpiarActionPerformed
 
     private void jBGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarActionPerformed
         borrarMensajesDeDatos();
-        
+
         boolean entradasValidas = true;
-        
+
         String strDNI = jTFDNI.getText().trim();
         try {
-            int longDNI = Integer.parseInt(strDNI);
-            if (bomberoData.estaDNIentreInactivos(longDNI)) {
+            int intDNI = Integer.parseInt(strDNI);
+            if (bomberoData.estaDNIentreInactivos(intDNI)) {
                 entradasValidas = false;
                 jLabMensajeDNI.setForeground(Color.RED);
                 jLabMensajeDNI.setText("<html>Este DNI se encuentra ocupado por un bombero "
                         + "dado de baja y no puede ser utilizado por otro.</html>");
-            } else if (longDNI < 10000000 || longDNI > 99999999) {
+            } else if (intDNI < 10000000 || intDNI > 99999999) {
                 entradasValidas = false;
                 jLabMensajeDNI.setForeground(Color.RED);
                 jLabMensajeDNI.setText("<html>Debe ingresar un DNI válido.</html>");
             } else {
-                Bombero bomberoBuscado = bomberoData.buscarBomberoPorDNI(longDNI);
+                Bombero bomberoBuscado = bomberoData.buscarBomberoPorDNI(intDNI);
                 if (bomberoBuscado != null) {
                     if (bomberoBuscado.getDni() == dniRegEncontrado) {      // nota: ver si esto funciona
-                        bombero.setDni(longDNI);
+                        bombero.setDni(intDNI);
                     } else {
                         entradasValidas = false;
                         jLabMensajeDNI.setForeground(Color.RED);
@@ -820,7 +790,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                                 + "bombero y no puede ser utilizado por otro.</html>");
                     }
                 }
-                bombero.setDni(longDNI);
+                bombero.setDni(intDNI);
             }
         } catch (NumberFormatException e) {
             entradasValidas = false;
@@ -832,7 +802,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                 jLabMensajeDNI.setText("<html>Debe ingresar un DNI válido.</html>");
             }
         }
-        
+
         String nombreCompleto = jTFNombreCompleto.getText();
         if (nombreCompleto.isBlank()) {
             entradasValidas = false;
@@ -841,7 +811,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         } else {
             bombero.setNombreCompleto(nombreCompleto);
         }
-        
+
         if (jCBGrupoSanguineo.getSelectedIndex() == -1) {
             entradasValidas = false;
             jLabMensajeGrupoSanguineo.setForeground(Color.RED);
@@ -849,7 +819,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         } else {
             bombero.setGrupoSanguineo((String) jCBGrupoSanguineo.getSelectedItem());
         }
-        
+
         Date fechaNacimiento = jDCFechaNacimiento.getDate();
         if (fechaNacimiento == null) {
             entradasValidas = false;
@@ -866,7 +836,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                 bombero.setFechaNacimiento(fechaNac);
             }
         }
-        
+
         String celular = jTFCelular.getText();
         if (celular.isBlank()) {
             entradasValidas = false;
@@ -875,7 +845,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         } else {
             bombero.setCelular(celular);
         }
-        
+
         if (jCBBrigadas.getSelectedIndex() == -1) {
             entradasValidas = false;
             jLabMensajeBrigada.setForeground(Color.RED);
@@ -883,7 +853,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         } else {
             bombero.setBrigada((Brigada) jCBBrigadas.getSelectedItem());
         }
-        
+
         if (entradasValidas && enAgregacion) {
             if (bomberoData.guardarBombero(bombero)) {
                 jLabAux.setText("<html>Se registró al bombero con DNI: \"" + bombero.getDni()
@@ -927,7 +897,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
     private void jBModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBModificarActionPerformed
         enModificacion = true;
         modoOperacion();
-        
+
         jLabMensajeDNI.setText("");
         jLabMensajeDemasDatos.setForeground(Color.BLUE);
         jLabMensajeDemasDatos.setText("<html>Modifique los datos que desee. También puede "
@@ -940,7 +910,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         // evita que el programa entre en modo "registro encontrado" cada vez que se genera un 
         // actionEvent en "jCBBomberos" sin la intervención del usuario y, además, el índice 
         // seleccionado en dicho componente es distinto de -1 (situación que ocurre al agregar el 
-        // primer item a "jCBBomberos" en "configurarjCBBomberos)
+        // primer item a "jCBBomberos" en "configurarJCBBomberos)
         if (bombero != null && programaCambiandoJCBBomberos == false) {
             modoRegistroEncontrado();
         }
@@ -949,7 +919,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
     private void jBBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBuscarActionPerformed
         String strDNI = jTFDNI.getText().trim();
         int intDNI;
-        
+
         try {
             intDNI = Integer.parseInt(strDNI);
             if (intDNI < 10000000 || intDNI > 99999999) {
@@ -967,7 +937,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             }
             return;
         }
-        
+
         if (bomberoData.estaDNIentreInactivos(intDNI)) {
             jLabMensajeDemasDatos.setText("");
             jLabMensajeDNI.setForeground(Color.RED);
@@ -975,7 +945,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                     + "dado de baja. Por favor, ingrese otro.</html>");
             return;
         }
-        
+
         bombero = bomberoData.buscarBomberoPorDNI(intDNI);
         if (bombero != null) {
             modoRegistroEncontrado();
@@ -988,7 +958,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
         enAgregacion = true;
         modoOperacion();
-        
+
         jLabMensajeDNI.setText("");
         jLabMensajeDemasDatos.setForeground(Color.BLUE);
         jLabMensajeDemasDatos.setText("<html>Complete los campos de los demás datos del "
@@ -997,7 +967,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
 
     private void jBDarDeBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBDarDeBajaActionPerformed
         int dni = bombero.getDni();
-        
+
         jLabAux.setText("<html>¿Está seguro de querer dar de baja al bombero con DNI: \""
                 + dni + "\"?</html>");
         if (JOptionPane.showConfirmDialog(this, jLabAux, "Advertencia", JOptionPane.YES_NO_OPTION)
@@ -1047,10 +1017,6 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         // al cambiar de JInternalFrame 
         jTFDNI.requestFocusInWindow();
     }//GEN-LAST:event_formFocusGained
-
-    private void jDCFechaNacimientoMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jDCFechaNacimientoMouseMoved
-        jDCFechaNacimiento.setToolTipText("");
-    }//GEN-LAST:event_jDCFechaNacimientoMouseMoved
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBAgregar;

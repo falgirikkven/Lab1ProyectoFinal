@@ -115,7 +115,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         jCBCuarteles.setSelectedIndex(-1);
     }
 
-    private void limpiarEntradasDistintasDeNombre() {
+    private void limpiarEntradasDeJPDemasDatos() {
         jCBEspecialidades.setSelectedIndex(-1);
         BGDisponible.clearSelection();
         jCBCuarteles.setSelectedIndex(-1);
@@ -298,7 +298,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
             jCBBrigadas.setSelectedIndex(-1);
             programaCambiandoJCBBrigadas = false;
         }
-        limpiarEntradasDistintasDeNombre();
+        limpiarEntradasDeJPDemasDatos();
         borrarMensajesMenosEnJCBBrigadas();
 
         jBAgregar.setEnabled(false);
@@ -339,26 +339,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
                 + "\"" + jBDarDeBaja.getText() + "\".</html>");
 
         jTFNombre.setText(brigada.getNombreBrigada());
-        switch (brigada.getEspecialidad()) {
-            case "Incendio en viviendas e industrias":
-                jCBEspecialidades.setSelectedItem("Incendio en viviendas e industrias");
-                break;
-            case "Salvamento en derrumbes":
-                jCBEspecialidades.setSelectedItem("Salvamento en derrumbes");
-                break;
-            case "Rescates en ámbito montaña":
-                jCBEspecialidades.setSelectedItem("Rescates en ámbito montaña");
-                break;
-            case "Rescates de personas en accidentes de tráfico":
-                jCBEspecialidades.setSelectedItem("Rescates de personas en accidentes de tráfico");
-                break;
-            case "Socorrer inundaciones":
-                jCBEspecialidades.setSelectedItem("Socorrer inundaciones");
-                break;
-            case "Operativos de prevención":
-                jCBEspecialidades.setSelectedItem("Operativos de prevención");
-                break;
-        }
+        jCBEspecialidades.setSelectedItem(brigada.getEspecialidad());
         if (brigada.isDisponible()) {
             jRBDisponibleSi.setSelected(true);
         } else {
@@ -398,7 +379,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         2) Se cancela la agregación de un registro.
          */
 
-        limpiarEntradasDistintasDeNombre();
+        limpiarEntradasDeJPDemasDatos();
         borrarMensajesDeDemasDatos();
 
         jLabMensajeNombre.setForeground(Color.BLACK);
@@ -697,7 +678,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimpiarActionPerformed
-        limpiarEntradasDistintasDeNombre();
+        limpiarEntradasDeJPDemasDatos();
     }//GEN-LAST:event_jBLimpiarActionPerformed
 
     private void jBGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarActionPerformed

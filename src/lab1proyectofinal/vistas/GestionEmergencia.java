@@ -7,17 +7,20 @@ package lab1proyectofinal.vistas;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Date;
 import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.ToolTipManager;
 import javax.swing.text.JTextComponent;
 import lab1proyectofinal.entidades.*;
@@ -28,113 +31,87 @@ import lab1proyectofinal.accesoADatos.*;
  * @author nahue
  */
 public class GestionEmergencia extends javax.swing.JInternalFrame {
-    
-    private final CuartelData cuartelData;
+
     private final BrigadaData brigadaData;
-    private final BomberoData bomberoData;
+    private final SiniestroData siniestroData;
     private Brigada brigada;
-    private Bombero bombero;
-    private List<Cuartel> listaCuartel;
-    private List<Brigada> listaBrigada;
-    private List<Bombero> listaBombero;
+    private Siniestro siniestro;
+    private List<Brigada> brigadas;
+    private List<Siniestro> siniestros;
     private boolean enOperacion = false;
     private boolean enAgregacion;
     private boolean enModificacion;
-    private boolean programaCambiandoJCBBomberos;
-    private Integer dniRegEncontrado;
-    private MouseListener[] mouseListenersJCBGruposSanguineos;
-    private MouseListener[] mouseListenersJCBGruposSanguineosAB;
-    private MouseListener[] mouseListenersJCBBrigadas;
-    private MouseListener[] mouseListenersJCBBrigadasAB;
-    private MouseListener[] mouseListenersJDCFechaNacimientoJTC;
-    private MouseListener[] mouseListenersJDCFechaNacimientoAB;
+    private boolean enEstablecerBrigada;
+    private boolean enEstablecerResolucion;
+    private boolean programaCambiandoJCBEmergencias;
+    private MouseListener[] mouseListenersJCBTipo;
+    private MouseListener[] mouseListenersJCBTipoAB;
+    private MouseListener[] mouseListenersJDCFechaInicioJTC;
+    private MouseListener[] mouseListenersJDCFechaInicioAB;
+    private MouseListener[] mouseListenersJDCFechaResolucionJTC;
+    private MouseListener[] mouseListenersJDCFechaResolucionAB;
+    private MouseListener[] mouseListenersJSpHoraInicioAB;
+    private MouseListener[] mouseListenersJSpHoraResolucionAB;
     private JLabel jLabAux = Utils.jLabConfigurado();
-    
-    public GestionEmergencia(CuartelData cuartelData, BrigadaData brigadaData, BomberoData bomberoData) {
+
+    public GestionEmergencia(SiniestroData siniestroData, BrigadaData brigadaData) {
         initComponents();
-        this.cuartelData = cuartelData;
         this.brigadaData = brigadaData;
-        this.bomberoData = bomberoData;
-        configurarJCBGruposSanguineos();
-        configurarJCBBomberos();
-        configurarJDCFechaNacimiento();
-        modoPrevioABusqueda();
+        this.siniestroData = siniestroData;
+        configurarJCBTipo();
+        configurarJCBEmergencias();
+        configurarJDCFechaInicio();
+        configurarJDCFechaResolucion();
+        configurarJSp(jSpHoraInicio);
+        configurarJSp(jSpHoraResolucion);
+        modoPrevioASeleccion();
     }
-    
+
     boolean isEnOperacion() {
         return enOperacion;
     }
-    
+
     void cancelarOperacion() {
         jBCancelar.doClick();
     }
-    
-    private void configurarJCBBomberos() {
-        jLabMensajeBombero.setText("");
-        
-        programaCambiandoJCBBomberos = true;
-        jCBBomberos.removeAllItems();
-        listaBombero = bomberoData.listarBomberos();
-        if (listaBombero.isEmpty()) {
-            jLabMensajeBombero.setForeground(Color.BLACK);
-            jLabMensajeBombero.setText("<html>Advertencia: no hay bomberos cargados en el "
+
+    private void configurarJCBEmergencias() {
+        jLabMensajeJCBEmergencias.setText("");
+
+        programaCambiandoJCBEmergencias = true;
+        jCBEmergencias.removeAllItems();
+        siniestros = siniestroData.listarSiniestros();
+        if (siniestros.isEmpty()) {
+            jLabMensajeJCBEmergencias.setForeground(Color.BLACK);
+            jLabMensajeJCBEmergencias.setText("<html>Advertencia: no hay siniestros cargados en el "
                     + "sistema.</html>");
-            programaCambiandoJCBBomberos = false;
+            programaCambiandoJCBEmergencias = false;
             return;
         }
-        for (Bombero bom : listaBombero) {
-            jCBBomberos.addItem(bom);
+        for (Siniestro sin : siniestros) {
+            jCBEmergencias.addItem(sin);
         }
-        programaCambiandoJCBBomberos = false;
+        programaCambiandoJCBEmergencias = false;
     }
-    
-    private void configurarJCBGruposSanguineos() {
-        String gruposSanguineos[] = Utils.obtenerGrupoSanguineo();
-        for (String gruposSanguineo : gruposSanguineos) {
-            jCBGrupoSanguineo.addItem(gruposSanguineo);
+
+    private void configurarJCBTipo() {
+        String tipos[] = Utils.obtenerEspecialidades();
+        for (String tipo : tipos) {
+            jCBTipos.addItem(tipo);
         }
     }
-    
-    private void configurarJCBBrigadas() {
-        jLabMensajeBrigada.setText("");
-        
-        jCBBrigadas.removeAllItems();
-        listaBrigada = brigadaData.listarBrigadas();
-        if (listaBrigada.isEmpty()) {
-            jLabMensajeBrigada.setForeground(Color.BLACK);
-            jLabMensajeBrigada.setText("<html>Advertencia: no hay brigadas cargadas en el "
-                    + "sistema.</html>");
-            modoInhabilitado();
-            jLabAux.setText("<html>No hay brigadas registradas. No se puede agregar, modificar "
-                    + "o dar de baja bomberos hasta que se registre una brigada.</html>");
-            JOptionPane.showMessageDialog(this, jLabAux, "Advertencia",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (jTFDNI.getText().isBlank()) {
-            modoPrevioABusqueda();
-        }
-        for (Brigada bri : listaBrigada) {
-            jCBBrigadas.addItem(bri);
-        }
-        if (dniRegEncontrado != null) {
-            jCBBrigadas.setSelectedItem(bombero.getBrigada());
-            return;
-        }
-        jCBBrigadas.setSelectedIndex(-1);
-    }
-    
-    private void configurarJDCFechaNacimiento() {
-        Component[] comps = jDCFechaNacimiento.getComponents();
+
+    private void configurarJDCFechaInicio() {
+        Component[] comps = jDCFechaInicio.getComponents();
         for (Component c : comps) {
             if (c instanceof JTextComponent) {
                 JTextComponent jtc = (JTextComponent) c;
                 jtc.setEditable(false);
                 if (jtc.getMouseListeners().length > 0) {
-                    mouseListenersJDCFechaNacimientoJTC = jtc.getMouseListeners();
-                    for (MouseListener listener : mouseListenersJDCFechaNacimientoJTC) {
+                    mouseListenersJDCFechaInicioJTC = jtc.getMouseListeners();
+                    for (MouseListener listener : mouseListenersJDCFechaInicioJTC) {
                         if (listener instanceof ToolTipManager) {
-                            ((ToolTipManager) listener).setEnabled(false);
+                            ((ToolTipManager) listener).setEnabled(false);  // nota: revisar si es necesario
                         } else {
                             jtc.removeMouseListener(listener);
                         }
@@ -143,77 +120,116 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
             }
         }
     }
-    
-    private void limpiarEntradasDistintasDeNombre() {
-        jTFNombreCompleto.setText("");
-        jCBGrupoSanguineo.setSelectedIndex(-1);
-        jDCFechaNacimiento.setDate(null);
-        jTFCelular.setText("");
-        jCBBrigadas.setSelectedIndex(-1);
+
+    private void configurarJDCFechaResolucion() {
+        Component[] comps = jDCFechaResolucion.getComponents();
+        for (Component c : comps) {
+            if (c instanceof JTextComponent) {
+                JTextComponent jtc = (JTextComponent) c;
+                jtc.setEditable(false);
+                if (jtc.getMouseListeners().length > 0) {
+                    mouseListenersJDCFechaResolucionJTC = jtc.getMouseListeners();
+                    for (MouseListener listener : mouseListenersJDCFechaResolucionJTC) {
+                        if (listener instanceof ToolTipManager) {
+                            ((ToolTipManager) listener).setEnabled(false);  // nota: revisar si es necesario
+                        } else {
+                            jtc.removeMouseListener(listener);
+                        }
+                    }
+                }
+            }
+        }
     }
-    
-    private void borrarMensajesMenosEnJCBBomberos() {
-        jLabMensajeDNI.setText("");
-        jLabMensajeDemasDatos.setText("");
-        jLabMensajeNomCompleto.setText("");
-        jLabMensajeGrupoSanguineo.setText("");
-        jLabMensajeFechaNacimiento.setText("");
-        jLabMensajeCelular.setText("");
-        jLabMensajeBrigada.setText("");
+
+    private void configurarJSp(JSpinner jsp) {
+        Component[] comps = jsp.getComponents();
+        for (Component c : comps) {
+            if (c instanceof JTextComponent) {
+                JTextComponent jtc = (JTextComponent) c;
+                jtc.setEditable(false);
+                // nota: lo de abajo podría ser útil
+//                if (jtc.getMouseListeners().length > 0) {
+//                    mouseListenersJDCFechaResolucionJTC = jtc.getMouseListeners();
+//                    for (MouseListener listener : mouseListenersJDCFechaResolucionJTC) {
+//                        if (listener instanceof ToolTipManager) {
+//                            ((ToolTipManager) listener).setEnabled(false);  // nota: revisar si es necesario
+//                        } else {
+//                            jtc.removeMouseListener(listener);
+//                        }
+//                    }
+//                }
+            }
+        }
     }
-    
-    private void borrarMensajesDeDatos() {
-        jLabMensajeDNI.setText("");
-        jLabMensajeNomCompleto.setText("");
-        jLabMensajeGrupoSanguineo.setText("");
-        jLabMensajeFechaNacimiento.setText("");
-        jLabMensajeCelular.setText("");
-        jLabMensajeBrigada.setText("");
+
+    private void limpiarEntradasDeJPDatos() {
+        jCBTipos.setSelectedIndex(-1);
+        jTFCoorX.setText("");
+        jTFCoorY.setText("");
+        jTADetalles.setText("");
+        jDCFechaInicio.setDate(null);
+        jDCFechaResolucion.setDate(null);
+        jSpHoraInicio.setValue(null);   // nota: ver si funciona
+        jSpHoraResolucion.setValue(null);   // nota: ver si funciona
+        jTFBrigada.setText("");
     }
-    
-    private void borrarMensajesDeDemasDatos() {
-        jLabMensajeNomCompleto.setText("");
-        jLabMensajeGrupoSanguineo.setText("");
-        jLabMensajeFechaNacimiento.setText("");
-        jLabMensajeCelular.setText("");
-        jLabMensajeBrigada.setText("");
+
+    private void borrarMensajesMenosEnJCBEmergencias() {
+        jLabMensajeJCBTipo.setText("");
+        jLabMensajeJPDatos.setText("");
+        jTFCoorX.setText("");
+        jTFCoorY.setText("");
+        jLabMensajeJTADetalles.setText("");
+        jLabMensajeFechaHoraInicio.setText("");
+        jLabMensajeFechaHoraResolucion.setText("");
+        jLabMensajeJTFDesempeño.setText("");
+        jLabMensajeJTFBrigada.setText("");
+    }
+
+    private void borrarMensajesDeJPDatos() {
+        jLabMensajeJCBTipo.setText("");
+        jLabMensajeCoordenadas.setText("");
+        jLabMensajeJTADetalles.setText("");
+        jLabMensajeFechaHoraInicio.setText("");
+        jLabMensajeFechaHoraResolucion.setText("");
+        jLabMensajeJTFDesempeño.setText("");
+        jLabMensajeJTFBrigada.setText("");
     }
 
     // los métodos de "solo lectura" y "lectura-escritura" han sido (en gran medida) copiados de 
     // internet (pueden haber efectos secundarios que no tenga contemplados)                          
-    private void soloLecturaJCBGruposSanguineos(boolean b) {
-        
+    private void soloLecturaJCBTipos(boolean b) {
         if (b) {
-            if (jCBGrupoSanguineo.getMouseListeners().length > 0) {
-                mouseListenersJCBGruposSanguineos = jCBGrupoSanguineo.getMouseListeners();
-                for (MouseListener listener : mouseListenersJCBGruposSanguineos) {
-                    jCBGrupoSanguineo.removeMouseListener(listener);
+            if (jCBTipos.getMouseListeners().length > 0) {
+                mouseListenersJCBTipo = jCBTipos.getMouseListeners();
+                for (MouseListener listener : mouseListenersJCBTipo) {
+                    jCBTipos.removeMouseListener(listener);
                 }
             }
         } else {
-            if (jCBGrupoSanguineo.getMouseListeners().length == 0) {
-                for (MouseListener listener : mouseListenersJCBGruposSanguineos) {
-                    jCBGrupoSanguineo.addMouseListener(listener);
+            if (jCBTipos.getMouseListeners().length == 0) {
+                for (MouseListener listener : mouseListenersJCBTipo) {
+                    jCBTipos.addMouseListener(listener);
                 }
             }
         }
-        
-        Component[] comps = jCBGrupoSanguineo.getComponents();
+
+        Component[] comps = jCBTipos.getComponents();
         for (Component c : comps) {
             if (c instanceof AbstractButton) {
                 AbstractButton ab = (AbstractButton) c;
                 if (b) {
                     ab.setVisible(false);
                     if (ab.getMouseListeners().length > 0) {
-                        mouseListenersJCBGruposSanguineosAB = ab.getMouseListeners();
-                        for (MouseListener listener : mouseListenersJCBGruposSanguineosAB) {
+                        mouseListenersJCBTipoAB = ab.getMouseListeners();
+                        for (MouseListener listener : mouseListenersJCBTipoAB) {
                             ab.removeMouseListener(listener);
                         }
                     }
                 } else {
                     ab.setVisible(true);
                     if (ab.getMouseListeners().length == 0) {
-                        for (MouseListener listener : mouseListenersJCBGruposSanguineosAB) {
+                        for (MouseListener listener : mouseListenersJCBTipoAB) {
                             ab.addMouseListener(listener);
                         }
                     }
@@ -221,64 +237,24 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
             }
         }
     }
-    
-    private void soloLecturaJCBBrigadas(boolean b) {
-        if (b) {
-            if (jCBBrigadas.getMouseListeners().length > 0) {
-                mouseListenersJCBBrigadas = jCBBrigadas.getMouseListeners();
-                for (MouseListener listener : mouseListenersJCBBrigadas) {
-                    jCBBrigadas.removeMouseListener(listener);
-                }
-            }
-        } else {
-            if (jCBBrigadas.getMouseListeners().length == 0) {
-                for (MouseListener listener : mouseListenersJCBBrigadas) {
-                    jCBBrigadas.addMouseListener(listener);
-                }
-            }
-        }
-        
-        Component[] comps = jCBBrigadas.getComponents();
+
+    private void soloLecturaBotonJDCFechaInicio(boolean b) {
+        Component[] comps = jDCFechaInicio.getComponents();
         for (Component c : comps) {
             if (c instanceof AbstractButton) {
                 AbstractButton ab = (AbstractButton) c;
                 if (b) {
                     ab.setVisible(false);
                     if (ab.getMouseListeners().length > 0) {
-                        mouseListenersJCBBrigadasAB = ab.getMouseListeners();
-                        for (MouseListener listener : mouseListenersJCBBrigadasAB) {
+                        mouseListenersJDCFechaInicioAB = ab.getMouseListeners();
+                        for (MouseListener listener : mouseListenersJDCFechaInicioAB) {
                             ab.removeMouseListener(listener);
                         }
                     }
                 } else {
                     ab.setVisible(true);
                     if (ab.getMouseListeners().length == 0) {
-                        for (MouseListener listener : mouseListenersJCBBrigadasAB) {
-                            ab.addMouseListener(listener);
-                        }
-                    }
-                }
-            }
-        }
-    }    
-    
-    private void soloLecturaJDCBotonFechaNacimiento(boolean b) {
-        Component[] comps = jDCFechaNacimiento.getComponents();
-        for (Component c : comps) {
-            if (c instanceof AbstractButton) {
-                AbstractButton ab = (AbstractButton) c;
-                if (b) {
-                    ab.setVisible(false);
-                    if (ab.getMouseListeners().length > 0) {
-                        mouseListenersJDCFechaNacimientoAB = ab.getMouseListeners();
-                        for (MouseListener listener : mouseListenersJDCFechaNacimientoAB) {
-                            ab.removeMouseListener(listener);
-                        }
-                    }
-                } else {
-                    ab.setVisible(true);
-                    if (ab.getMouseListeners().length == 0) {
-                        for (MouseListener listener : mouseListenersJDCFechaNacimientoAB) {
+                        for (MouseListener listener : mouseListenersJDCFechaInicioAB) {
                             ab.addMouseListener(listener);
                         }
                     }
@@ -286,28 +262,118 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
             }
         }
     }
-    
-    private void setEnabledDemasDatos(boolean b) {
-        jCBBrigadas.setEnabled(b);
-        jCBGrupoSanguineo.setEnabled(b);
-        jDCFechaNacimiento.setEnabled(b);
-        jTFCelular.setEnabled(b);
-        jTFNombreCompleto.setEnabled(b);
+
+    private void soloLecturaBotonJDCFechaResolucion(boolean b) {
+        Component[] comps = jDCFechaResolucion.getComponents();
+        for (Component c : comps) {
+            if (c instanceof AbstractButton) {
+                AbstractButton ab = (AbstractButton) c;
+                if (b) {
+                    ab.setVisible(false);
+                    if (ab.getMouseListeners().length > 0) {
+                        mouseListenersJDCFechaResolucionAB = ab.getMouseListeners();
+                        for (MouseListener listener : mouseListenersJDCFechaResolucionAB) {
+                            ab.removeMouseListener(listener);
+                        }
+                    }
+                } else {
+                    ab.setVisible(true);
+                    if (ab.getMouseListeners().length == 0) {
+                        for (MouseListener listener : mouseListenersJDCFechaResolucionAB) {
+                            ab.addMouseListener(listener);
+                        }
+                    }
+                }
+            }
+        }
     }
-    
-    private void soloLecturaDemasDatos(boolean b) {
+
+    // nota: revisar si este método afecta a solo un botón de los presentes en el jspinner
+    private void soloLecturaBotonJSpHoraInicio(boolean b) {
+        Component[] comps = jSpHoraInicio.getComponents();
+        for (Component c : comps) {
+            if (c instanceof AbstractButton) {
+                AbstractButton ab = (AbstractButton) c;
+                if (b) {
+                    ab.setVisible(false);
+                    if (ab.getMouseListeners().length > 0) {
+                        mouseListenersJSpHoraInicioAB = ab.getMouseListeners();
+                        for (MouseListener listener : mouseListenersJSpHoraInicioAB) {
+                            ab.removeMouseListener(listener);
+                        }
+                    }
+                } else {
+                    ab.setVisible(true);
+                    if (ab.getMouseListeners().length == 0) {
+                        for (MouseListener listener : mouseListenersJSpHoraInicioAB) {
+                            ab.addMouseListener(listener);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void soloLecturaBotonJSpHoraResolucion(boolean b) {
+        Component[] comps = jSpHoraResolucion.getComponents();
+        for (Component c : comps) {
+            if (c instanceof AbstractButton) {
+                AbstractButton ab = (AbstractButton) c;
+                if (b) {
+                    ab.setVisible(false);
+                    if (ab.getMouseListeners().length > 0) {
+                        mouseListenersJSpHoraResolucionAB = ab.getMouseListeners();
+                        for (MouseListener listener : mouseListenersJSpHoraResolucionAB) {
+                            ab.removeMouseListener(listener);
+                        }
+                    }
+                } else {
+                    ab.setVisible(true);
+                    if (ab.getMouseListeners().length == 0) {
+                        for (MouseListener listener : mouseListenersJSpHoraResolucionAB) {
+                            ab.addMouseListener(listener);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void setEnabledJPCompsDatos(boolean b) {
+        jTFBrigada.setEnabled(b);
+        jCBTipos.setEnabled(b);
+        jTFCoorX.setEnabled(b);
+        jTFCoorY.setEnabled(b);
+        jTADetalles.setEnabled(b);
+        jDCFechaInicio.setEnabled(b);
+        jSpHoraInicio.setEnabled(b);
+        jDCFechaResolucion.setEnabled(b);
+        jSpHoraResolucion.setEnabled(b);
+        jTFDesempeño.setEnabled(b);
+        jTFBrigada.setEnabled(b);
+    }
+
+    private void soloLecturaCompsJPDatosDistintosDeJTFBrigada(boolean b) {
         if (b) {
-            jTFNombreCompleto.setEditable(false);
-            soloLecturaJCBGruposSanguineos(true);
-            soloLecturaJDCBotonFechaNacimiento(true);
-            jTFCelular.setEditable(false);
-            soloLecturaJCBBrigadas(true);
+            soloLecturaJCBTipos(true);
+            jTFCoorX.setEditable(false);
+            jTFCoorY.setEditable(false);
+            jTADetalles.setEditable(false);
+            soloLecturaBotonJDCFechaInicio(true);
+            soloLecturaBotonJSpHoraInicio(true);
+            soloLecturaBotonJDCFechaResolucion(true);
+            soloLecturaBotonJSpHoraResolucion(true);
+            jTFDesempeño.setEditable(false);
         } else {
-            jTFNombreCompleto.setEditable(true);
-            soloLecturaJCBGruposSanguineos(false);
-            soloLecturaJDCBotonFechaNacimiento(false);
-            jTFCelular.setEditable(true);
-            soloLecturaJCBBrigadas(false);
+            soloLecturaJCBTipos(false);
+            jTFCoorX.setEditable(true);
+            jTFCoorY.setEditable(true);
+            jTADetalles.setEditable(true);
+            soloLecturaBotonJDCFechaInicio(false);
+            soloLecturaBotonJSpHoraInicio(false);
+            soloLecturaBotonJDCFechaResolucion(false);
+            soloLecturaBotonJSpHoraResolucion(false);
+            jTFDesempeño.setEditable(true);
         }
     }
 
@@ -324,172 +390,85 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
         Instant instant = zonedDateTime.toInstant();
         return Date.from(instant);
     }
-    
-    private void modoInhabilitado() {
-        /*
-            Modo "inhabilitado", se aplica cuando:
-        1) No existen brigadas activas y, por tanto, no se puede agregar, modificar o dar de baja a 
-        un bombero, pues no existe ninguno activo.
-         */
-        
-        jBAgregar.setEnabled(false);
-        jBBuscar.setEnabled(false);
-        jBCancelar.setEnabled(false);
-        jBDarDeBaja.setEnabled(false);
-        jBGuardar.setEnabled(false);
-        jBLimpiar.setEnabled(false);
-        jBModificar.setEnabled(false);
-        jCBBomberos.setEnabled(false);
-        jTFDNI.setEnabled(false);
-        setEnabledDemasDatos(false);
-        
-        jBSalir.requestFocusInWindow();
-    }
-    
-    private void modoPrevioABusqueda() {
+
+    private void modoPrevioASeleccion() {
         /* 
             Modo "previo a búsqueda", se aplica cuando:
         1) La primera vez que se utiliza este JInternalFrame 
-        2) Inmediatamente luego de una operación llevada a cabo exitosamente
-        3) Se cambia el contenido de "jTextFieldDNI", sin modificar un registro.
+        2) Inmediatamente luego de una operación llevada a cabo exitosamente        
          */
-        
-        dniRegEncontrado = null;
-        
-        if (jCBBomberos.getSelectedIndex() != -1) {
-            programaCambiandoJCBBomberos = true;
-            jCBBomberos.setSelectedIndex(-1);
-            programaCambiandoJCBBomberos = false;
+
+        if (jCBEmergencias.getSelectedIndex() != -1) {
+            programaCambiandoJCBEmergencias = true;
+            jCBEmergencias.setSelectedIndex(-1);
+            programaCambiandoJCBEmergencias = false;
         }
-        limpiarEntradasDistintasDeNombre();
-        borrarMensajesMenosEnJCBBomberos();
-        
-        jBAgregar.setEnabled(false);
-        jBBuscar.setEnabled(true);
+        limpiarEntradasDeJPDatos();
+        borrarMensajesMenosEnJCBEmergencias();
+
+        jBAgregar.setEnabled(true);
+        jBBrigada.setEnabled(false);
         jBCancelar.setEnabled(false);
-        jBDarDeBaja.setEnabled(false);
+        jBEliminar.setEnabled(false);
         jBGuardar.setEnabled(false);
         jBLimpiar.setEnabled(false);
         jBModificar.setEnabled(false);
-        jCBBomberos.setEnabled(true);
-        jTFDNI.setEnabled(true);
-        setEnabledDemasDatos(false);
-        
-        jTFDNI.setEditable(true);
+        jBResolucion.setEnabled(false);
+        jCBEmergencias.setEnabled(true);
+        setEnabledJPCompsDatos(false);
     }
-    
+
     private void modoRegistroEncontrado() {
         /* 
             Modo "registro encontrado", se aplica cuando:
-        1) Se encuentra un registro mediante "jCBBomberos" o "jBBuscar". 
-        2) Se cancela la modificación de un registro.
+        1) Se encuentra un registro mediante "jCBEmergencias". 
+        2) Se cancela la modificación de un registro, la asignación de una brigada o la asignación
+        de una resolución.
          */
-        
-        if (jCBBomberos.getSelectedIndex() == -1) {
-            programaCambiandoJCBBomberos = true;
-            jCBBomberos.setSelectedItem(bombero);
-            programaCambiandoJCBBomberos = false;
-        }
-        
-        borrarMensajesDeDemasDatos();
-        
-        jLabMensajeDNI.setForeground(Color.BLACK);
-        jLabMensajeDNI.setText("<html>Hay un bombero con este DNI entre los "
-                + "registrados.</html>");
-        jLabMensajeDemasDatos.setForeground(Color.BLUE);
-        jLabMensajeDemasDatos.setText("<html>Puede modificar al bombero encontrado haciendo "
-                + "click en \"" + jBModificar.getText() + "\" o darle de baja haciendo click en "
-                + "\"" + jBDarDeBaja.getText() + "\".</html>");
-        
-        jTFDNI.setText(String.valueOf(bombero.getDni()));
-        jTFNombreCompleto.setText(bombero.getNombreCompleto());
-        switch (bombero.getGrupoSanguineo()) {
-            case "A+":
-                jCBGrupoSanguineo.setSelectedItem("A+");
-                break;
-            case "B+":
-                jCBGrupoSanguineo.setSelectedItem("B+");
-                break;
-            case "AB+":
-                jCBGrupoSanguineo.setSelectedItem("AB+");
-                break;
-            case "O+":
-                jCBGrupoSanguineo.setSelectedItem("O+");
-                break;
-            case "A-":
-                jCBGrupoSanguineo.setSelectedItem("A-");
-                break;
-            case "B-":
-                jCBGrupoSanguineo.setSelectedItem("B-");
-                break;
-            case "AB-":
-                jCBGrupoSanguineo.setSelectedItem("AB-");
-                break;
-            case "O-":
-                jCBGrupoSanguineo.setSelectedItem("O-");
-                break;
-        }
-        jDCFechaNacimiento.setDate(localDateToDate(bombero.getFechaNacimiento()));      // nota: verificar si funciona
-        jTFCelular.setText(bombero.getCelular());
-        for (int i = 0; i < jCBBrigadas.getItemCount(); i++) {
-            if (bombero.getBrigada().getNombreBrigada()
-                    .equals(jCBBrigadas.getItemAt(i).getNombreBrigada())) {
-                jCBBrigadas.setSelectedIndex(i);
-            }
-        }
 
-        // necesario para compararlo con una hipotética modificación del contenido de 
-        // "jTFDNI", en caso de que se proceda a modificar el registro
-        dniRegEncontrado = Integer.parseInt(jTFDNI.getText());
-        
+        borrarMensajesDeJPDatos();
+
+        jLabMensajeJPDatos.setForeground(Color.BLUE);
+        jLabMensajeJPDatos.setText("<html>Puede modificar la emergencia encontrada haciendo "
+                + "click en \"" + jBModificar.getText() + "\", asignarle una brigada haciendo "
+                + "click en \"" + jBBrigada + "\", asignarle una resolución haciendo click en "
+                + "\"" + jBResolucion + "\" o eliminarla haciendo click en "
+                + "\"" + jBEliminar.getText() + "\".</html>");
+        jCBTipos.setSelectedItem(siniestro.getTipo());
+        jTFCoorX.setText(String.valueOf(siniestro.getCoordenadaX()));
+        jTFCoorY.setText(String.valueOf(siniestro.getCoordenadaY()));
+        jDCFechaInicio.setDate(localDateToDate(siniestro.getFechaHoraInicio().toLocalDate()));
+        jSpHoraInicio.setValue(siniestro.getFechaHoraInicio().toLocalTime()); // nota: verificar si funciona
+        jTADetalles.setText(siniestro.getDetalles());
+        if (siniestro.getBrigada() != null) {
+            jTFBrigada.setText(siniestro.getBrigada().getNombreBrigada());
+        } else {
+            jTFBrigada.setText("");
+            jLabMensajeJTFBrigada.setText("No se ha asignado brigada.");
+        }
+        if (siniestro.getFechaHoraResolucion() != null) {    // nota: revisar si funciona
+            jDCFechaResolucion.setDate(localDateToDate(siniestro.getFechaHoraResolucion().toLocalDate()));
+            jSpHoraResolucion.setValue(siniestro.getFechaHoraResolucion().toLocalTime()); // nota: verificar si funciona
+        } else {
+            jDCFechaResolucion.setDate(null);
+            jSpHoraInicio.setValue(null);   // nota: revisar si funciona
+        }
+        jTFDesempeño.setText(String.valueOf(siniestro.getPuntuacion()));
+
         jBAgregar.setEnabled(false);
-        jBBuscar.setEnabled(true);
+        jBBrigada.setEnabled(true);
         jBCancelar.setEnabled(false);
-        jBDarDeBaja.setEnabled(true);
+        jBEliminar.setEnabled(true);
         jBGuardar.setEnabled(false);
         jBLimpiar.setEnabled(false);
         jBModificar.setEnabled(true);
-        jCBBomberos.setEnabled(true);
-        jTFDNI.setEnabled(true);
-        setEnabledDemasDatos(true);
-        
-        jTFDNI.setEditable(true);
-        soloLecturaDemasDatos(true);
+        jBResolucion.setEnabled(true);
+        jCBEmergencias.setEnabled(true);
+        setEnabledJPCompsDatos(true);
+
+        soloLecturaCompsJPDatosDistintosDeJTFBrigada(true);
     }
-    
-    private void modoRegistroNoEncontrado() {
-        /* 
-            Modo "registro no encontrado", se aplica cuando: 
-        1) Se ha clickeado en "jButtonBuscar" y el nombre ingresado no se corresponde con el de 
-        ningún registro en la BD (ni activo ni inactivo).
-        2) Se cancela la agregación de un registro.
-         */
-        
-        limpiarEntradasDistintasDeNombre();
-        borrarMensajesDeDemasDatos();
-        
-        jLabMensajeDNI.setForeground(Color.BLACK);
-        jLabMensajeDNI.setText("<html>No existe un bombero registrado con este "
-                + "DNI.</html>");
-        jLabMensajeDemasDatos.setForeground(Color.BLUE);
-        jLabMensajeDemasDatos.setText("<html>Puede registrar un bombero con el DNI ingresado "
-                + "haciendo click en \"" + jBAgregar.getText() + "\" e ingresando los demás "
-                + "datos.</html>");
-        
-        jBAgregar.setEnabled(true);
-        jBBuscar.setEnabled(true);
-        jBCancelar.setEnabled(false);
-        jBDarDeBaja.setEnabled(false);
-        jBGuardar.setEnabled(false);
-        jBLimpiar.setEnabled(false);
-        jBModificar.setEnabled(false);
-        jCBBomberos.setEnabled(true);
-        jTFDNI.setEnabled(true);
-        setEnabledDemasDatos(false);
-        
-        jTFDNI.setEditable(true);
-    }
-    
+
     private void modoOperacion() {
         /* 
             Modo "operación", se aplica cuando: 
@@ -497,28 +476,22 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
         última solo requiere del click en "jbDarDeBaja" y de la confirmación o declinación de 
         la solicitud de confirmación posterior).
          */
-        
-        borrarMensajesDeDatos();
-        
+
+        borrarMensajesMenosEnJCBEmergencias();
         enOperacion = true;
-        
+
         jBAgregar.setEnabled(false);
-        jBBuscar.setEnabled(false);
+        jBBrigada.setEnabled(false);
         jBCancelar.setEnabled(true);
-        jBDarDeBaja.setEnabled(false);
+        jBEliminar.setEnabled(false);
         jBGuardar.setEnabled(true);
         jBLimpiar.setEnabled(true);
         jBModificar.setEnabled(false);
-        jCBBomberos.setEnabled(false);
-        jTFDNI.setEnabled(true);
-        setEnabledDemasDatos(true);
-        
-        if (enAgregacion) {
-            jTFDNI.setEditable(false);
-        } else if (enModificacion) {
-            jTFDNI.setEditable(true);
-        }
-        soloLecturaDemasDatos(false);
+        jBResolucion.setEnabled(false);
+        jCBEmergencias.setEnabled(false);
+        setEnabledJPCompsDatos(true);
+
+        soloLecturaCompsJPDatosDistintosDeJTFBrigada(false);
     }
 
     /**
@@ -529,43 +502,51 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabDNI = new javax.swing.JLabel();
-        jTFDNI = new javax.swing.JTextField();
         jBGuardar = new javax.swing.JButton();
         jBSalir = new javax.swing.JButton();
-        jLabGestionBomberos = new javax.swing.JLabel();
+        jLabGestionEmergencias = new javax.swing.JLabel();
+        jBCancelar = new javax.swing.JButton();
+        jLabEmergencia = new javax.swing.JLabel();
+        jCBEmergencias = new javax.swing.JComboBox<>();
+        jLabBuscarConCB = new javax.swing.JLabel();
+        jLabDatos = new javax.swing.JLabel();
+        jLabMensajeJPDatos = new javax.swing.JLabel();
+        jLabMensajeJCBEmergencias = new javax.swing.JLabel();
+        jPDatos = new javax.swing.JPanel();
+        jBLimpiar = new javax.swing.JButton();
+        jLabFechaInicio = new javax.swing.JLabel();
+        jDCFechaInicio = new com.toedter.calendar.JDateChooser();
+        jLabMensajeFechaHoraInicio = new javax.swing.JLabel();
+        jLabMensajeJCBTipo = new javax.swing.JLabel();
+        jCBTipos = new javax.swing.JComboBox<>();
+        jLabTipo = new javax.swing.JLabel();
+        jTFCoorX = new javax.swing.JTextField();
+        jLabMensajeCoordenadas = new javax.swing.JLabel();
+        jLabCoorX = new javax.swing.JLabel();
+        jLabCoorY = new javax.swing.JLabel();
+        jTFCoorY = new javax.swing.JTextField();
+        jLabDetalles = new javax.swing.JLabel();
+        jScPDetalles = new javax.swing.JScrollPane();
+        jTADetalles = new javax.swing.JTextArea();
+        jLabMensajeJTADetalles = new javax.swing.JLabel();
+        jLabMensajeFechaHoraResolucion = new javax.swing.JLabel();
+        jDCFechaResolucion = new com.toedter.calendar.JDateChooser();
+        jLabJDCFechaResolucion = new javax.swing.JLabel();
+        jLabMensajeJTFDesempeño = new javax.swing.JLabel();
+        jTFDesempeño = new javax.swing.JTextField();
+        jLabDesempeño = new javax.swing.JLabel();
+        jSpHoraResolucion = new javax.swing.JSpinner();
+        jSpHoraInicio = new javax.swing.JSpinner();
+        jTFBrigada = new javax.swing.JTextField();
+        jLabBrigada = new javax.swing.JLabel();
+        jLabMensajeJTFBrigada = new javax.swing.JLabel();
         jBAgregar = new javax.swing.JButton();
         jBModificar = new javax.swing.JButton();
-        jBCancelar = new javax.swing.JButton();
-        jBDarDeBaja = new javax.swing.JButton();
-        jLabMensajeDNI = new javax.swing.JLabel();
-        jLabBombero = new javax.swing.JLabel();
-        jCBBomberos = new javax.swing.JComboBox<>();
-        jLabBuscarConCB = new javax.swing.JLabel();
-        jLabBuscarConTF = new javax.swing.JLabel();
-        jLabDemasDatos = new javax.swing.JLabel();
-        jBBuscar = new javax.swing.JButton();
-        jLabMensajeDemasDatos = new javax.swing.JLabel();
-        jLabMensajeBombero = new javax.swing.JLabel();
-        jPDemasDatos = new javax.swing.JPanel();
-        jLabBrigada = new javax.swing.JLabel();
-        jBLimpiar = new javax.swing.JButton();
-        jLabMensajeBrigada = new javax.swing.JLabel();
-        jCBBrigadas = new javax.swing.JComboBox<>();
-        jLabNombreCompleto = new javax.swing.JLabel();
-        jTFNombreCompleto = new javax.swing.JTextField();
-        jLabMensajeNomCompleto = new javax.swing.JLabel();
-        jLabCelular = new javax.swing.JLabel();
-        jTFCelular = new javax.swing.JTextField();
-        jLabMensajeCelular = new javax.swing.JLabel();
-        jLabFechaNacimiento = new javax.swing.JLabel();
-        jDCFechaNacimiento = new com.toedter.calendar.JDateChooser();
-        jLabMensajeFechaNacimiento = new javax.swing.JLabel();
-        jLabMensajeGrupoSanguineo = new javax.swing.JLabel();
-        jCBGrupoSanguineo = new javax.swing.JComboBox<>();
-        jLabGrupoSanguineo = new javax.swing.JLabel();
+        jBEliminar = new javax.swing.JButton();
+        jBBrigada = new javax.swing.JButton();
+        jBResolucion = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(1134, 706));
+        setPreferredSize(new java.awt.Dimension(1300, 750));
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formFocusGained(evt);
@@ -590,19 +571,6 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabDNI.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabDNI.setText("DNI:");
-        getContentPane().add(jLabDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 270, -1, -1));
-
-        jTFDNI.setColumns(20);
-        jTFDNI.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTFDNI.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTFDNIKeyTyped(evt);
-            }
-        });
-        getContentPane().add(jTFDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 200, -1));
-
         jBGuardar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jBGuardar.setText("Guardar");
         jBGuardar.setEnabled(false);
@@ -611,7 +579,7 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
                 jBGuardarActionPerformed(evt);
             }
         });
-        getContentPane().add(jBGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 620, -1, -1));
+        getContentPane().add(jBGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 670, -1, -1));
 
         jBSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jBSalir.setText("Salir");
@@ -620,32 +588,12 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
                 jBSalirActionPerformed(evt);
             }
         });
-        getContentPane().add(jBSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 620, -1, -1));
+        getContentPane().add(jBSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 670, -1, -1));
 
-        jLabGestionBomberos.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabGestionBomberos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabGestionBomberos.setText("Gestión de bomberos");
-        getContentPane().add(jLabGestionBomberos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 1070, -1));
-
-        jBAgregar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jBAgregar.setText("Agregar bombero");
-        jBAgregar.setEnabled(false);
-        jBAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBAgregarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jBAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, -1, -1));
-
-        jBModificar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jBModificar.setText("Modificar bombero");
-        jBModificar.setEnabled(false);
-        jBModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBModificarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jBModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 360, -1, -1));
+        jLabGestionEmergencias.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabGestionEmergencias.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabGestionEmergencias.setText("Gestión de emergencias");
+        getContentPane().add(jLabGestionEmergencias, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 1020, -1));
 
         jBCancelar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jBCancelar.setText("Cancelar");
@@ -655,70 +603,39 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
                 jBCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(jBCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 620, -1, -1));
+        getContentPane().add(jBCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 670, -1, -1));
 
-        jBDarDeBaja.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jBDarDeBaja.setText("Dar de baja bombero");
-        jBDarDeBaja.setEnabled(false);
-        jBDarDeBaja.addActionListener(new java.awt.event.ActionListener() {
+        jLabEmergencia.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabEmergencia.setText("Emergencia:");
+        getContentPane().add(jLabEmergencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 100, -1, -1));
+
+        jCBEmergencias.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jCBEmergencias.setMaximumRowCount(10);
+        jCBEmergencias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBDarDeBajaActionPerformed(evt);
+                jCBEmergenciasActionPerformed(evt);
             }
         });
-        getContentPane().add(jBDarDeBaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 360, -1, -1));
-
-        jLabMensajeDNI.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabMensajeDNI.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabMensajeDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 305, 340, 40));
-
-        jLabBombero.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabBombero.setText("Bombero:");
-        getContentPane().add(jLabBombero, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 133, -1, -1));
-
-        jCBBomberos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jCBBomberos.setMaximumRowCount(10);
-        jCBBomberos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCBBomberosActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jCBBomberos, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 340, -1));
+        getContentPane().add(jCBEmergencias, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 100, 340, -1));
 
         jLabBuscarConCB.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabBuscarConCB.setText("Puede seleccionar un bombero de entre los registradas:");
-        getContentPane().add(jLabBuscarConCB, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
+        jLabBuscarConCB.setText("Puede seleccionar una emergencia de entre las registradas:");
+        getContentPane().add(jLabBuscarConCB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 70, -1, -1));
 
-        jLabBuscarConTF.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabBuscarConTF.setText("Puede ingresar un DNI y ver si está registrado como bombero:");
-        getContentPane().add(jLabBuscarConTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, -1, -1));
+        jLabDatos.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabDatos.setText("Datos de la emergencia:");
+        getContentPane().add(jLabDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, -1, -1));
 
-        jLabDemasDatos.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabDemasDatos.setText("Demás datos del bombero:");
-        getContentPane().add(jLabDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, -1, -1));
+        jLabMensajeJPDatos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabMensajeJPDatos.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        getContentPane().add(jLabMensajeJPDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 200, 1030, 23));
 
-        jBBuscar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jBBuscar.setText("Buscar");
-        jBBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBBuscarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jBBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 270, -1, -1));
+        jLabMensajeJCBEmergencias.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabMensajeJCBEmergencias.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        getContentPane().add(jLabMensajeJCBEmergencias, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 340, 23));
 
-        jLabMensajeDemasDatos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabMensajeDemasDatos.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabMensajeDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 410, 450, 55));
-
-        jLabMensajeBombero.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabMensajeBombero.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabMensajeBombero, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 165, 340, 40));
-
-        jPDemasDatos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPDemasDatos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabBrigada.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabBrigada.setText("Brigada:");
-        jPDemasDatos.add(jLabBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, -1, -1));
+        jPDatos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPDatos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jBLimpiar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jBLimpiar.setText("Limpiar campos");
@@ -727,195 +644,326 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
                 jBLimpiarActionPerformed(evt);
             }
         });
-        jPDemasDatos.add(jBLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 420, -1, -1));
+        jPDatos.add(jBLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 370, -1, -1));
 
-        jLabMensajeBrigada.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 360, 320, 40));
+        jLabFechaInicio.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabFechaInicio.setText("Fecha de inicio:");
+        jPDatos.add(jLabFechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, -1, -1));
 
-        jCBBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jCBBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 320, 200, -1));
+        jDCFechaInicio.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jDCFechaInicio.setMaxSelectableDate(Date.from(((LocalDate.now()).atStartOfDay(ZoneId.systemDefault())).toInstant()));
+        jDCFechaInicio.setMinSelectableDate(Date.from(((LocalDate.now().minusYears(70)).atStartOfDay(ZoneId.systemDefault())).toInstant()));
+        jPDatos.add(jDCFechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 290, 140, 30));
 
-        jLabNombreCompleto.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabNombreCompleto.setText("Nombre Completo:");
-        jPDemasDatos.add(jLabNombreCompleto, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+        jLabMensajeFechaHoraInicio.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDatos.add(jLabMensajeFechaHoraInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 320, 320, 46));
 
-        jTFNombreCompleto.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jTFNombreCompleto, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 270, -1));
+        jLabMensajeJCBTipo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDatos.add(jLabMensajeJCBTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 50, 310, 23));
 
-        jLabMensajeNomCompleto.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeNomCompleto, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 60, 320, 23));
+        jCBTipos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDatos.add(jCBTipos, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 20, 320, -1));
 
-        jLabCelular.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabCelular.setText("Celular:");
-        jPDemasDatos.add(jLabCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 250, 90, -1));
+        jLabTipo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabTipo.setText("Tipo:");
+        jPDatos.add(jLabTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 20, -1, -1));
 
-        jTFCelular.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jTFCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 250, 140, -1));
+        jTFCoorX.setEditable(false);
+        jTFCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFCoorX.setEnabled(false);
+        jPDatos.add(jTFCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 75, -1));
 
-        jLabMensajeCelular.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 280, 320, 23));
+        jLabMensajeCoordenadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDatos.add(jLabMensajeCoordenadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 116, 310, 23));
 
-        jLabFechaNacimiento.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabFechaNacimiento.setText("Fecha de nacimiento:");
-        jPDemasDatos.add(jLabFechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 140, -1));
+        jLabCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabCoorX.setText("Coordenada X:");
+        jPDatos.add(jLabCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
 
-        jDCFechaNacimiento.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jDCFechaNacimiento.setMaxSelectableDate(Date.from(((LocalDate.now()).atStartOfDay(ZoneId.systemDefault())).toInstant()));
-        jDCFechaNacimiento.setMinSelectableDate(Date.from(((LocalDate.now().minusYears(70)).atStartOfDay(ZoneId.systemDefault())).toInstant()));
-        jDCFechaNacimiento.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                jDCFechaNacimientoMouseMoved(evt);
+        jLabCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabCoorY.setText("Coordenada Y:");
+        jPDatos.add(jLabCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, -1, -1));
+
+        jTFCoorY.setEditable(false);
+        jTFCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFCoorY.setEnabled(false);
+        jPDatos.add(jTFCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 80, 75, -1));
+
+        jLabDetalles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabDetalles.setText("Detalles:");
+        jPDatos.add(jLabDetalles, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, -1, -1));
+
+        jTADetalles.setColumns(20);
+        jTADetalles.setRows(5);
+        jScPDetalles.setViewportView(jTADetalles);
+
+        jPDatos.add(jScPDetalles, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 150, 320, 120));
+
+        jLabMensajeJTADetalles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDatos.add(jLabMensajeJTADetalles, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 280, 310, 23));
+
+        jLabMensajeFechaHoraResolucion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDatos.add(jLabMensajeFechaHoraResolucion, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 140, 280, 46));
+
+        jDCFechaResolucion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jDCFechaResolucion.setMaxSelectableDate(Date.from(((LocalDate.now()).atStartOfDay(ZoneId.systemDefault())).toInstant()));
+        jDCFechaResolucion.setMinSelectableDate(Date.from(((LocalDate.now().minusYears(70)).atStartOfDay(ZoneId.systemDefault())).toInstant()));
+        jPDatos.add(jDCFechaResolucion, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 110, 140, 30));
+
+        jLabJDCFechaResolucion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabJDCFechaResolucion.setText("Fecha de resolución:");
+        jPDatos.add(jLabJDCFechaResolucion, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 110, -1, -1));
+
+        jLabMensajeJTFDesempeño.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDatos.add(jLabMensajeJTFDesempeño, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 230, 440, 23));
+
+        jTFDesempeño.setEditable(false);
+        jTFDesempeño.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFDesempeño.setEnabled(false);
+        jPDatos.add(jTFDesempeño, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 200, 75, -1));
+
+        jLabDesempeño.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabDesempeño.setText("Desempeño en el tratamiento de la emergencia:");
+        jPDatos.add(jLabDesempeño, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 200, -1, -1));
+
+        jSpHoraResolucion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jSpHoraResolucion.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1702076735463L), null, new java.util.Date(), java.util.Calendar.SECOND));
+        jSpHoraResolucion.setEditor(new javax.swing.JSpinner.DateEditor(jSpHoraResolucion, "HH:mm:ss"));
+        jPDatos.add(jSpHoraResolucion, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 110, 100, 30));
+
+        jSpHoraInicio.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jSpHoraInicio.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1702076735463L), null, new java.util.Date(), java.util.Calendar.SECOND));
+        jSpHoraInicio.setEditor(new javax.swing.JSpinner.DateEditor(jSpHoraInicio, "HH:mm:ss"));
+        jPDatos.add(jSpHoraInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 290, 100, 30));
+
+        jTFBrigada.setEditable(false);
+        jTFBrigada.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDatos.add(jTFBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 30, 250, -1));
+
+        jLabBrigada.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabBrigada.setText("Brigada:");
+        jPDatos.add(jLabBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 30, -1, -1));
+
+        jLabMensajeJTFBrigada.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDatos.add(jLabMensajeJTFBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 70, 280, 23));
+
+        getContentPane().add(jPDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 1050, 420));
+
+        jBAgregar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBAgregar.setText("Agregar emergencia");
+        jBAgregar.setEnabled(false);
+        jBAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBAgregarActionPerformed(evt);
             }
         });
-        jPDemasDatos.add(jDCFechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 180, 140, 30));
+        getContentPane().add(jBAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 100, -1, -1));
 
-        jLabMensajeFechaNacimiento.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeFechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 210, 320, 23));
+        jBModificar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBModificar.setText("Modificar emergencia");
+        jBModificar.setEnabled(false);
+        jBModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBModificarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jBModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 100, -1, -1));
 
-        jLabMensajeGrupoSanguineo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeGrupoSanguineo, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 130, 320, 23));
+        jBEliminar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBEliminar.setText("Eliminar emergencia");
+        jBEliminar.setEnabled(false);
+        jBEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBEliminarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jBEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 100, -1, -1));
 
-        jCBGrupoSanguineo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jCBGrupoSanguineo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 100, 70, -1));
+        jBBrigada.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBBrigada.setText("Asignar brigada");
+        getContentPane().add(jBBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 150, 150, -1));
 
-        jLabGrupoSanguineo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabGrupoSanguineo.setText("Grupo sanguíneo:");
-        jPDemasDatos.add(jLabGrupoSanguineo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
-
-        getContentPane().add(jPDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 560, 470));
+        jBResolucion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBResolucion.setText("Asignar resolución");
+        getContentPane().add(jBResolucion, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 150, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimpiarActionPerformed
-        limpiarEntradasDistintasDeNombre();
+        limpiarEntradasDeJPDatos();
     }//GEN-LAST:event_jBLimpiarActionPerformed
 
     private void jBGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarActionPerformed
-        borrarMensajesDeDatos();
-        
+        borrarMensajesDeJPDatos();
+
         boolean entradasValidas = true;
-        
-        String strDNI = jTFDNI.getText().trim();
-        try {
-            int longDNI = Integer.parseInt(strDNI);
-            if (bomberoData.estaDNIentreInactivos(longDNI)) {
+
+        if (enAgregacion || enModificacion) {
+            if (jCBTipos.getSelectedIndex() == -1) {
                 entradasValidas = false;
-                jLabMensajeDNI.setForeground(Color.RED);
-                jLabMensajeDNI.setText("<html>Este DNI se encuentra ocupado por un bombero "
-                        + "dado de baja y no puede ser utilizado por otro.</html>");
-            } else if (longDNI < 10000000 || longDNI > 99999999) {
-                entradasValidas = false;
-                jLabMensajeDNI.setForeground(Color.RED);
-                jLabMensajeDNI.setText("<html>Debe ingresar un DNI válido.</html>");
+                jLabMensajeJCBTipo.setForeground(Color.RED);
+                jLabMensajeJCBTipo.setText("Debe seleccionar un tipo de emergencia.");
             } else {
-                Bombero bomberoBuscado = bomberoData.buscarBomberoPorDNI(longDNI);
-                if (bomberoBuscado != null) {
-                    if (bomberoBuscado.getDni() == dniRegEncontrado) {      // nota: ver si esto funciona
-                        bombero.setDni(longDNI);
-                    } else {
-                        entradasValidas = false;
-                        jLabMensajeDNI.setForeground(Color.RED);
-                        jLabMensajeDNI.setText("<html>Este DNI se encuentra ocupado por un "
-                                + "bombero y no puede ser utilizado por otro.</html>");
-                    }
+                siniestro.setTipo((String) jCBTipos.getSelectedItem());
+            }
+
+            String strCoordenadaX = jTFCoorX.getText();
+            String strCoordenadaY = jTFCoorY.getText();
+            try {
+                int intCoordernadaX = Integer.parseInt(strCoordenadaX);
+                int intCoordernadaY = Integer.parseInt(strCoordenadaY);
+                siniestro.setCoordenadaX(intCoordernadaX);
+                siniestro.setCoordenadaY(intCoordernadaY);
+            } catch (NumberFormatException e) {
+                entradasValidas = false;
+                if (strCoordenadaX.isBlank() && strCoordenadaY.isBlank()) {
+                    jLabMensajeCoordenadas.setForeground(Color.RED);
+                    jLabMensajeCoordenadas.setText("<html>Debe completar los campos de coordenadas.</html>");
+                } else if (strCoordenadaX.isBlank()) {
+                    jLabMensajeCoordenadas.setForeground(Color.RED);
+                    jLabMensajeCoordenadas.setText("<html>Debe completar los campo de la coordenada X.</html>");
+                } else if (strCoordenadaY.isBlank()) {
+                    jLabMensajeCoordenadas.setForeground(Color.RED);
+                    jLabMensajeCoordenadas.setText("<html>Debe completar los campo de la coordenada Y.</html>");
+                } else {
+                    jLabMensajeCoordenadas.setForeground(Color.RED);
+                    jLabMensajeCoordenadas.setText("<html>Las coordenadas deben ser números enteros.</html>");
                 }
-                bombero.setDni(longDNI);
             }
-        } catch (NumberFormatException e) {
-            entradasValidas = false;
-            if (strDNI.isBlank()) {
-                jLabMensajeDNI.setForeground(Color.RED);
-                jLabMensajeDNI.setText("<html>Debe completar este campo.</html>");
-            } else {
-                jLabMensajeDNI.setForeground(Color.RED);
-                jLabMensajeDNI.setText("<html>Debe ingresar un DNI válido.</html>");
-            }
-        }
-        
-        String nombreCompleto = jTFNombreCompleto.getText();
-        if (nombreCompleto.isBlank()) {
-            entradasValidas = false;
-            jLabMensajeNomCompleto.setForeground(Color.RED);
-            jLabMensajeNomCompleto.setText("Debe completar este campo.");
-        } else {
-            bombero.setNombreCompleto(nombreCompleto);
-        }
-        
-        if (jCBGrupoSanguineo.getSelectedIndex() == -1) {
-            entradasValidas = false;
-            jLabMensajeGrupoSanguineo.setForeground(Color.RED);
-            jLabMensajeGrupoSanguineo.setText("Debe seleccionar un grupo sanguíneo.");
-        } else {
-            bombero.setGrupoSanguineo((String) jCBGrupoSanguineo.getSelectedItem());
-        }
-        
-        Date fechaNacimiento = jDCFechaNacimiento.getDate();
-        if (fechaNacimiento == null) {
-            entradasValidas = false;
-            jLabMensajeFechaNacimiento.setForeground(Color.RED);
-            jLabMensajeFechaNacimiento.setText("Debe seleccionar una fecha.");
-        } else {
-            LocalDate fechaNac = fechaNacimiento.toInstant().atZone(ZoneId.systemDefault()).
-                    toLocalDate();
-            if (fechaNac.isAfter(LocalDate.now().minusYears(18))) {
+
+            String detalles = jTADetalles.getText();
+            if (detalles.isBlank()) {
                 entradasValidas = false;
-                jLabMensajeFechaNacimiento.setForeground(Color.RED);
-                jLabMensajeFechaNacimiento.setText("No puede haber bomberos menores de edad.");
+                jLabMensajeJTADetalles.setForeground(Color.RED);
+                jLabMensajeJTADetalles.setText("Debe completar este campo.");
             } else {
-                bombero.setFechaNacimiento(fechaNac);
+                siniestro.setDetalles(detalles);
             }
-        }
-        
-        String celular = jTFCelular.getText();
-        if (celular.isBlank()) {
-            entradasValidas = false;
-            jLabMensajeCelular.setForeground(Color.RED);
-            jLabMensajeCelular.setText("Debe completar este campo.");
-        } else {
-            bombero.setCelular(celular);
-        }
-        
-        if (jCBBrigadas.getSelectedIndex() == -1) {
-            entradasValidas = false;
-            jLabMensajeBrigada.setForeground(Color.RED);
-            jLabMensajeBrigada.setText("Debe seleccionar un cuartel.");
-        } else {
-            bombero.setBrigada((Brigada) jCBBrigadas.getSelectedItem());
-        }
-        
-        if (entradasValidas && enAgregacion) {
-            if (bomberoData.guardarBombero(bombero)) {
-                jLabAux.setText("<html>Se registró al bombero con DNI: \"" + bombero.getDni()
-                        + "\".</html>");
-                JOptionPane.showMessageDialog(this, jLabAux, "Información",
-                        JOptionPane.INFORMATION_MESSAGE);
-                configurarJCBBomberos();
-                modoPrevioABusqueda();
-                jTFDNI.setText("");
-                enOperacion = false;
-                enAgregacion = false;
+
+            // nota: revisar si esto funciona
+            LocalDate fechaInicio = jDCFechaInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).
+                    toLocalDate();
+            LocalTime horaInicio = LocalTime.parse(String.valueOf(jSpHoraInicio.getValue()),
+                    DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
+            if (fechaInicio == null && horaInicio == null) {
+                entradasValidas = false;
+                jLabMensajeFechaHoraInicio.setForeground(Color.RED);
+                jLabMensajeFechaHoraInicio.setText("Debe seleccionar una fecha y una hora.");
+            } else if (fechaInicio == null) {
+                entradasValidas = false;
+                jLabMensajeFechaHoraInicio.setForeground(Color.RED);
+                jLabMensajeFechaHoraInicio.setText("Debe seleccionar una fecha.");
+            } else if (horaInicio == null) {
+                entradasValidas = false;
+                jLabMensajeFechaHoraInicio.setForeground(Color.RED);
+                jLabMensajeFechaHoraInicio.setText("Debe seleccionar una hora.");
             } else {
-                jLabAux.setText("<html>No se pudo registrar al bombero con DNI: \""
-                        + bombero.getDni() + "\".</html>");
-                JOptionPane.showMessageDialog(this, jLabAux, "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                LocalDateTime fechaHoraInicio = LocalDateTime.of(fechaInicio, horaInicio);
+                if (fechaHoraInicio.isAfter(LocalDateTime.now())) {
+                    entradasValidas = false;
+                    jLabMensajeFechaHoraInicio.setForeground(Color.RED);
+                    jLabMensajeFechaHoraInicio.setText("<html>La fecha y hora de inicio del incidente no pueden ser posteriores a la fecha y hora actual.</html>");
+                } else {
+                    siniestro.setFechaHoraInicio(fechaHoraInicio);
+                }
             }
-        } else if (entradasValidas && enModificacion) {
-            if (bomberoData.modificarBombero(bombero)) {
-                jLabAux.setText("<html>Se ha modificado al bombero con DNI: \"" + bombero.getDni()
-                        + "\".</html>");
-                JOptionPane.showMessageDialog(this, jLabAux, "Información",
-                        JOptionPane.INFORMATION_MESSAGE);
-                configurarJCBBomberos();
-                modoPrevioABusqueda();
-                jTFDNI.setText("");
-                enOperacion = false;
-                enModificacion = false;
+
+            if (entradasValidas && enAgregacion) {
+                if (siniestroData.guardarSiniestro(siniestro)) {
+                    jLabAux.setText("<html>Se registró la emergencia.</html>");
+                    JOptionPane.showMessageDialog(this, jLabAux, "Información",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    configurarJCBEmergencias();
+                    modoPrevioASeleccion();
+                    enOperacion = false;
+                    enAgregacion = false;
+                } else {
+                    jLabAux.setText("<html>No se pudo registrar la emergencia.</html>");
+                    JOptionPane.showMessageDialog(this, jLabAux, "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (entradasValidas && enModificacion) {
+                if (siniestroData.modificarSiniestro(siniestro)) {
+                    jLabAux.setText("<html>Se ha modificado la emergencia.</html>");
+                    JOptionPane.showMessageDialog(this, jLabAux, "Información",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    configurarJCBEmergencias();
+                    modoPrevioASeleccion();
+                    enOperacion = false;
+                    enModificacion = false;
+                } else {
+                    jLabAux.setText("<html>No se pudo modificar la emergencia.</html>");
+                    JOptionPane.showMessageDialog(this, jLabAux, "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else if (enEstablecerResolucion) {
+            // nota: revisar si esto funciona
+            LocalDate fechaResolucion = jDCFechaInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).
+                    toLocalDate();
+            LocalTime horaResolucion = LocalTime.parse(String.valueOf(jSpHoraInicio.getValue()),
+                    DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
+            if (fechaResolucion == null && horaResolucion == null) {
+                entradasValidas = false;
+                jLabMensajeFechaHoraResolucion.setForeground(Color.RED);
+                jLabMensajeFechaHoraResolucion.setText("Debe seleccionar una fecha y una hora.");
+            } else if (fechaResolucion == null) {
+                entradasValidas = false;
+                jLabMensajeFechaHoraResolucion.setForeground(Color.RED);
+                jLabMensajeFechaHoraResolucion.setText("Debe seleccionar una fecha.");
+            } else if (horaResolucion == null) {
+                entradasValidas = false;
+                jLabMensajeFechaHoraResolucion.setForeground(Color.RED);
+                jLabMensajeFechaHoraResolucion.setText("Debe seleccionar una hora.");
             } else {
-                jLabAux.setText("<html>No se pudo modificar al bombero con DNI: \""
-                        + bombero.getDni() + "\".</html>");
-                JOptionPane.showMessageDialog(this, jLabAux, "Error", JOptionPane.ERROR_MESSAGE);
+                LocalDateTime fechaHoraResolucion = LocalDateTime.of(fechaResolucion, horaResolucion);
+                if (fechaHoraResolucion.isAfter(LocalDateTime.now())) {
+                    entradasValidas = false;
+                    jLabMensajeFechaHoraResolucion.setForeground(Color.RED);
+                    jLabMensajeFechaHoraResolucion.setText("<html>La fecha y hora de resolución de la emergencia no pueden ser posteriores a la fecha y hora actual.</html>");
+                } else if (siniestro.getFechaHoraInicio().isAfter(fechaHoraResolucion)) {
+                    entradasValidas = false;
+                    jLabMensajeFechaHoraResolucion.setForeground(Color.RED);
+                    jLabMensajeFechaHoraResolucion.setText("<html>La fecha y hora de resolución de la emergencia  no pueden ser anteriores a la fecha y hora de inicio de ka misma.</html>");
+                } else {
+                    siniestro.setFechaHoraResolucion(fechaHoraResolucion);
+                }
+            }
+
+            String strDesempeño = jTFDesempeño.getText().trim();
+            try {
+                int intDesempeño = Integer.parseInt(strDesempeño);
+                if (intDesempeño < 1 || intDesempeño > 10) {
+                    entradasValidas = false;
+                    jLabMensajeJTFDesempeño.setForeground(Color.RED);
+                    jLabMensajeJTFDesempeño.setText("<html>Debe ingresar un número entero entre el 1 y el 10, inclusive.</html>");
+                    siniestro.setPuntuacion(intDesempeño);
+                }
+            } catch (NumberFormatException e) {
+                entradasValidas = false;
+                if (strDesempeño.isBlank()) {
+                    jLabMensajeJTFDesempeño.setForeground(Color.RED);
+                    jLabMensajeJTFDesempeño.setText("<html>Debe completar este campo.</html>");
+                } else {
+                    jLabMensajeJTFDesempeño.setForeground(Color.RED);
+                    jLabMensajeJTFDesempeño.setText("<html>Debe ingresar un número entero entre el 1 y el 10, inclusive.</html>");
+                }
+            }
+
+            if (entradasValidas) {
+                if (siniestroData.modificarSiniestro(siniestro)) {
+                    jLabAux.setText("<html>Se agregó la resolución a la emergencia.</html>");
+                    JOptionPane.showMessageDialog(this, jLabAux, "Información",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    configurarJCBEmergencias();
+                    modoPrevioASeleccion();
+                    enOperacion = false;
+                    enEstablecerResolucion = false;
+                } else {
+                    jLabAux.setText("<html>No se pudo agregar la resolución a la emergencia.</html>");
+                    JOptionPane.showMessageDialog(this, jLabAux, "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_jBGuardarActionPerformed
@@ -927,116 +975,59 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
     private void jBModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBModificarActionPerformed
         enModificacion = true;
         modoOperacion();
-        
-        jLabMensajeDNI.setText("");
-        jLabMensajeDemasDatos.setForeground(Color.BLUE);
-        jLabMensajeDemasDatos.setText("<html>Modifique los datos que desee. También puede "
-                + "modificar el DNI.</html>");
+
+        jLabMensajeJPDatos.setForeground(Color.BLUE);
+        jLabMensajeJPDatos.setText("<html>Modifique los datos que desee. Recuerde que si desea "
+                + "cambiar la brigada asignada o algún dato referido a la resolución de la "
+                + "emergencia, debe hacer click en los botones \"" + jBBrigada + "\" o "
+                + "\"" + jBResolucion + "\", respectivamente.</html>");
     }//GEN-LAST:event_jBModificarActionPerformed
 
-    private void jCBBomberosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBBomberosActionPerformed
-        bombero = (Bombero) jCBBomberos.getSelectedItem();
+    private void jCBEmergenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBEmergenciasActionPerformed
+        siniestro = (Siniestro) jCBEmergencias.getSelectedItem();
 
         // evita que el programa entre en modo "registro encontrado" cada vez que se genera un 
-        // actionEvent en "jCBBomberos" sin la intervención del usuario y, además, el índice 
+        // actionEvent en "jCBEmergencias" sin la intervención del usuario y, además, el índice 
         // seleccionado en dicho componente es distinto de -1 (situación que ocurre al agregar el 
-        // primer item a "jCBBomberos" en "configurarjCBBomberos)
-        if (bombero != null && programaCambiandoJCBBomberos == false) {
+        // primer item a "jCBEmergencias" en "configurarJCBEmergencias)
+        if (siniestro != null && programaCambiandoJCBEmergencias == false) {
             modoRegistroEncontrado();
         }
-    }//GEN-LAST:event_jCBBomberosActionPerformed
-
-    private void jBBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBuscarActionPerformed
-        String strDNI = jTFDNI.getText().trim();
-        int intDNI;
-        
-        try {
-            intDNI = Integer.parseInt(strDNI);
-            if (intDNI < 10000000 || intDNI > 99999999) {
-                jLabMensajeDNI.setForeground(Color.RED);
-                jLabMensajeDNI.setText("<html>Debe ingresar un DNI válido.</html>");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            if (strDNI.isBlank()) {
-                jLabMensajeDNI.setForeground(Color.RED);
-                jLabMensajeDNI.setText("<html>Debe ingresar el DNI que desea buscar.</html>");
-            } else {
-                jLabMensajeDNI.setForeground(Color.RED);
-                jLabMensajeDNI.setText("<html>Debe ingresar un DNI válido.</html>");
-            }
-            return;
-        }
-        
-        if (bomberoData.estaDNIentreInactivos(intDNI)) {
-            jLabMensajeDemasDatos.setText("");
-            jLabMensajeDNI.setForeground(Color.RED);
-            jLabMensajeDNI.setText("<html>Este DNI ya se encuentra ocupado por un bombero "
-                    + "dado de baja. Por favor, ingrese otro.</html>");
-            return;
-        }
-        
-        bombero = bomberoData.buscarBomberoPorDNI(intDNI);
-        if (bombero != null) {
-            modoRegistroEncontrado();
-        } else {
-            bombero = new Bombero();
-            modoRegistroNoEncontrado();
-        }
-    }//GEN-LAST:event_jBBuscarActionPerformed
+    }//GEN-LAST:event_jCBEmergenciasActionPerformed
 
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
         enAgregacion = true;
         modoOperacion();
-        
-        jLabMensajeDNI.setText("");
-        jLabMensajeDemasDatos.setForeground(Color.BLUE);
-        jLabMensajeDemasDatos.setText("<html>Complete los campos de los demás datos del "
-                + "bombero.</html>");
+
+        jLabMensajeJPDatos.setForeground(Color.BLUE);
+        jLabMensajeJPDatos.setText("<html>Complete los campos de los datos solicitados de la "
+                + "emergencia.</html>");
     }//GEN-LAST:event_jBAgregarActionPerformed
 
-    private void jBDarDeBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBDarDeBajaActionPerformed
-        int dni = bombero.getDni();
-        
-        jLabAux.setText("<html>¿Está seguro de querer dar de baja al bombero con DNI: \""
-                + dni + "\"?</html>");
+    private void jBEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBEliminarActionPerformed
+        jLabAux.setText("<html>¿Está seguro de querer eliminar esta emergencia de los registros?</html>");
         if (JOptionPane.showConfirmDialog(this, jLabAux, "Advertencia", JOptionPane.YES_NO_OPTION)
                 == JOptionPane.YES_OPTION) {
-            if (bomberoData.eliminarBomberoPorDNI(dni)) {
-                jLabAux.setText("<html>Se dió de baja al bombero con DNI: \"" + dni
-                        + "\".</html>");
+            if (siniestroData.eliminarSiniestro(siniestro.getCodigoSiniestro())) {
+                jLabAux.setText("<html>Se eliminó la emergencia de los registros.</html>");
                 JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
-                configurarJCBBomberos();
-                jTFDNI.setText("");
-                modoPrevioABusqueda();
+                configurarJCBEmergencias();
+                modoPrevioASeleccion();
             } else {
-                jLabAux.setText("<html>No se pudo dar de baja al bombero con DNI: \"" + dni
-                        + "\".</html>");
+                jLabAux.setText("<html>No se pudo eliminar la emergencia de los registros.</html>");
                 JOptionPane.showMessageDialog(this, jLabAux, "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
-    }//GEN-LAST:event_jBDarDeBajaActionPerformed
+    }//GEN-LAST:event_jBEliminarActionPerformed
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
         enOperacion = false;
-        if (enAgregacion) {
-            modoRegistroNoEncontrado();
-        } else if (enModificacion) {
-            modoRegistroEncontrado();
-        }
+        modoRegistroEncontrado();
     }//GEN-LAST:event_jBCancelarActionPerformed
 
-    private void jTFDNIKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFDNIKeyTyped
-        if (!enModificacion) {
-            modoPrevioABusqueda();
-        }
-    }//GEN-LAST:event_jTFDNIKeyTyped
-
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
-        configurarJCBBrigadas();
-
         // parte de un parche para evitar que el enfoque caiga sobre un componente inhabilitado
         // al cambiar de JInternalFrame 
         this.requestFocusInWindow();
@@ -1045,48 +1036,52 @@ public class GestionEmergencia extends javax.swing.JInternalFrame {
     private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
         // parte de un parche para evitar que el enfoque caiga sobre un componente inhabilitado
         // al cambiar de JInternalFrame 
-        jTFDNI.requestFocusInWindow();
+        jCBEmergencias.requestFocusInWindow();
     }//GEN-LAST:event_formFocusGained
-
-    private void jDCFechaNacimientoMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jDCFechaNacimientoMouseMoved
-        jDCFechaNacimiento.setToolTipText("");
-    }//GEN-LAST:event_jDCFechaNacimientoMouseMoved
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBAgregar;
-    private javax.swing.JButton jBBuscar;
+    private javax.swing.JButton jBBrigada;
     private javax.swing.JButton jBCancelar;
-    private javax.swing.JButton jBDarDeBaja;
+    private javax.swing.JButton jBEliminar;
     private javax.swing.JButton jBGuardar;
     private javax.swing.JButton jBLimpiar;
     private javax.swing.JButton jBModificar;
+    private javax.swing.JButton jBResolucion;
     private javax.swing.JButton jBSalir;
-    private javax.swing.JComboBox<Bombero> jCBBomberos;
-    private javax.swing.JComboBox<Brigada> jCBBrigadas;
-    private javax.swing.JComboBox<String> jCBGrupoSanguineo;
-    private com.toedter.calendar.JDateChooser jDCFechaNacimiento;
-    private javax.swing.JLabel jLabBombero;
+    private javax.swing.JComboBox<Siniestro> jCBEmergencias;
+    private javax.swing.JComboBox<String> jCBTipos;
+    private com.toedter.calendar.JDateChooser jDCFechaInicio;
+    private com.toedter.calendar.JDateChooser jDCFechaResolucion;
     private javax.swing.JLabel jLabBrigada;
     private javax.swing.JLabel jLabBuscarConCB;
-    private javax.swing.JLabel jLabBuscarConTF;
-    private javax.swing.JLabel jLabCelular;
-    private javax.swing.JLabel jLabDNI;
-    private javax.swing.JLabel jLabDemasDatos;
-    private javax.swing.JLabel jLabFechaNacimiento;
-    private javax.swing.JLabel jLabGestionBomberos;
-    private javax.swing.JLabel jLabGrupoSanguineo;
-    private javax.swing.JLabel jLabMensajeBombero;
-    private javax.swing.JLabel jLabMensajeBrigada;
-    private javax.swing.JLabel jLabMensajeCelular;
-    private javax.swing.JLabel jLabMensajeDNI;
-    private javax.swing.JLabel jLabMensajeDemasDatos;
-    private javax.swing.JLabel jLabMensajeFechaNacimiento;
-    private javax.swing.JLabel jLabMensajeGrupoSanguineo;
-    private javax.swing.JLabel jLabMensajeNomCompleto;
-    private javax.swing.JLabel jLabNombreCompleto;
-    private javax.swing.JPanel jPDemasDatos;
-    private javax.swing.JTextField jTFCelular;
-    private javax.swing.JTextField jTFDNI;
-    private javax.swing.JTextField jTFNombreCompleto;
+    private javax.swing.JLabel jLabCoorX;
+    private javax.swing.JLabel jLabCoorY;
+    private javax.swing.JLabel jLabDatos;
+    private javax.swing.JLabel jLabDesempeño;
+    private javax.swing.JLabel jLabDetalles;
+    private javax.swing.JLabel jLabEmergencia;
+    private javax.swing.JLabel jLabFechaInicio;
+    private javax.swing.JLabel jLabGestionEmergencias;
+    private javax.swing.JLabel jLabJDCFechaResolucion;
+    private javax.swing.JLabel jLabMensajeCoordenadas;
+    private javax.swing.JLabel jLabMensajeFechaHoraInicio;
+    private javax.swing.JLabel jLabMensajeFechaHoraResolucion;
+    private javax.swing.JLabel jLabMensajeJCBEmergencias;
+    private javax.swing.JLabel jLabMensajeJCBTipo;
+    private javax.swing.JLabel jLabMensajeJPDatos;
+    private javax.swing.JLabel jLabMensajeJTADetalles;
+    private javax.swing.JLabel jLabMensajeJTFBrigada;
+    private javax.swing.JLabel jLabMensajeJTFDesempeño;
+    private javax.swing.JLabel jLabTipo;
+    private javax.swing.JPanel jPDatos;
+    private javax.swing.JScrollPane jScPDetalles;
+    private javax.swing.JSpinner jSpHoraInicio;
+    private javax.swing.JSpinner jSpHoraResolucion;
+    private javax.swing.JTextArea jTADetalles;
+    private javax.swing.JTextField jTFBrigada;
+    private javax.swing.JTextField jTFCoorX;
+    private javax.swing.JTextField jTFCoorY;
+    private javax.swing.JTextField jTFDesempeño;
     // End of variables declaration//GEN-END:variables
 }
