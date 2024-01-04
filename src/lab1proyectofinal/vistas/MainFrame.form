@@ -4,7 +4,7 @@
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="JMenuBarEntidades">
       <SubComponents>
-        <Menu class="javax.swing.JMenu" name="JMenuCuarteles">
+        <Menu class="javax.swing.JMenu" name="JMCuarteles">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cuarteles"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -12,7 +12,7 @@
             </Property>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="JMenuItemGestionCuarteles">
+            <MenuItem class="javax.swing.JMenuItem" name="JMIGestionCuarteles">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="14" style="0"/>
@@ -20,10 +20,10 @@
                 <Property name="text" type="java.lang.String" value="Gesti&#xf3;n de cuarteles"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JMenuItemGestionCuartelesActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JMIGestionCuartelesActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="JMenuItemListadosPorCuartel">
+            <MenuItem class="javax.swing.JMenuItem" name="JMIListadosPorCuartel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="14" style="0"/>
@@ -31,20 +31,20 @@
                 <Property name="text" type="java.lang.String" value="Listados por cuartel"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JMenuItemListadosPorCuartelActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JMIListadosPorCuartelActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="JMenuBrigada">
+        <Menu class="javax.swing.JMenu" name="JMBrigadas">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Brigada"/>
+            <Property name="text" type="java.lang.String" value="Brigadas"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Dialog" size="14" style="1"/>
             </Property>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="JMenuItemGestionBrigadas">
+            <MenuItem class="javax.swing.JMenuItem" name="JMIGestionBrigadas">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="14" style="0"/>
@@ -52,10 +52,10 @@
                 <Property name="text" type="java.lang.String" value="Gesti&#xf3;n de brigadas"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JMenuItemGestionBrigadasActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JMIGestionBrigadasActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemListadosPorBrigada">
+            <MenuItem class="javax.swing.JMenuItem" name="jMIListadosPorBrigada">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="14" style="0"/>
@@ -63,10 +63,10 @@
                 <Property name="text" type="java.lang.String" value="Listados por brigada"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemListadosPorBrigadaActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMIListadosPorBrigadaActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemBrigadasSegunSituacion">
+            <MenuItem class="javax.swing.JMenuItem" name="jMIBrigadasSegunSituacion">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="14" style="0"/>
@@ -74,59 +74,71 @@
                 <Property name="text" type="java.lang.String" value="Brigadas seg&#xfa;n situaci&#xf3;n"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemBrigadasSegunSituacionActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMIBrigadasSegunSituacionActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="bomberoMenu">
+        <Menu class="javax.swing.JMenu" name="jMBomberos">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Bombero"/>
+            <Property name="text" type="java.lang.String" value="Bomberos"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Dialog" size="14" style="1"/>
             </Property>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="gestionBomberoMI">
+            <MenuItem class="javax.swing.JMenuItem" name="jMIGestionBomberos">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Bombero"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="14" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Gesti&#xf3;n de bomberos"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gestionBomberoMIActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMIGestionBomberosActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMIListadoDeBomberos">
+            <MenuItem class="javax.swing.JMenuItem" name="jMIListadoBomberos">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="14" style="0"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Listado de bomberos"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMIListadoDeBomberosActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMIListadoBomberosActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="siniestroMenu">
+        <Menu class="javax.swing.JMenu" name="jMEmergencias">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Siniestro"/>
+            <Property name="text" type="java.lang.String" value="Emergencias"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Dialog" size="14" style="1"/>
             </Property>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="gestionSiniestroMI">
+            <MenuItem class="javax.swing.JMenuItem" name="jMIGestionEmergencias">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Siniestro"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="14" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Gesti&#xf3;n de emergencias"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gestionSiniestroMIActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMIGestionEmergenciasActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="tratamientoEmergenciaMI">
+            <MenuItem class="javax.swing.JMenuItem" name="jMIListadoEmergencias">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Tratamiento de Emergencia"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="14" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Listados de emergencias"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tratamientoEmergenciaMIActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMIListadoEmergenciasActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

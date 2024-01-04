@@ -46,7 +46,7 @@ public class ListadoDeBomberos extends javax.swing.JInternalFrame {
         jTaBomberos.getColumnModel().getColumn(2).setPreferredWidth(5);
         jTaBomberos.getColumnModel().getColumn(3).setPreferredWidth(5);
 
-        jTaBomberos.setRowHeight(20);
+        jTaBomberos.setRowHeight(23);
     }
 
     private void cargarDatosTablaBomberos() {

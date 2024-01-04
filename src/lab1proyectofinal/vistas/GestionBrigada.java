@@ -6,14 +6,12 @@ package lab1proyectofinal.vistas;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.MouseListener;
 import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import lab1proyectofinal.entidades.Cuartel;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.accesoADatos.CuartelData;
@@ -31,7 +29,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     private Brigada brigada;
     private List<Cuartel> listaCuartel;
     private List<Brigada> listaBrigada;
-    private boolean enOperacion = false;
+    private boolean enModoPrevioABusqueda;
     private boolean enAgregacion;
     private boolean enModificacion;
     private boolean programaCambiandoJCBBrigadas;
@@ -40,7 +38,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     private MouseListener[] mouseListenersJCBEspecialidadesAB;
     private MouseListener[] mouseListenersJCBCuarteles;
     private MouseListener[] mouseListenersJCBCuartelesAB;
-    private MouseListener[] mouseListenersJRBDisponible;
+    private MouseListener[] mouseListenersJRBEnServicio;
     private JLabel jLabAux = Utils.jLabConfigurado();
 
     public GestionBrigada(CuartelData cuartelData, BrigadaData brigadaData) {
@@ -52,8 +50,12 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         modoPrevioABusqueda();
     }
 
-    boolean isEnOperacion() {
-        return enOperacion;
+    public boolean isEnAgregacion() {
+        return enAgregacion;
+    }
+
+    public boolean isEnModificacion() {
+        return enModificacion;
     }
 
     void cancelarOperacion() {
@@ -67,8 +69,8 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         jCBBrigadas.removeAllItems();
         listaBrigada = brigadaData.listarBrigadas();
         if (listaBrigada.isEmpty()) {
-            jLabMensajeBrigada.setForeground(Color.BLACK);
-            jLabMensajeBrigada.setText("<html>Advertencia: no hay brigadas cargadas en el "
+            jLabMensajeBrigada.setForeground(Color.BLUE);
+            jLabMensajeBrigada.setText("<html>No hay brigadas cargadas en el "
                     + "sistema.</html>");
             programaCambiandoJCBBrigadas = false;
             return;
@@ -92,8 +94,8 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         jCBCuarteles.removeAllItems();
         listaCuartel = cuartelData.listarCuarteles();
         if (listaCuartel.isEmpty()) {
-            jLabMensajeCuarteles.setForeground(Color.BLACK);
-            jLabMensajeCuarteles.setText("<html>Advertencia: no hay cuarteles cargados en el "
+            jLabMensajeCuarteles.setForeground(Color.BLUE);
+            jLabMensajeCuarteles.setText("<html>No hay cuarteles cargados en el "
                     + "sistema.</html>");
             modoInhabilitado();
             jLabAux.setText("<html>No hay cuarteles registrados. No se puede agregar, modificar "
@@ -117,7 +119,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
 
     private void limpiarEntradasDeJPDemasDatos() {
         jCBEspecialidades.setSelectedIndex(-1);
-        BGDisponible.clearSelection();
+        BGEnServicio.clearSelection();
         jCBCuarteles.setSelectedIndex(-1);
     }
 
@@ -125,20 +127,20 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         jLabMensajeNombre.setText("");
         jLabMensajeDemasDatos.setText("");
         jLabMensajeEspecialidades.setText("");
-        jLabMensajeDisponible.setText("");
+        jLabMensajeEnServicio.setText("");
         jLabMensajeCuarteles.setText("");
     }
 
     private void borrarMensajesDeDatos() {
         jLabMensajeNombre.setText("");
         jLabMensajeEspecialidades.setText("");
-        jLabMensajeDisponible.setText("");
+        jLabMensajeEnServicio.setText("");
         jLabMensajeCuarteles.setText("");
     }
 
     private void borrarMensajesDeDemasDatos() {
         jLabMensajeEspecialidades.setText("");
-        jLabMensajeDisponible.setText("");
+        jLabMensajeEnServicio.setText("");
         jLabMensajeCuarteles.setText("");
     }
 
@@ -227,14 +229,14 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     private void soloLecturaJRB(JRadioButton jrb, boolean b) {
         if (b) {
             if (jrb.getMouseListeners().length > 0) {
-                mouseListenersJRBDisponible = jrb.getMouseListeners();
-                for (MouseListener listener : mouseListenersJRBDisponible) {
+                mouseListenersJRBEnServicio = jrb.getMouseListeners();
+                for (MouseListener listener : mouseListenersJRBEnServicio) {
                     jrb.removeMouseListener(listener);
                 }
             }
         } else {
             if (jrb.getMouseListeners().length == 0) {
-                for (MouseListener listener : mouseListenersJRBDisponible) {
+                for (MouseListener listener : mouseListenersJRBEnServicio) {
                     jrb.addMouseListener(listener);
                 }
             }
@@ -243,21 +245,21 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
 
     private void setEnabledDemasDatos(boolean b) {
         jCBEspecialidades.setEnabled(b);
-        jRBDisponibleNo.setEnabled(b);
-        jRBDisponibleSi.setEnabled(b);
+        jRBEnServicioNo.setEnabled(b);
+        jRBEnServicioSi.setEnabled(b);
         jCBCuarteles.setEnabled(b);
     }
 
     private void soloLecturaDemasDatos(boolean b) {
         if (b) {
             soloLecturaJCBEspecialidades(b);
-            soloLecturaJRB(jRBDisponibleSi, b);
-            soloLecturaJRB(jRBDisponibleNo, b);
+            soloLecturaJRB(jRBEnServicioSi, b);
+            soloLecturaJRB(jRBEnServicioNo, b);
             soloLecturaJCBCuarteles(b);
         } else {
             soloLecturaJCBEspecialidades(b);
-            soloLecturaJRB(jRBDisponibleSi, b);
-            soloLecturaJRB(jRBDisponibleNo, b);
+            soloLecturaJRB(jRBEnServicioSi, b);
+            soloLecturaJRB(jRBEnServicioNo, b);
             soloLecturaJCBCuarteles(b);
         }
     }
@@ -268,6 +270,10 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         1) No existen cuarteles activos y, por tanto, no se puede agregar, modificar o dar de baja a 
         una brigada, pues no existe ninguna activa.
          */
+
+        enModoPrevioABusqueda = false;
+        enAgregacion = false;
+        enModificacion = false;
 
         jBAgregar.setEnabled(false);
         jBModificar.setEnabled(false);
@@ -290,6 +296,10 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         2) Inmediatamente luego de una operación llevada a cabo exitosamente
         3) Se cambia el contenido de "jTextFieldNombre", sin modificar un registro.
          */
+
+        enModoPrevioABusqueda = true;
+        enAgregacion = false;
+        enModificacion = false;
 
         nombreRegEncontrado = null;
 
@@ -322,6 +332,10 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         2) Se cancela la modificación de un registro.
          */
 
+        enModoPrevioABusqueda = false;
+        enAgregacion = false;
+        enModificacion = false;
+
         if (jCBBrigadas.getSelectedIndex() == -1) {
             programaCambiandoJCBBrigadas = true;
             jCBBrigadas.setSelectedItem(brigada);
@@ -330,7 +344,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
 
         borrarMensajesDeDemasDatos();
 
-        jLabMensajeNombre.setForeground(Color.BLACK);
+        jLabMensajeNombre.setForeground(Color.BLUE);
         jLabMensajeNombre.setText("<html>Hay una brigada con este nombre entre las "
                 + "registradas.</html>");
         jLabMensajeDemasDatos.setForeground(Color.BLUE);
@@ -340,10 +354,10 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
 
         jTFNombre.setText(brigada.getNombreBrigada());
         jCBEspecialidades.setSelectedItem(brigada.getEspecialidad());
-        if (brigada.isDisponible()) {
-            jRBDisponibleSi.setSelected(true);
+        if (brigada.isEnServicio()) {
+            jRBEnServicioSi.setSelected(true);
         } else {
-            jRBDisponibleNo.setSelected(true);
+            jRBEnServicioNo.setSelected(true);
         }
         for (int i = 0; i < jCBCuarteles.getItemCount(); i++) {
             if (brigada.getCuartel().getNombreCuartel()
@@ -379,10 +393,14 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         2) Se cancela la agregación de un registro.
          */
 
+        enModoPrevioABusqueda = false;
+        enAgregacion = false;
+        enModificacion = false;
+
         limpiarEntradasDeJPDemasDatos();
         borrarMensajesDeDemasDatos();
 
-        jLabMensajeNombre.setForeground(Color.BLACK);
+        jLabMensajeNombre.setForeground(Color.BLUE);
         jLabMensajeNombre.setText("<html>No existe una brigada registrada con este "
                 + "nombre.</html>");
         jLabMensajeDemasDatos.setForeground(Color.BLUE);
@@ -412,9 +430,9 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         la solicitud de confirmación posterior).
          */
 
-        borrarMensajesDeDatos();
+        enModoPrevioABusqueda = false;
 
-        enOperacion = true;
+        borrarMensajesDeDatos();
 
         jBAgregar.setEnabled(false);
         jBBuscar.setEnabled(false);
@@ -443,7 +461,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        BGDisponible = new javax.swing.ButtonGroup();
+        BGEnServicio = new javax.swing.ButtonGroup();
         jLabNombre = new javax.swing.JLabel();
         jTFNombre = new javax.swing.JTextField();
         jBGuardar = new javax.swing.JButton();
@@ -454,7 +472,6 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         jBCancelar = new javax.swing.JButton();
         jBDarDeBaja = new javax.swing.JButton();
         jLabMensajeNombre = new javax.swing.JLabel();
-        jLabBrigada = new javax.swing.JLabel();
         jCBBrigadas = new javax.swing.JComboBox<>();
         jLabBuscarConCB = new javax.swing.JLabel();
         jLabBuscarConTF = new javax.swing.JLabel();
@@ -465,13 +482,13 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         jPDemasDatos = new javax.swing.JPanel();
         jLabEspecialidad = new javax.swing.JLabel();
         jLabCuartel = new javax.swing.JLabel();
-        jLabMensajeDisponible = new javax.swing.JLabel();
+        jLabMensajeEnServicio = new javax.swing.JLabel();
         jLabMensajeEspecialidades = new javax.swing.JLabel();
         jBLimpiar = new javax.swing.JButton();
-        jLabDisponible = new javax.swing.JLabel();
+        jLabEnServicio = new javax.swing.JLabel();
         jCBEspecialidades = new javax.swing.JComboBox<>();
-        jRBDisponibleSi = new javax.swing.JRadioButton();
-        jRBDisponibleNo = new javax.swing.JRadioButton();
+        jRBEnServicioSi = new javax.swing.JRadioButton();
+        jRBEnServicioNo = new javax.swing.JRadioButton();
         jLabMensajeCuarteles = new javax.swing.JLabel();
         jCBCuarteles = new javax.swing.JComboBox<>();
 
@@ -502,7 +519,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
 
         jLabNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabNombre.setText("Nombre:");
-        getContentPane().add(jLabNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 274, -1, -1));
+        getContentPane().add(jLabNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, -1, -1));
 
         jTFNombre.setColumns(20);
         jTFNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -511,7 +528,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
                 jTFNombreKeyTyped(evt);
             }
         });
-        getContentPane().add(jTFNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 200, -1));
+        getContentPane().add(jTFNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 270, 250, -1));
 
         jBGuardar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jBGuardar.setText("Guardar");
@@ -579,11 +596,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
 
         jLabMensajeNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabMensajeNombre.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabMensajeNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 305, 340, 40));
-
-        jLabBrigada.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabBrigada.setText("Brigada:");
-        getContentPane().add(jLabBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 133, -1, -1));
+        getContentPane().add(jLabMensajeNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 310, 340, 40));
 
         jCBBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jCBBrigadas.setMaximumRowCount(10);
@@ -592,7 +605,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
                 jCBBrigadasActionPerformed(evt);
             }
         });
-        getContentPane().add(jCBBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 200, -1));
+        getContentPane().add(jCBBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 380, -1));
 
         jLabBuscarConCB.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabBuscarConCB.setText("Puede seleccionar una brigada de entre las registradas:");
@@ -634,8 +647,8 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         jLabCuartel.setText("Cuartel:");
         jPDemasDatos.add(jLabCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 172, -1, -1));
 
-        jLabMensajeDisponible.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeDisponible, new org.netbeans.lib.awtextra.AbsoluteConstraints(132, 125, 340, 23));
+        jLabMensajeEnServicio.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeEnServicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(132, 125, 340, 23));
 
         jLabMensajeEspecialidades.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jPDemasDatos.add(jLabMensajeEspecialidades, new org.netbeans.lib.awtextra.AbsoluteConstraints(132, 55, 340, 23));
@@ -649,22 +662,22 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
         });
         jPDemasDatos.add(jBLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 260, -1, -1));
 
-        jLabDisponible.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabDisponible.setText("Disponible:");
-        jPDemasDatos.add(jLabDisponible, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 95, -1, -1));
+        jLabEnServicio.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabEnServicio.setText("En servicio:");
+        jPDemasDatos.add(jLabEnServicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 95, -1, -1));
 
         jCBEspecialidades.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jPDemasDatos.add(jCBEspecialidades, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 20, 340, -1));
 
-        BGDisponible.add(jRBDisponibleSi);
-        jRBDisponibleSi.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jRBDisponibleSi.setText("Si");
-        jPDemasDatos.add(jRBDisponibleSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 95, -1, -1));
+        BGEnServicio.add(jRBEnServicioSi);
+        jRBEnServicioSi.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jRBEnServicioSi.setText("Si");
+        jPDemasDatos.add(jRBEnServicioSi, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 95, -1, -1));
 
-        BGDisponible.add(jRBDisponibleNo);
-        jRBDisponibleNo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jRBDisponibleNo.setText("No");
-        jPDemasDatos.add(jRBDisponibleNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 95, -1, -1));
+        BGEnServicio.add(jRBEnServicioNo);
+        jRBEnServicioNo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jRBEnServicioNo.setText("No");
+        jPDemasDatos.add(jRBEnServicioNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 95, -1, -1));
 
         jLabMensajeCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jPDemasDatos.add(jLabMensajeCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(132, 202, 340, 40));
@@ -725,14 +738,14 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
             jLabMensajeEspecialidades.setText("Debe seleccionar una especialidad.");
         }
 
-        if (jRBDisponibleSi.isSelected()) {
-            brigada.setDisponible(true);
-        } else if (jRBDisponibleNo.isSelected()) {
-            brigada.setDisponible(false);
+        if (jRBEnServicioSi.isSelected()) {
+            brigada.setEnServicio(true);
+        } else if (jRBEnServicioNo.isSelected()) {
+            brigada.setEnServicio(false);
         } else {
             entradasValidas = false;
-            jLabMensajeDisponible.setForeground(Color.RED);
-            jLabMensajeDisponible.setText("Debe determinar la disponibilidad.");
+            jLabMensajeEnServicio.setForeground(Color.RED);
+            jLabMensajeEnServicio.setText("Debe indicar si la brigada está en servicio.");
         }
 
         if (jCBCuarteles.getSelectedIndex() == -1) {
@@ -750,10 +763,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
                 configurarJCBBrigadas();
-                modoPrevioABusqueda();
-                jTFNombre.setText("");
-                enAgregacion = false;
-                enOperacion = false;
+                modoRegistroEncontrado();
             } else {
                 jLabAux.setText("<html>No se pudo registrar la brigada \""
                         + brigada.getNombreBrigada() + "\".</html>");
@@ -766,10 +776,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
                 configurarJCBBrigadas();
-                modoPrevioABusqueda();
-                jTFNombre.setText("");
-                enOperacion = false;
-                enModificacion = false;
+                modoRegistroEncontrado();
             } else {
                 jLabAux.setText("<html>No se pudo modificar la brigada \""
                         + brigada.getNombreBrigada() + "\".</html>");
@@ -867,7 +874,6 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jBDarDeBajaActionPerformed
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
-        enOperacion = false;
         if (enAgregacion) {
             modoRegistroNoEncontrado();
         } else if (enModificacion) {
@@ -876,7 +882,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jTFNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFNombreKeyTyped
-        if (!enModificacion) {
+        if (!enModificacion && !enModoPrevioABusqueda) {
             modoPrevioABusqueda();
         }
     }//GEN-LAST:event_jTFNombreKeyTyped
@@ -896,7 +902,7 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formFocusGained
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup BGDisponible;
+    private javax.swing.ButtonGroup BGEnServicio;
     private javax.swing.JButton jBAgregar;
     private javax.swing.JButton jBBuscar;
     private javax.swing.JButton jBCancelar;
@@ -908,24 +914,23 @@ public class GestionBrigada extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<Brigada> jCBBrigadas;
     private javax.swing.JComboBox<Cuartel> jCBCuarteles;
     private javax.swing.JComboBox<String> jCBEspecialidades;
-    private javax.swing.JLabel jLabBrigada;
     private javax.swing.JLabel jLabBuscarConCB;
     private javax.swing.JLabel jLabBuscarConTF;
     private javax.swing.JLabel jLabCuartel;
     private javax.swing.JLabel jLabDemasDatos;
-    private javax.swing.JLabel jLabDisponible;
+    private javax.swing.JLabel jLabEnServicio;
     private javax.swing.JLabel jLabEspecialidad;
     private javax.swing.JLabel jLabGestionBrigadas;
     private javax.swing.JLabel jLabMensajeBrigada;
     private javax.swing.JLabel jLabMensajeCuarteles;
     private javax.swing.JLabel jLabMensajeDemasDatos;
-    private javax.swing.JLabel jLabMensajeDisponible;
+    private javax.swing.JLabel jLabMensajeEnServicio;
     private javax.swing.JLabel jLabMensajeEspecialidades;
     private javax.swing.JLabel jLabMensajeNombre;
     private javax.swing.JLabel jLabNombre;
     private javax.swing.JPanel jPDemasDatos;
-    private javax.swing.JRadioButton jRBDisponibleNo;
-    private javax.swing.JRadioButton jRBDisponibleSi;
+    private javax.swing.JRadioButton jRBEnServicioNo;
+    private javax.swing.JRadioButton jRBEnServicioSi;
     private javax.swing.JTextField jTFNombre;
     // End of variables declaration//GEN-END:variables
 }

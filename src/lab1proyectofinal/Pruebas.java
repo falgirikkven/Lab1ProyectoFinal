@@ -9,12 +9,12 @@ import lab1proyectofinal.accesoADatos.BomberoData;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.Conexion;
 import lab1proyectofinal.accesoADatos.CuartelData;
-import lab1proyectofinal.accesoADatos.SiniestroData;
+import lab1proyectofinal.accesoADatos.EmergenciaData;
 import lab1proyectofinal.accesoADatos.Utils;
 import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.entidades.Cuartel;
-import lab1proyectofinal.entidades.Siniestro;
+import lab1proyectofinal.entidades.Emergencia;
 
 /**
  *
@@ -34,7 +34,7 @@ public class Pruebas {
             return;
         }
 
-        SiniestroData.inicializar();
+        EmergenciaData.inicializar();
 
         /* RECORDATORIO: Limpiar base de datos antes de ejecutar las pruebas */
         System.out.println("[RECORDATORIO] Limpiar base de datos antes de ejecutar las pruebas");
@@ -183,19 +183,19 @@ public class Pruebas {
         // ***** SINIESTRO PRUEBAS *****
         System.out.println("\n***** SINIESTRO PRUEBAS *****");
 
-        // Siniestro data
-        SiniestroData siniestroData = new SiniestroData();
+        // Emergencia data
+        EmergenciaData siniestroData = new EmergenciaData();
 
         // Siniestros
-        Siniestro siniestro1 = new Siniestro(especialidades[0], LocalDateTime.of(2023, Month.NOVEMBER, 1, 12, 12, 13), 1, 10, "Mucho humo");
-        Siniestro siniestro2 = new Siniestro(especialidades[1], LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 13, 12), 2, -9, "Mucho escombro", brigada1);
-        Siniestro siniestro3 = new Siniestro(especialidades[2], LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 24, 32), -5, 8, "Al desarmadero", brigada2);
-        Siniestro siniestro4 = new Siniestro(especialidades[3], LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 32, 48), -6, -7, "NADA", brigada3, LocalDateTime.of(2023, Month.NOVEMBER, 5, 17, 0, 21), 10);
-        Siniestro siniestros[] = new Siniestro[]{siniestro1, siniestro2, siniestro3, siniestro4};
+        Emergencia siniestro1 = new Emergencia(especialidades[0], LocalDateTime.of(2023, Month.NOVEMBER, 1, 12, 12, 13), 1, 10, "Mucho humo");
+        Emergencia siniestro2 = new Emergencia(especialidades[1], LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 13, 12), 2, -9, "Mucho escombro", brigada1);
+        Emergencia siniestro3 = new Emergencia(especialidades[2], LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 24, 32), -5, 8, "Al desarmadero", brigada2);
+        Emergencia siniestro4 = new Emergencia(especialidades[3], LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 32, 48), -6, -7, "NADA", brigada3, LocalDateTime.of(2023, Month.NOVEMBER, 5, 17, 0, 21), 10);
+        Emergencia siniestros[] = new Emergencia[]{siniestro1, siniestro2, siniestro3, siniestro4};
 
         // Guardar Siniestros
         System.out.println("\n----- Guardar Siniestros -----");
-        for (Siniestro siniestro : siniestros) {
+        for (Emergencia siniestro : siniestros) {
             siniestroData.guardarSiniestro(siniestro);
         }
 
@@ -204,21 +204,21 @@ public class Pruebas {
         siniestroData.buscarSiniestro(siniestro1.getCodigoSiniestro()); // No deberia fallar
         siniestroData.buscarSiniestro(-2); // Deberia fallar
 
-        // Modificar Siniestro
-        Siniestro siniestroModificado = new Siniestro("Accidente FATAL", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 30), -666, -666, "Se ve al diablo", brigada3);
+        // Modificar Emergencia
+        Emergencia siniestroModificado = new Emergencia("Accidente FATAL", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 30), -666, -666, "Se ve al diablo", brigada3);
         siniestroModificado.setCodigoSiniestro(siniestro3.getCodigoSiniestro());
         System.out.println("\n----- Modificar Siniestro (con codigoSiniestro=" + Integer.toString(siniestroModificado.getCodigoSiniestro()) + " ) -----");
         siniestroData.modificarSiniestro(siniestroModificado);
 
-        // Eliminar Siniestro
+        // Eliminar Emergencia
         int cualSiniestroEliminar = siniestro3.getCodigoSiniestro();
         System.out.println("\n----- Eliminar Siniestro (con codigoSiniestro=" + cualSiniestroEliminar + ") -----");
         siniestroData.eliminarSiniestro(cualSiniestroEliminar);
 
         // Listar Siniestros
         System.out.println("\n----- Listar Siniestros -----");
-        List<Siniestro> listaSiniestros = siniestroData.listarSiniestros();
-        for (Siniestro siniestro : listaSiniestros) {
+        List<Emergencia> listaSiniestros = siniestroData.listarSiniestros();
+        for (Emergencia siniestro : listaSiniestros) {
             System.out.println(siniestro.debugToString());
         }
         // ***** FIN SINIESTRO PRUEBAS *****

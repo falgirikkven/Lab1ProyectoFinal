@@ -1,6 +1,5 @@
 package lab1proyectofinal.entidades;
 
-import java.util.Objects;
 import lab1proyectofinal.accesoADatos.Utils;
 
 /**
@@ -9,20 +8,20 @@ import lab1proyectofinal.accesoADatos.Utils;
  */
 public class Brigada {
 
-    private int codigoBrigada = Utils.NIL;
+    private int codigoBrigada = Utils.codigoNoEstablecido;
     private String nombreBrigada;
     private String especialidad;
-    private boolean disponible;
+    private boolean enServicio;
     private Cuartel cuartel;
     private boolean estado = true;
 
     public Brigada() {
     }
 
-    public Brigada(String nombreBrigada, String especialidad, boolean disponible, Cuartel cuartel) {
+    public Brigada(String nombreBrigada, String especialidad, boolean enServicio, Cuartel cuartel) {
         this.nombreBrigada = nombreBrigada;
         this.especialidad = especialidad;
-        this.disponible = disponible;
+        this.enServicio = enServicio;
         this.cuartel = cuartel;
     }
 
@@ -50,12 +49,12 @@ public class Brigada {
         this.especialidad = especialidad;
     }
 
-    public boolean isDisponible() {
-        return disponible;
+    public boolean isEnServicio() {
+        return enServicio;
     }
 
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
+    public void setEnServicio(boolean enServicio) {
+        this.enServicio = enServicio;
     }
 
     public Cuartel getCuartel() {
@@ -75,54 +74,11 @@ public class Brigada {
     }
 
     public String debugToString() {
-        return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", disponible=" + disponible + ", codigoCuartel=" + Integer.toString(cuartel.getCodigoCuartel()) + ", estado=" + estado + '}';
+        return "Brigada{" + "codigoBrigada=" + codigoBrigada + ", nombreBrigada=" + nombreBrigada + ", especialidad=" + especialidad + ", enServicio=" + enServicio + ", codigoCuartel=" + Integer.toString(cuartel.getCodigoCuartel()) + ", estado=" + estado + '}';
     }
-
+        
     @Override
     public String toString() {
-        return nombreBrigada;
+        return "Nombre: " + nombreBrigada;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + this.codigoBrigada;
-        hash = 67 * hash + Objects.hashCode(this.nombreBrigada);
-        hash = 67 * hash + Objects.hashCode(this.especialidad);
-        hash = 67 * hash + (this.disponible ? 1 : 0);
-        hash = 67 * hash + Objects.hashCode(this.cuartel);
-        hash = 67 * hash + (this.estado ? 1 : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Brigada other = (Brigada) obj;
-        if (this.codigoBrigada != other.codigoBrigada) {
-            return false;
-        }
-        if (this.disponible != other.disponible) {
-            return false;
-        }
-        if (this.estado != other.estado) {
-            return false;
-        }
-        if (!Objects.equals(this.nombreBrigada, other.nombreBrigada)) {
-            return false;
-        }
-        if (!Objects.equals(this.especialidad, other.especialidad)) {
-            return false;
-        }
-        return Objects.equals(this.cuartel, other.cuartel);
-    }
-
 }

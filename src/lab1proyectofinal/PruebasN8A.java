@@ -9,11 +9,11 @@ import lab1proyectofinal.accesoADatos.BomberoData;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.accesoADatos.Conexion;
 import lab1proyectofinal.accesoADatos.CuartelData;
-import lab1proyectofinal.accesoADatos.SiniestroData;
+import lab1proyectofinal.accesoADatos.EmergenciaData;
 import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.entidades.Cuartel;
-import lab1proyectofinal.entidades.Siniestro;
+import lab1proyectofinal.entidades.Emergencia;
 
 /**
  *
@@ -31,11 +31,11 @@ public class PruebasN8A {
         }
     }
 
-    public static void imprimirListaSiniestro(List<Siniestro> lista) {
+    public static void imprimirListaSiniestro(List<Emergencia> lista) {
         if (lista.isEmpty()) {
             System.out.println("No se ha encontrado ningún elemento");
         }
-        for (Siniestro sin : lista) {
+        for (Emergencia sin : lista) {
             System.out.println(sin.debugToString());
         }
     }
@@ -64,7 +64,7 @@ public class PruebasN8A {
         }
     }
 
-    public static void imprimirResultadoSiniestro(Siniestro siniestro) {
+    public static void imprimirResultadoSiniestro(Emergencia siniestro) {
         if (siniestro != null) {
             System.out.println("Mostrando:\n" + siniestro.debugToString());
         }
@@ -94,25 +94,25 @@ public class PruebasN8A {
             return;
         }
         
-        SiniestroData.inicializar();
+        EmergenciaData.inicializar();
 
         // Clases Data
         CuartelData cuartelData = new CuartelData();
         BrigadaData brigadaData = new BrigadaData();
         BomberoData bomberoData = new BomberoData();
-        SiniestroData siniestroData = new SiniestroData();
+        EmergenciaData siniestroData = new EmergenciaData();
 
         // List de cada entidad
         List<Cuartel> listaCuartel;
         List<Brigada> listaBrigada;
         List<Bombero> listaBombero;
-        List<Siniestro> listaSiniestro;
+        List<Emergencia> listaSiniestro;
 
         // Objetos "vacíos" de cada entidad
         Cuartel cuartelAux;
         Brigada brigadaAux;
         Bombero bomberoAux;
-        Siniestro siniestroAux;
+        Emergencia siniestroAux;
 
         // Cuarteles
         Cuartel cuartel2 = new Cuartel("cuartel2", "direccion 202", 2, 2, "2664202020", "cuartel2@gmail.com");
@@ -122,17 +122,17 @@ public class PruebasN8A {
         Cuartel cuarteles[] = new Cuartel[]{cuartel2, cuartel3, cuartel4, cuartelRep};
 
         // Siniestros
-        Siniestro siniestro1 = new Siniestro("Incendio", LocalDateTime.of(2023, Month.NOVEMBER, 1, 12, 0), 10, 10, "Mucho humo");
-        Siniestro siniestro2 = new Siniestro("Derrumbe", LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 0), 20, 20, "Mucho escombro");
-        Siniestro siniestro3 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 0), 30, 30, "Al desarmadero");
-        Siniestro siniestro4 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 20, 12, 0), 40, 40, "Al desarmadero");      // siniestro con fechaI posterior a la actual
-        //Siniestro siniestro5 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), 50, 50, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), -1);    // siniestro con fechaR no "nula", pero puntuación "nula" 
-        //Siniestro siniestro6 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 6, 16, 0), 60, 60, "Al desarmadero", null, 5);       // siniestro con puntuación no nula, pero fechaR nula
-        //Siniestro siniestro7 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 7, 16, 0), 70, 70, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), 10);    // siniestro con fechaI posterior a la fechaR
-        //Siniestro siniestro8 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 8, 16, 0), 80, 80, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 9, 14, 0), 11);    // siniestro con puntuación fuera del rango válido
-        //Siniestro siniestro9 = new Siniestro("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 0), 70, 70, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 30, 14, 0), 10);    // siniestro con fechaR posterior a la fecha actual
-        //Siniestro siniestros[] = new Siniestro[]{siniestro1, siniestro2, siniestro3, siniestro4, siniestro5, siniestro6, siniestro7, siniestro8, siniestro9};
-        Siniestro siniestros[] = new Siniestro[]{siniestro1, siniestro2, siniestro3, siniestro4};
+        Emergencia siniestro1 = new Emergencia("Incendio", LocalDateTime.of(2023, Month.NOVEMBER, 1, 12, 0), 10, 10, "Mucho humo");
+        Emergencia siniestro2 = new Emergencia("Derrumbe", LocalDateTime.of(2023, Month.NOVEMBER, 2, 14, 0), 20, 20, "Mucho escombro");
+        Emergencia siniestro3 = new Emergencia("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 3, 16, 0), 30, 30, "Al desarmadero");
+        Emergencia siniestro4 = new Emergencia("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 20, 12, 0), 40, 40, "Al desarmadero");      // siniestro con fechaI posterior a la actual
+        //Siniestro siniestro5 = new Emergencia("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), 50, 50, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), -1);    // siniestro con fechaR no "nula", pero puntuación "nula" 
+        //Siniestro siniestro6 = new Emergencia("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 6, 16, 0), 60, 60, "Al desarmadero", null, 5);       // siniestro con puntuación no nula, pero fechaR nula
+        //Siniestro siniestro7 = new Emergencia("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 7, 16, 0), 70, 70, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 5, 14, 0), 10);    // siniestro con fechaI posterior a la fechaR
+        //Siniestro siniestro8 = new Emergencia("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 8, 16, 0), 80, 80, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 9, 14, 0), 11);    // siniestro con puntuación fuera del rango válido
+        //Siniestro siniestro9 = new Emergencia("Accidente", LocalDateTime.of(2023, Month.NOVEMBER, 4, 16, 0), 70, 70, "Al desarmadero", LocalDateTime.of(2023, Month.NOVEMBER, 30, 14, 0), 10);    // siniestro con fechaR posterior a la fecha actual
+        //Siniestro siniestros[] = new Emergencia[]{siniestro1, siniestro2, siniestro3, siniestro4, siniestro5, siniestro6, siniestro7, siniestro8, siniestro9};
+        Emergencia siniestros[] = new Emergencia[]{siniestro1, siniestro2, siniestro3, siniestro4};
 
         // Brigadas
         Brigada brigada2 = new Brigada("Grupo 2", "Quien sabe", true, cuartel2);
@@ -186,7 +186,7 @@ public class PruebasN8A {
         }
 
         System.out.println("\n----- Guardar siniestros -----");
-        for (Siniestro siniestro : siniestros) {
+        for (Emergencia siniestro : siniestros) {
             siniestroData.guardarSiniestro(siniestro);
         }
 
@@ -671,7 +671,7 @@ public class PruebasN8A {
         //        for (Brigada brigada : brigadas) {
         //            System.out.println(brigada);
         //        }
-        //        for (Siniestro siniestro : siniestros) {
+        //        for (Emergencia siniestro : siniestros) {
         //            System.out.println(siniestro);
         //        }
         //        for (Cuartel cuartel : cuarteles) {

@@ -7,12 +7,10 @@ package lab1proyectofinal.vistas;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.AbstractButton;
@@ -29,18 +27,16 @@ import lab1proyectofinal.accesoADatos.*;
  */
 public class GestionBombero extends javax.swing.JInternalFrame {
 
-    private final CuartelData cuartelData;
     private final BrigadaData brigadaData;
     private final BomberoData bomberoData;
-    private Brigada brigada;
     private Bombero bombero;
-    private List<Cuartel> listaCuartel;
     private List<Brigada> listaBrigada;
     private List<Bombero> listaBombero;
-    private boolean enOperacion = false;
+    private boolean enModoPrevioABusqueda;
     private boolean enAgregacion;
     private boolean enModificacion;
     private boolean programaCambiandoJCBBomberos;
+    private boolean cambioDeBrigada;
     private Integer dniRegEncontrado;
     private MouseListener[] mouseListenersJCBGruposSanguineos;
     private MouseListener[] mouseListenersJCBGruposSanguineosAB;
@@ -50,9 +46,8 @@ public class GestionBombero extends javax.swing.JInternalFrame {
     private MouseListener[] mouseListenersJDCFechaNacimientoAB;
     private JLabel jLabAux = Utils.jLabConfigurado();
 
-    public GestionBombero(CuartelData cuartelData, BrigadaData brigadaData, BomberoData bomberoData) {
+    public GestionBombero(BrigadaData brigadaData, BomberoData bomberoData) {
         initComponents();
-        this.cuartelData = cuartelData;
         this.brigadaData = brigadaData;
         this.bomberoData = bomberoData;
         configurarJCBGruposSanguineos();
@@ -61,8 +56,12 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         modoPrevioABusqueda();
     }
 
-    boolean isEnOperacion() {
-        return enOperacion;
+    public boolean isEnAgregacion() {
+        return enAgregacion;
+    }
+
+    public boolean isEnModificacion() {
+        return enModificacion;
     }
 
     void cancelarOperacion() {
@@ -76,8 +75,8 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jCBBomberos.removeAllItems();
         listaBombero = bomberoData.listarBomberos();
         if (listaBombero.isEmpty()) {
-            jLabMensajeBombero.setForeground(Color.BLACK);
-            jLabMensajeBombero.setText("<html>Advertencia: no hay bomberos cargados en el "
+            jLabMensajeBombero.setForeground(Color.BLUE);
+            jLabMensajeBombero.setText("<html>No hay bomberos cargados en el "
                     + "sistema.</html>");
             programaCambiandoJCBBomberos = false;
             return;
@@ -101,8 +100,8 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jCBBrigadas.removeAllItems();
         listaBrigada = brigadaData.listarBrigadas();
         if (listaBrigada.isEmpty()) {
-            jLabMensajeBrigada.setForeground(Color.BLACK);
-            jLabMensajeBrigada.setText("<html>Advertencia: no hay brigadas cargadas en el "
+            jLabMensajeBrigada.setForeground(Color.BLUE);
+            jLabMensajeBrigada.setText("<html>No hay brigadas cargadas en el "
                     + "sistema.</html>");
             modoInhabilitado();
             jLabAux.setText("<html>No hay brigadas registradas. No se puede agregar, modificar "
@@ -311,14 +310,6 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         }
     }
 
-//    private Calendar localDateToCalendar(LocalDate ldate) {
-//        ZonedDateTime zonedDateTime = ldate.atStartOfDay(ZoneId.systemDefault());
-//        Instant instant = zonedDateTime.toInstant();
-//        Date date = Date.from(instant);
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(date);
-//        return calendar;
-//    }
     private Date localDateToDate(LocalDate ldate) {
         ZonedDateTime zonedDateTime = ldate.atStartOfDay(ZoneId.systemDefault());
         Instant instant = zonedDateTime.toInstant();
@@ -331,6 +322,9 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         1) No existen brigadas activas y, por tanto, no se puede agregar, modificar o dar de baja a 
         un bombero, pues no existe ninguno activo.
          */
+        enModoPrevioABusqueda = false;
+        enAgregacion = false;
+        enModificacion = false;
 
         jBAgregar.setEnabled(false);
         jBBuscar.setEnabled(false);
@@ -353,6 +347,10 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         2) Inmediatamente luego de una operación llevada a cabo exitosamente
         3) Se cambia el contenido de "jTextFieldDNI", sin modificar un registro.
          */
+
+        enModoPrevioABusqueda = true;
+        enAgregacion = false;
+        enModificacion = false;
 
         dniRegEncontrado = null;
 
@@ -385,6 +383,10 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         2) Se cancela la modificación de un registro.
          */
 
+        enModoPrevioABusqueda = false;
+        enAgregacion = false;
+        enModificacion = false;
+
         if (jCBBomberos.getSelectedIndex() == -1) {
             programaCambiandoJCBBomberos = true;
             jCBBomberos.setSelectedItem(bombero);
@@ -393,7 +395,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
 
         borrarMensajesDeDemasDatos();
 
-        jLabMensajeDNI.setForeground(Color.BLACK);
+        jLabMensajeDNI.setForeground(Color.BLUE);
         jLabMensajeDNI.setText("<html>Hay un bombero con este DNI entre los "
                 + "registrados.</html>");
         jLabMensajeDemasDatos.setForeground(Color.BLUE);
@@ -440,12 +442,15 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         2) Se cancela la agregación de un registro.
          */
 
+        enModoPrevioABusqueda = false;
+        enAgregacion = false;
+        enModificacion = false;
+
         limpiarEntradasDeJPDemasDatos();
         borrarMensajesDeDemasDatos();
 
-        jLabMensajeDNI.setForeground(Color.BLACK);
-        jLabMensajeDNI.setText("<html>No existe un bombero registrado con este "
-                + "DNI.</html>");
+        jLabMensajeDNI.setForeground(Color.BLUE);
+        jLabMensajeDNI.setText("<html>No existe un bombero registrado con este DNI.</html>");
         jLabMensajeDemasDatos.setForeground(Color.BLUE);
         jLabMensajeDemasDatos.setText("<html>Puede registrar un bombero con el DNI ingresado "
                 + "haciendo click en \"" + jBAgregar.getText() + "\" e ingresando los demás "
@@ -473,9 +478,9 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         la solicitud de confirmación posterior).
          */
 
-        borrarMensajesDeDatos();
+        enModoPrevioABusqueda = false;
 
-        enOperacion = true;
+        borrarMensajesDeDatos();
 
         jBAgregar.setEnabled(false);
         jBBuscar.setEnabled(false);
@@ -514,7 +519,6 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jBCancelar = new javax.swing.JButton();
         jBDarDeBaja = new javax.swing.JButton();
         jLabMensajeDNI = new javax.swing.JLabel();
-        jLabBombero = new javax.swing.JLabel();
         jCBBomberos = new javax.swing.JComboBox<>();
         jLabBuscarConCB = new javax.swing.JLabel();
         jLabBuscarConTF = new javax.swing.JLabel();
@@ -576,7 +580,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                 jTFDNIKeyTyped(evt);
             }
         });
-        getContentPane().add(jTFDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 200, -1));
+        getContentPane().add(jTFDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 270, 230, -1));
 
         jBGuardar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jBGuardar.setText("Guardar");
@@ -644,11 +648,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
 
         jLabMensajeDNI.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabMensajeDNI.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabMensajeDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 305, 340, 40));
-
-        jLabBombero.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabBombero.setText("Bombero:");
-        getContentPane().add(jLabBombero, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 133, -1, -1));
+        getContentPane().add(jLabMensajeDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, 340, 40));
 
         jCBBomberos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jCBBomberos.setMaximumRowCount(10);
@@ -657,7 +657,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                 jCBBomberosActionPerformed(evt);
             }
         });
-        getContentPane().add(jCBBomberos, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 340, -1));
+        getContentPane().add(jCBBomberos, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 460, -1));
 
         jLabBuscarConCB.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabBuscarConCB.setText("Puede seleccionar un bombero de entre los registradas:");
@@ -705,7 +705,8 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jPDemasDatos.add(jBLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 420, -1, -1));
 
         jLabMensajeBrigada.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 360, 320, 40));
+        jLabMensajeBrigada.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jPDemasDatos.add(jLabMensajeBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 350, 320, 40));
 
         jCBBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jPDemasDatos.add(jCBBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 320, 240, -1));
@@ -718,7 +719,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jPDemasDatos.add(jTFNombreCompleto, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 270, -1));
 
         jLabMensajeNomCompleto.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeNomCompleto, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 60, 320, 23));
+        jPDemasDatos.add(jLabMensajeNomCompleto, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 60, 320, 23));
 
         jLabCelular.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabCelular.setText("Celular:");
@@ -728,7 +729,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jPDemasDatos.add(jTFCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 250, 140, -1));
 
         jLabMensajeCelular.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 280, 320, 23));
+        jPDemasDatos.add(jLabMensajeCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 280, 320, 23));
 
         jLabFechaNacimiento.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabFechaNacimiento.setText("Fecha de nacimiento:");
@@ -743,7 +744,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
         jPDemasDatos.add(jLabMensajeFechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 210, 320, 23));
 
         jLabMensajeGrupoSanguineo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeGrupoSanguineo, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 130, 320, 23));
+        jPDemasDatos.add(jLabMensajeGrupoSanguineo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 320, 23));
 
         jCBGrupoSanguineo.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jPDemasDatos.add(jCBGrupoSanguineo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 100, 70, -1));
@@ -766,6 +767,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
 
         boolean entradasValidas = true;
 
+        // DNI
         String strDNI = jTFDNI.getText().trim();
         try {
             int intDNI = Integer.parseInt(strDNI);
@@ -779,7 +781,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
                 jLabMensajeDNI.setForeground(Color.RED);
                 jLabMensajeDNI.setText("<html>Debe ingresar un DNI válido.</html>");
             } else {
-                Bombero bomberoBuscado = bomberoData.buscarBomberoPorDNI(intDNI);
+                Bombero bomberoBuscado = bomberoData.bomberoSegunDNI(intDNI);
                 if (bomberoBuscado != null) {
                     if (bomberoBuscado.getDni() == dniRegEncontrado) {      // nota: ver si esto funciona
                         bombero.setDni(intDNI);
@@ -803,6 +805,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             }
         }
 
+        // Nombre completo
         String nombreCompleto = jTFNombreCompleto.getText();
         if (nombreCompleto.isBlank()) {
             entradasValidas = false;
@@ -812,6 +815,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             bombero.setNombreCompleto(nombreCompleto);
         }
 
+        // Grupo Sanguíneo
         if (jCBGrupoSanguineo.getSelectedIndex() == -1) {
             entradasValidas = false;
             jLabMensajeGrupoSanguineo.setForeground(Color.RED);
@@ -820,6 +824,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             bombero.setGrupoSanguineo((String) jCBGrupoSanguineo.getSelectedItem());
         }
 
+        // Fecha de nacimiento
         Date fechaNacimiento = jDCFechaNacimiento.getDate();
         if (fechaNacimiento == null) {
             entradasValidas = false;
@@ -837,6 +842,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             }
         }
 
+        // Celular
         String celular = jTFCelular.getText();
         if (celular.isBlank()) {
             entradasValidas = false;
@@ -846,45 +852,46 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             bombero.setCelular(celular);
         }
 
+        // Brigada
         if (jCBBrigadas.getSelectedIndex() == -1) {
             entradasValidas = false;
             jLabMensajeBrigada.setForeground(Color.RED);
-            jLabMensajeBrigada.setText("Debe seleccionar un cuartel.");
+            jLabMensajeBrigada.setText("Debe seleccionar una brigada.");
         } else {
+            if (enModificacion) {
+                cambioDeBrigada = !bombero.getBrigada().getNombreBrigada().
+                        equals(((Brigada) jCBBrigadas.getSelectedItem()).getNombreBrigada());
+            }
             bombero.setBrigada((Brigada) jCBBrigadas.getSelectedItem());
         }
 
         if (entradasValidas && enAgregacion) {
-            if (bomberoData.guardarBombero(bombero)) {
+            if (bomberoData.esGuardarBombero(bombero)) {
                 jLabAux.setText("<html>Se registró al bombero con DNI: \"" + bombero.getDni()
                         + "\".</html>");
                 JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
                 configurarJCBBomberos();
-                modoPrevioABusqueda();
-                jTFDNI.setText("");
-                enOperacion = false;
-                enAgregacion = false;
+                modoRegistroEncontrado();
             } else {
                 jLabAux.setText("<html>No se pudo registrar al bombero con DNI: \""
-                        + bombero.getDni() + "\".</html>");
+                        + bombero.getDni() + "\". Puede que la brigada a la que lo quiere asignar "
+                        + "ya esté llena; intentelo con otra.</html>");
                 JOptionPane.showMessageDialog(this, jLabAux, "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
         } else if (entradasValidas && enModificacion) {
-            if (bomberoData.modificarBombero(bombero)) {
+            if (bomberoData.modificarBombero(bombero, cambioDeBrigada)) {
                 jLabAux.setText("<html>Se ha modificado al bombero con DNI: \"" + bombero.getDni()
                         + "\".</html>");
                 JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
                 configurarJCBBomberos();
-                modoPrevioABusqueda();
-                jTFDNI.setText("");
-                enOperacion = false;
-                enModificacion = false;
+                modoRegistroEncontrado();
             } else {
                 jLabAux.setText("<html>No se pudo modificar al bombero con DNI: \""
-                        + bombero.getDni() + "\".</html>");
+                        + bombero.getDni() + "\". Puede que la brigada a la que lo quiere asignar "
+                        + "ya esté llena; intentelo con otra.</html>");
                 JOptionPane.showMessageDialog(this, jLabAux, "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -946,7 +953,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
             return;
         }
 
-        bombero = bomberoData.buscarBomberoPorDNI(intDNI);
+        bombero = bomberoData.bomberoSegunDNI(intDNI);
         if (bombero != null) {
             modoRegistroEncontrado();
         } else {
@@ -990,7 +997,6 @@ public class GestionBombero extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jBDarDeBajaActionPerformed
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
-        enOperacion = false;
         if (enAgregacion) {
             modoRegistroNoEncontrado();
         } else if (enModificacion) {
@@ -999,7 +1005,7 @@ public class GestionBombero extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jTFDNIKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFDNIKeyTyped
-        if (!enModificacion) {
+        if (!enModificacion && !enModoPrevioABusqueda) {
             modoPrevioABusqueda();
         }
     }//GEN-LAST:event_jTFDNIKeyTyped
@@ -1031,7 +1037,6 @@ public class GestionBombero extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<Brigada> jCBBrigadas;
     private javax.swing.JComboBox<String> jCBGrupoSanguineo;
     private com.toedter.calendar.JDateChooser jDCFechaNacimiento;
-    private javax.swing.JLabel jLabBombero;
     private javax.swing.JLabel jLabBrigada;
     private javax.swing.JLabel jLabBuscarConCB;
     private javax.swing.JLabel jLabBuscarConTF;

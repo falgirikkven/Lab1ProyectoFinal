@@ -7,6 +7,8 @@ package lab1proyectofinal.vistas;
 import java.awt.Color;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import lab1proyectofinal.accesoADatos.BrigadaData;
 import lab1proyectofinal.entidades.*;
 import lab1proyectofinal.accesoADatos.Utils;
@@ -46,7 +48,7 @@ public class ListadosPorBrigada extends javax.swing.JInternalFrame {
         jTaBomberosDeBrigada.getTableHeader().setFont(Utils.fuenteNegrita);
         modeloTablaBrigadas.addColumn("Nombre");
         modeloTablaBrigadas.addColumn("Especialidad");
-        modeloTablaBrigadas.addColumn("Disponible");
+        modeloTablaBrigadas.addColumn("En servicio");
         modeloTablaBrigadas.addColumn("Cuartel");
         modeloTablaBomberos.addColumn("DNI");
         modeloTablaBomberos.addColumn("Nombre completo");
@@ -61,8 +63,12 @@ public class ListadosPorBrigada extends javax.swing.JInternalFrame {
         jTaBomberosDeBrigada.getColumnModel().getColumn(1).setPreferredWidth(180);
         jTaBomberosDeBrigada.getColumnModel().getColumn(2).setPreferredWidth(20);
 
-        jTaTodasLasBrigadas.setRowHeight(20);
-        jTaBomberosDeBrigada.setRowHeight(20);
+        jTaTodasLasBrigadas.setRowHeight(23);
+        jTaBomberosDeBrigada.setRowHeight(23);
+
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(modeloTablaBrigadas);        
+        sorter.toggleSortOrder(0);
+        jTaTodasLasBrigadas.setRowSorter(sorter);
     }
 
     private void cargarDatosTablaBrigadas() {
@@ -74,11 +80,12 @@ public class ListadosPorBrigada extends javax.swing.JInternalFrame {
         } else {
             for (Brigada bri : listaBrigada) {
                 modeloTablaBrigadas.addRow(new Object[]{bri.getNombreBrigada(),
-                    bri.getEspecialidad(), bri.isDisponible() ? "Si" : "No ",
+                    bri.getEspecialidad(), bri.isEnServicio() ? "Si" : "No ",
                     bri.getCuartel().getNombreCuartel()});
             }
             jLabMensajeTablaBrigadas.setText("<html>Seleccione una brigada de la tabla haciendo "
-                    + "click en su fila para ver los bomberos vinculados a la misma.</html>");
+                    + "click en su fila para ver los bomberos vinculados a la misma. También puede "
+                    + "hacer click en las columnas de la cabecera para ordenar las filas</html>");
         }
     }
 
@@ -118,7 +125,7 @@ public class ListadosPorBrigada extends javax.swing.JInternalFrame {
         jLabMensajeTablaBrigadas = new javax.swing.JLabel();
         jBSalir = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(1022, 718));
+        setPreferredSize(new java.awt.Dimension(1022, 740));
         setRequestFocusEnabled(false);
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
@@ -155,12 +162,12 @@ public class ListadosPorBrigada extends javax.swing.JInternalFrame {
         jTaBomberosDeBrigada.getTableHeader().setReorderingAllowed(false);
         jScPBomberosDeBrigada.setViewportView(jTaBomberosDeBrigada);
 
-        getContentPane().add(jScPBomberosDeBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 440, 800, 210));
+        getContentPane().add(jScPBomberosDeBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 460, 800, 210));
 
         jLabBomberosBrigada.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabBomberosBrigada.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabBomberosBrigada.setText("Bomberos de la brigada seleccionada");
-        getContentPane().add(jLabBomberosBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 380, 800, -1));
+        getContentPane().add(jLabBomberosBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 400, 800, -1));
 
         jTaTodasLasBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jTaTodasLasBrigadas.setModel(new javax.swing.table.DefaultTableModel(
@@ -182,7 +189,7 @@ public class ListadosPorBrigada extends javax.swing.JInternalFrame {
         });
         jScPBrigadas.setViewportView(jTaTodasLasBrigadas);
 
-        getContentPane().add(jScPBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 800, 210));
+        getContentPane().add(jScPBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 160, 800, 210));
 
         jLabTodasLasBrigadas.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabTodasLasBrigadas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -195,10 +202,10 @@ public class ListadosPorBrigada extends javax.swing.JInternalFrame {
         getContentPane().add(jLabListadosPorBrigada, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 800, -1));
 
         jLabMensajeTablaBomberos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabMensajeTablaBomberos, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 410, 790, 20));
+        getContentPane().add(jLabMensajeTablaBomberos, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 430, 790, 20));
 
         jLabMensajeTablaBrigadas.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        getContentPane().add(jLabMensajeTablaBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 110, 780, 20));
+        getContentPane().add(jLabMensajeTablaBrigadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 110, 780, 46));
 
         jBSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jBSalir.setText("Salir");

@@ -14,7 +14,9 @@ import javax.swing.JLabel;
 import lab1proyectofinal.entidades.Bombero;
 import lab1proyectofinal.entidades.Brigada;
 import lab1proyectofinal.entidades.Cuartel;
-import lab1proyectofinal.entidades.Siniestro;
+import lab1proyectofinal.entidades.Emergencia;
+import java.lang.Math;
+import java.time.LocalTime;
 
 /**
  *
@@ -22,10 +24,20 @@ import lab1proyectofinal.entidades.Siniestro;
  */
 public class Utils {
 
-    public static final int NIL = -1;
+    public static final int codigoNoEstablecido = -1;
+    public static final int desempenioNoEstablecida = -1;
+    public static final String nombreEntidadNula = "nulo";
 
-    public static final Font fuentePlana = new Font("Dialog", 0, 14);
-    public static final Font fuenteNegrita = new Font("Dialog", 1, 14);
+    public static final Font fuentePlana = new Font("Lucida Sans Unicode", 0, 14);
+    public static final Font fuenteNegrita = new Font("Lucida Sans Unicode", 1, 14);
+
+    public static Date horaPorDefecto() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
 
     public static JLabel jLabConfigurado() {
         JLabel jLab = new JLabel();
@@ -33,6 +45,27 @@ public class Utils {
         Dimension dim = new Dimension(300, 80);
         jLab.setPreferredSize(dim);
         return jLab;
+    }
+
+    public static enum Dato {
+        ID_BOMBERO,
+        CODIGO_CUARTEL,
+        CODIGO_BRIGADA,
+        CODIGO_SINIESTRO,
+        DNI,
+        NOMBRE,
+        NOMBRE_COMPLETO,
+        CELULAR,
+        TELEFONO,
+        GRUPO_SANGUINEO,
+        CORREO,
+        FECHA_NACIMIENTO,
+        FECHA_INICIO,
+        FECHA_RESOLUCION,
+        DESEMPEÑO,
+        ESTADO,
+        BRIGADA,
+        CUARTEL
     }
 
     public static String[] obtenerEspecialidades() {
@@ -61,17 +94,21 @@ public class Utils {
         return s;
     }
 
-    public static boolean esTelefonoValido(String telefono) {
-        return telefono.matches("^\\d+$");
+    public static boolean esCorreoValido(String correo) {
+        return correo.matches("(?=[a-z]\\w{2,}@[a-z]\\w{2,}(\\.[a-z]{2,4}){1,2}$).{1,50}");
     }
+
+    public static boolean esTelefonoValido(String telefono) {
+        return telefono.matches("^\\d{9,15}$");
+    }   
 
     public static Cuartel obtenerDeResultSetCuartel(ResultSet rs) throws SQLException {
         Cuartel cuartel = new Cuartel();
         cuartel.setCodigoCuartel(rs.getInt("cuartel.codigoCuartel"));
         cuartel.setNombreCuartel(rs.getString("nombreCuartel"));
         cuartel.setDireccion(rs.getString("direccion"));
-        cuartel.setCoordenadaX(rs.getInt("coordenadaX"));
-        cuartel.setCoordenadaY(rs.getInt("coordenadaY"));
+        cuartel.setCoordenadaX(rs.getDouble("coordenadaX"));
+        cuartel.setCoordenadaY(rs.getDouble("coordenadaY"));
         cuartel.setTelefono(rs.getString("telefono"));
         cuartel.setCorreo(rs.getString("correo"));
         cuartel.setEstado(rs.getBoolean("cuartel.estado"));
@@ -85,7 +122,7 @@ public class Utils {
         brigada.setCodigoBrigada(rs.getInt("brigada.codigoBrigada"));
         brigada.setNombreBrigada(rs.getString("nombreBrigada"));
         brigada.setEspecialidad(rs.getString("especialidad"));
-        brigada.setDisponible(rs.getBoolean("disponible"));
+        brigada.setEnServicio(rs.getBoolean("enServicio"));
         brigada.setCuartel(cuartel);
         brigada.setEstado(rs.getBoolean("brigada.estado"));
         return brigada;
@@ -96,7 +133,7 @@ public class Utils {
         brigada.setCodigoBrigada(rs.getInt("brigada.codigoBrigada"));
         brigada.setNombreBrigada(rs.getString("nombreBrigada"));
         brigada.setEspecialidad(rs.getString("especialidad"));
-        brigada.setDisponible(rs.getBoolean("disponible"));
+        brigada.setEnServicio(rs.getBoolean("enServicio"));
         brigada.setCuartel(cuartel);
         brigada.setEstado(rs.getBoolean("brigada.estado"));
         return brigada;
@@ -130,42 +167,42 @@ public class Utils {
         return bombero;
     }
 
-    public static Siniestro obtenerDeResultSetSiniestro(ResultSet rs) throws SQLException {
+    public static Emergencia obtenerDeResultSetEmergencia(ResultSet rs) throws SQLException {
         Brigada brigada = obtenerDeResultSetBrigada(rs);
 
-        Siniestro siniestro = new Siniestro();
-        siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));
-        siniestro.setTipo(rs.getString("tipo"));
-        siniestro.setFechaHoraInicio(rs.getTimestamp("fechaHoraInicio").toLocalDateTime());
-        siniestro.setCoordenadaX(rs.getInt("coordenadaX"));
-        siniestro.setCoordenadaY(rs.getInt("coordenadaY"));
-        siniestro.setDetalles(rs.getString("detalles"));
-        siniestro.setBrigada(brigada);
-        if (rs.getInt("puntuacion") != Utils.NIL) {
-            siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
+        Emergencia emergencia = new Emergencia();
+        emergencia.setCodigoEmergencia(rs.getInt("codigoEmergencia"));
+        emergencia.setTipo(rs.getString("tipo"));
+        emergencia.setFechaHoraInicio(rs.getTimestamp("fechaHoraInicio").toLocalDateTime());
+        emergencia.setCoordenadaX(rs.getDouble("coordenadaX"));
+        emergencia.setCoordenadaY(rs.getDouble("coordenadaY"));
+        emergencia.setDetalles(rs.getString("detalles"));
+        emergencia.setBrigada(brigada);
+        if (rs.getInt("desempenio") != Utils.desempenioNoEstablecida) {
+            emergencia.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
         } else {
-            siniestro.setFechaHoraResolucion(null);
+            emergencia.setFechaHoraResolucion(null);
         }
-        siniestro.setPuntuacion(rs.getInt("puntuacion"));
-        return siniestro;
+        emergencia.setDesempenio(rs.getInt("desempenio"));
+        return emergencia;
     }
 
-    public static Siniestro obtenerDeResultSetSiniestro(ResultSet rs, Brigada brigada) throws SQLException {
-        Siniestro siniestro = new Siniestro();
-        siniestro.setCodigoSiniestro(rs.getInt("codigoSiniestro"));
-        siniestro.setTipo(rs.getString("tipo"));
-        siniestro.setFechaHoraInicio(rs.getTimestamp("fechaHoraInicio").toLocalDateTime());
-        siniestro.setCoordenadaX(rs.getInt("coordenadaX"));
-        siniestro.setCoordenadaY(rs.getInt("coordenadaY"));
-        siniestro.setDetalles(rs.getString("detalles"));
-        siniestro.setBrigada(brigada);
-        if (rs.getInt("puntuacion") != Utils.NIL) {
-            siniestro.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
+    public static Emergencia obtenerDeResultSetEmergencia(ResultSet rs, Brigada brigada) throws SQLException {
+        Emergencia emergencia = new Emergencia();
+        emergencia.setCodigoEmergencia(rs.getInt("codigoEmergencia"));
+        emergencia.setTipo(rs.getString("tipo"));
+        emergencia.setFechaHoraInicio(rs.getTimestamp("fechaHoraInicio").toLocalDateTime());
+        emergencia.setCoordenadaX(rs.getDouble("coordenadaX"));
+        emergencia.setCoordenadaY(rs.getDouble("coordenadaY"));
+        emergencia.setDetalles(rs.getString("detalles"));
+        emergencia.setBrigada(brigada);
+        if (rs.getInt("desempenio") != Utils.desempenioNoEstablecida) {
+            emergencia.setFechaHoraResolucion(rs.getTimestamp("fechaHoraResolucion").toLocalDateTime());
         } else {
-            siniestro.setFechaHoraResolucion(null);
+            emergencia.setFechaHoraResolucion(null);
         }
-        siniestro.setPuntuacion(rs.getInt("puntuacion"));
-        return siniestro;
+        emergencia.setDesempenio(rs.getInt("desempenio"));
+        return emergencia;
     }
 
     // LocalDate -> Calendar
@@ -178,8 +215,27 @@ public class Utils {
         return calendar;
     }
 
+    public static Date localDateToDate(LocalDate ldate) {
+        ZonedDateTime zonedDateTime = ldate.atStartOfDay(ZoneId.systemDefault());
+        Instant instant = zonedDateTime.toInstant();
+        return Date.from(instant);
+    }
+
+    public static Date localTimeToDate(LocalTime ltime) {
+        Instant instant = ltime.atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant();
+        return Date.from(instant);
+    }
+
     public static LocalDate dateToLocalDate(Date date) {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    public static LocalTime dateToLocalTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+    }
+
+    public static double calcularDistancia(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
 }

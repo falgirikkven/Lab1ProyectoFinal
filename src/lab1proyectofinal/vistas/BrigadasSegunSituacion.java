@@ -51,7 +51,7 @@ public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
         jTable.getTableHeader().setFont(Utils.fuenteNegrita);
         dtm.addColumn("Nombre");
         dtm.addColumn("Especialidad");
-        dtm.addColumn("Disponible");
+        dtm.addColumn("EnServicio");
         dtm.addColumn("Cuartel");
         jTable.setModel(dtm);
         jTable.getColumnModel().getColumn(0).setPreferredWidth(70);
@@ -70,7 +70,7 @@ public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
         } else {
             for (Brigada bri : listaBrigada) {
                 modeloJTaAsignables.addRow(new Object[]{bri.getNombreBrigada(),
-                    bri.getEspecialidad(), bri.isDisponible() ? "Si" : "No ",
+                    bri.getEspecialidad(), bri.isEnServicio() ? "Si" : "No ",
                     bri.getCuartel().getNombreCuartel()});
             }
             jLabMensajeTaAsignables.setText("");
@@ -87,7 +87,7 @@ public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
         } else {
             for (Brigada bri : listaBrigada) {
                 modeloJTaAtendiendoEmerg.addRow(new Object[]{bri.getNombreBrigada(),
-                    bri.getEspecialidad(), bri.isDisponible() ? "Si" : "No ",
+                    bri.getEspecialidad(), bri.isEnServicio() ? "Si" : "No ",
                     bri.getCuartel().getNombreCuartel()});
             }
             jLabMensajeJTaAtendiendoEmerg.setText("");
@@ -103,7 +103,7 @@ public class BrigadasSegunSituacion extends javax.swing.JInternalFrame {
         } else {
             for (Brigada bri : listaBrigada) {
                 modeloJTaIncompletas.addRow(new Object[]{bri.getNombreBrigada(),
-                    bri.getEspecialidad(), bri.isDisponible() ? "Si" : "No ",
+                    bri.getEspecialidad(), bri.isEnServicio() ? "Si" : "No ",
                     bri.getCuartel().getNombreCuartel()});
             }
             jLabMensajeTaIncompletas.setText("");

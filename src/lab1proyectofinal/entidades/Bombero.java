@@ -1,7 +1,6 @@
 package lab1proyectofinal.entidades;
 
 import java.time.LocalDate;
-import java.util.Objects;
 import lab1proyectofinal.accesoADatos.Utils;
 
 /**
@@ -10,7 +9,7 @@ import lab1proyectofinal.accesoADatos.Utils;
  */
 public class Bombero {
 
-    private int idBombero = Utils.NIL;
+    private int idBombero = Utils.codigoNoEstablecido;
     private int dni;
     private String nombreCompleto;
     private String grupoSanguineo;
@@ -93,7 +92,7 @@ public class Bombero {
 
     public void setEstado(boolean estado) {
         this.estado = estado;
-    }
+    }    
 
     public String debugToString() {
         return "Bombero{" + "idBombero=" + idBombero + ", dni=" + dni + ", nombreCompleto=" + nombreCompleto + ", grupoSanguineo=" + grupoSanguineo + ", fechaNacimiento=" + fechaNacimiento + ", celular=" + celular + ", codigoBrigada=" + Integer.toString(brigada.getCodigoBrigada()) + ", estado=" + estado + '}';
@@ -101,57 +100,6 @@ public class Bombero {
 
     @Override
     public String toString() {
-        return dni + ", " + nombreCompleto;
+        return "DNI: " + dni + ", Nombre:" + nombreCompleto;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 97 * hash + this.idBombero;
-        hash = 97 * hash + this.dni;
-        hash = 97 * hash + Objects.hashCode(this.nombreCompleto);
-        hash = 97 * hash + Objects.hashCode(this.grupoSanguineo);
-        hash = 97 * hash + Objects.hashCode(this.fechaNacimiento);
-        hash = 97 * hash + Objects.hashCode(this.celular);
-        hash = 97 * hash + Objects.hashCode(this.brigada);
-        hash = 97 * hash + (this.estado ? 1 : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Bombero other = (Bombero) obj;
-        if (this.idBombero != other.idBombero) {
-            return false;
-        }
-        if (this.dni != other.dni) {
-            return false;
-        }
-        if (this.estado != other.estado) {
-            return false;
-        }
-        if (!Objects.equals(this.nombreCompleto, other.nombreCompleto)) {
-            return false;
-        }
-        if (!Objects.equals(this.grupoSanguineo, other.grupoSanguineo)) {
-            return false;
-        }
-        if (!Objects.equals(this.celular, other.celular)) {
-            return false;
-        }
-        if (!Objects.equals(this.fechaNacimiento, other.fechaNacimiento)) {
-            return false;
-        }
-        return Objects.equals(this.brigada, other.brigada);
-    }
-
 }

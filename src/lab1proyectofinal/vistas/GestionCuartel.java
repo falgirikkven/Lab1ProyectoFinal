@@ -5,8 +5,6 @@
 package lab1proyectofinal.vistas;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,6 +21,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     private final CuartelData cuartelData;
     private Cuartel cuartel;
     private List<Cuartel> listaCuartel;
+    private boolean enModoPrevioABusqueda;
     private boolean enAgregacion;
     private boolean enModificacion;
     private boolean programaCambiandoJCBCuarteles;
@@ -42,9 +41,9 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         jCBCuarteles.removeAllItems();
         listaCuartel = cuartelData.listarCuarteles();
         if (listaCuartel.isEmpty()) {
-            jLabMensajeCuartel.setForeground(Color.BLACK);
+            jLabMensajeCuartel.setForeground(Color.BLUE);
             jLabMensajeCuartel.setText(
-                    "<html>Advertencia: no hay cuarteles cargados en el sistema.</html>");
+                    "<html>No hay cuarteles cargados en el sistema.</html>");
             programaCambiandoJCBCuarteles = false;
             return;
         }
@@ -113,6 +112,10 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         3) Se cambia el contenido de "jTextFieldNombre", sin modificar un registro.
          */
 
+        enModoPrevioABusqueda = true;
+        enAgregacion = false;
+        enModificacion = false;
+
         if (jCBCuarteles.getSelectedIndex() != -1) {
             programaCambiandoJCBCuarteles = true;
             jCBCuarteles.setSelectedIndex(-1);
@@ -143,6 +146,10 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         2) Se cancela la modificación de un registro.
          */
 
+        enModoPrevioABusqueda = false;
+        enAgregacion = false;
+        enModificacion = false;
+
         if (jCBCuarteles.getSelectedIndex() == -1) {
             programaCambiandoJCBCuarteles = true;
             jCBCuarteles.setSelectedItem(cuartel);
@@ -151,7 +158,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
 
         borrarMensajesDeDemasDatos();
 
-        jLabMensajeNombre.setForeground(Color.BLACK);
+        jLabMensajeNombre.setForeground(Color.BLUE);
         jLabMensajeNombre.setText("<html>Hay un cuartel con este nombre entre los "
                 + "registrados.</html>");
         jLabMensajeDemasDatos.setForeground(Color.BLUE);
@@ -193,10 +200,14 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         2) Se cancela la agregación de un registro.        
          */
 
+        enModoPrevioABusqueda = false;
+        enAgregacion = false;
+        enModificacion = false;
+
         limpiarEntradasDeJPDemasDatos();
         borrarMensajesDeDemasDatos();
 
-        jLabMensajeNombre.setForeground(Color.BLACK);
+        jLabMensajeNombre.setForeground(Color.BLUE);
         jLabMensajeNombre.setText("<html>No existe un cuartel registrado con este "
                 + "nombre.</html>");
         jLabMensajeDemasDatos.setForeground(Color.BLUE);
@@ -225,6 +236,8 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         última solo requiere del click en "jbDarDeBaja" y de la confirmación o declinación de 
         la solicitud de confirmación posterior).
          */
+
+        enModoPrevioABusqueda = false;
 
         borrarMensajesDeDatos();
 
@@ -265,7 +278,6 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         jBCancelar = new javax.swing.JButton();
         jBDarDeBaja = new javax.swing.JButton();
         jLabMensajeNombre = new javax.swing.JLabel();
-        jLabCuartel = new javax.swing.JLabel();
         jCBCuarteles = new javax.swing.JComboBox<>();
         jLabSelecCuartel = new javax.swing.JLabel();
         jLabBuscarCuartel = new javax.swing.JLabel();
@@ -290,24 +302,24 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         jLabMensajeCoorX = new javax.swing.JLabel();
         jBLimpiar = new javax.swing.JButton();
         jLabTelefono = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
-        setPreferredSize(new java.awt.Dimension(1085, 560));
+        setPreferredSize(new java.awt.Dimension(1240, 600));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabNombre.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jLabNombre.setText("Nombre:");
-        getContentPane().add(jLabNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 274, -1, -1));
+        getContentPane().add(jLabNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 265, -1, -1));
 
-        jTFNombre.setColumns(20);
-        jTFNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFNombre.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jTFNombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jTFNombreKeyTyped(evt);
             }
         });
-        getContentPane().add(jTFNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 200, -1));
+        getContentPane().add(jTFNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 260, 300, -1));
 
-        jBGuardar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBGuardar.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jBGuardar.setText("Guardar");
         jBGuardar.setEnabled(false);
         jBGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -315,23 +327,23 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                 jBGuardarActionPerformed(evt);
             }
         });
-        getContentPane().add(jBGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 470, -1, -1));
+        getContentPane().add(jBGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 510, -1, -1));
 
-        jBSalir.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBSalir.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jBSalir.setText("Salir");
         jBSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBSalirActionPerformed(evt);
             }
         });
-        getContentPane().add(jBSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 470, -1, -1));
+        getContentPane().add(jBSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 510, -1, -1));
 
-        jLabGestionCuarteles.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabGestionCuarteles.setFont(new java.awt.Font("Lucida Sans Unicode", 1, 24)); // NOI18N
         jLabGestionCuarteles.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabGestionCuarteles.setText("Gestión de cuarteles");
-        getContentPane().add(jLabGestionCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 1070, -1));
+        getContentPane().add(jLabGestionCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 1230, -1));
 
-        jBAgregar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBAgregar.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jBAgregar.setText("Agregar cuartel");
         jBAgregar.setEnabled(false);
         jBAgregar.addActionListener(new java.awt.event.ActionListener() {
@@ -339,9 +351,9 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                 jBAgregarActionPerformed(evt);
             }
         });
-        getContentPane().add(jBAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, -1, -1));
+        getContentPane().add(jBAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, -1, -1));
 
-        jBModificar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBModificar.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jBModificar.setText("Modificar cuartel");
         jBModificar.setEnabled(false);
         jBModificar.addActionListener(new java.awt.event.ActionListener() {
@@ -349,9 +361,9 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                 jBModificarActionPerformed(evt);
             }
         });
-        getContentPane().add(jBModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 360, -1, -1));
+        getContentPane().add(jBModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 370, -1, -1));
 
-        jBCancelar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBCancelar.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jBCancelar.setText("Cancelar");
         jBCancelar.setEnabled(false);
         jBCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -359,9 +371,9 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                 jBCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(jBCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 470, -1, -1));
+        getContentPane().add(jBCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 510, -1, -1));
 
-        jBDarDeBaja.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBDarDeBaja.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jBDarDeBaja.setText("Dar de baja cuartel");
         jBDarDeBaja.setEnabled(false);
         jBDarDeBaja.addActionListener(new java.awt.event.ActionListener() {
@@ -369,127 +381,127 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                 jBDarDeBajaActionPerformed(evt);
             }
         });
-        getContentPane().add(jBDarDeBaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 360, -1, -1));
+        getContentPane().add(jBDarDeBaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 370, -1, -1));
 
-        jLabMensajeNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabMensajeNombre.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jLabMensajeNombre.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabMensajeNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 305, 340, 40));
+        getContentPane().add(jLabMensajeNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 295, 300, 46));
 
-        jLabCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabCuartel.setText("Cuartel:");
-        getContentPane().add(jLabCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 133, -1, -1));
-
-        jCBCuarteles.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jCBCuarteles.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jCBCuarteles.setMaximumRowCount(10);
         jCBCuarteles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCBCuartelesActionPerformed(evt);
             }
         });
-        getContentPane().add(jCBCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 200, -1));
+        getContentPane().add(jCBCuarteles, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 130, 370, -1));
 
-        jLabSelecCuartel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabSelecCuartel.setFont(new java.awt.Font("Lucida Sans Unicode", 1, 14)); // NOI18N
         jLabSelecCuartel.setText("Puede seleccionar un cuartel de entre los registrados:");
         getContentPane().add(jLabSelecCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
 
-        jLabBuscarCuartel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabBuscarCuartel.setFont(new java.awt.Font("Lucida Sans Unicode", 1, 14)); // NOI18N
         jLabBuscarCuartel.setText("Puede ingresar un nombre y ver si está registrado como cuartel:");
-        getContentPane().add(jLabBuscarCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, -1, -1));
+        getContentPane().add(jLabBuscarCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
 
-        jLabDemasDatos.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabDemasDatos.setFont(new java.awt.Font("Lucida Sans Unicode", 1, 14)); // NOI18N
         jLabDemasDatos.setText("Demás datos del cuartel:");
         getContentPane().add(jLabDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, -1, -1));
 
-        jBBuscar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBBuscar.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jBBuscar.setText("Buscar");
         jBBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBBuscarActionPerformed(evt);
             }
         });
-        getContentPane().add(jBBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 270, -1, -1));
+        getContentPane().add(jBBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 260, -1, -1));
 
-        jLabMensajeDemasDatos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabMensajeDemasDatos.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jLabMensajeDemasDatos.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabMensajeDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 410, 450, 55));
+        getContentPane().add(jLabMensajeDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 470, 46));
 
-        jLabMensajeCuartel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabMensajeCuartel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jLabMensajeCuartel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(jLabMensajeCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 165, 340, 40));
+        getContentPane().add(jLabMensajeCuartel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, 370, 40));
 
         jPDemasDatos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPDemasDatos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabMensajeCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 295, 250, 23));
+        jLabMensajeCoorY.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 335, 450, 23));
 
-        jLabCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabCoorX.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jLabCoorX.setText("Coordenada X:");
-        jPDemasDatos.add(jLabCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 204, -1, -1));
+        jPDemasDatos.add(jLabCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 235, -1, -1));
 
-        jLabDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabDireccion.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jLabDireccion.setText("Dirección:");
-        jPDemasDatos.add(jLabDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 24, -1, -1));
+        jPDemasDatos.add(jLabDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 25, -1, -1));
 
         jTFDireccion.setEditable(false);
-        jTFDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFDireccion.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jTFDireccion.setEnabled(false);
-        jPDemasDatos.add(jTFDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 200, -1));
+        jPDemasDatos.add(jTFDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 470, -1));
 
-        jLabCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabCorreoElec.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jLabCorreoElec.setText("Correo Electrónico:");
-        jPDemasDatos.add(jLabCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 144, -1, -1));
+        jPDemasDatos.add(jLabCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 165, -1, -1));
 
         jTFCoorY.setEditable(false);
-        jTFCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFCoorY.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jTFCoorY.setEnabled(false);
-        jPDemasDatos.add(jTFCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, 75, -1));
+        jPDemasDatos.add(jTFCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 300, 100, -1));
 
-        jLabMensajeCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 170, 250, 23));
+        jLabMensajeCorreoElec.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 195, 460, 23));
 
         jTFTelefono.setEditable(false);
-        jTFTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFTelefono.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jTFTelefono.setEnabled(false);
-        jPDemasDatos.add(jTFTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 80, 200, -1));
+        jPDemasDatos.add(jTFTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 90, 160, -1));
 
-        jLabMensajeDireccion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 50, 250, 23));
+        jLabMensajeDireccion.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 55, 460, 23));
 
         jTFCorreoElec.setEditable(false);
-        jTFCorreoElec.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFCorreoElec.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jTFCorreoElec.setEnabled(false);
-        jPDemasDatos.add(jTFCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, 200, -1));
+        jPDemasDatos.add(jTFCorreoElec, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 160, 470, -1));
 
         jTFCoorX.setEditable(false);
-        jTFCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFCoorX.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jTFCoorX.setEnabled(false);
-        jPDemasDatos.add(jTFCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 200, 75, -1));
+        jPDemasDatos.add(jTFCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 230, 100, -1));
 
-        jLabCoorY.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabCoorY.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jLabCoorY.setText("Coordenada Y:");
-        jPDemasDatos.add(jLabCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 264, -1, -1));
+        jPDemasDatos.add(jLabCoorY, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 305, -1, -1));
 
-        jLabMensajeTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 110, 250, 23));
+        jLabMensajeTelefono.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 125, 460, 23));
 
-        jLabMensajeCoorX.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jPDemasDatos.add(jLabMensajeCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 230, 250, 23));
+        jLabMensajeCoorX.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
+        jPDemasDatos.add(jLabMensajeCoorX, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 265, 460, 23));
 
-        jBLimpiar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jBLimpiar.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jBLimpiar.setText("Limpiar campos");
         jBLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBLimpiarActionPerformed(evt);
             }
         });
-        jPDemasDatos.add(jBLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 260, -1, -1));
+        jPDemasDatos.add(jBLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 300, -1, -1));
 
-        jLabTelefono.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabTelefono.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
         jLabTelefono.setText("Teléfono:");
-        jPDemasDatos.add(jLabTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 84, -1, -1));
+        jPDemasDatos.add(jLabTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 95, -1, -1));
 
-        getContentPane().add(jPDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 440, 330));
+        getContentPane().add(jPDemasDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 660, 370));
+
+        jLabel1.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 14)); // NOI18N
+        jLabel1.setText("Cuartel:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 135, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -508,8 +520,12 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             if (nombre.isBlank()) {
                 entradasValidas = false;
                 jLabMensajeNombre.setForeground(Color.RED);
-                jLabMensajeNombre.setText("<html>El nombre no puede estar compuesto solo por "
-                        + "espacios en blanco.</html>");
+                jLabMensajeNombre.setText("<html>Debe completar este campo.</html>");
+            } else if (nombre.length() > 30) {
+                entradasValidas = false;
+                jLabMensajeNombre.setForeground(Color.RED);
+                jLabMensajeNombre.setText("<html>El nombre no puede superar los 30 "
+                        + "caracteres.</html>");
             } else if (cuartelData.estaNombreEntreInactivos(nombre)) {
                 entradasValidas = false;
                 jLabMensajeNombre.setForeground(Color.RED);
@@ -539,6 +555,10 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
             entradasValidas = false;
             jLabMensajeDireccion.setForeground(Color.RED);
             jLabMensajeDireccion.setText("Debe completar este campo.");
+        } else if (direccion.length() > 50) {
+            entradasValidas = false;
+            jLabMensajeDireccion.setForeground(Color.RED);
+            jLabMensajeDireccion.setText("La dirección no puede superar los 50 caracteres.");
         } else {
             cuartel.setDireccion(direccion);
         }
@@ -551,48 +571,64 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         } else if (!Utils.esTelefonoValido(telefono)) {
             entradasValidas = false;
             jLabMensajeTelefono.setForeground(Color.RED);
-            jLabMensajeTelefono.setText("Debe ingresar un número de teléfono válido.");
+            jLabMensajeTelefono.setText("Debe ingresar un nro de teléfono válido.");
         } else {
             cuartel.setTelefono(telefono);
         }
 
         String correoElec = jTFCorreoElec.getText();
+
         if (correoElec.isBlank()) {
             entradasValidas = false;
             jLabMensajeCorreoElec.setForeground(Color.RED);
             jLabMensajeCorreoElec.setText("Debe completar este campo.");
+        } else if (!Utils.esCorreoValido(correoElec)) {
+            entradasValidas = false;
+            jLabMensajeCorreoElec.setForeground(Color.RED);
+            if (correoElec.length() > 50) {
+                jLabMensajeCorreoElec.setText("La dirección de correo no puede superar los 50 "
+                        + "caracteres.");
+            } else {
+                jLabMensajeCorreoElec.setText("Debe ingresar un correo electrónico válido.");
+            }
         } else {
             cuartel.setCorreo(correoElec);
         }
 
         try {
-            int coorX = Integer.parseInt(jTFCoorX.getText());
+            double coorX = Double.parseDouble(jTFCoorX.getText());
             cuartel.setCoordenadaX(coorX);
         } catch (NumberFormatException e) {
-            jLabMensajeCoorX.setForeground(Color.RED);
-            jLabMensajeCoorX.setText("Debe ingresar un número entero.");
             entradasValidas = false;
+            jLabMensajeCoorX.setForeground(Color.RED);
+            if (jTFCoorX.getText().isBlank()) {
+                jLabMensajeCoorX.setText("Debe completar este campo.");
+            } else {
+                jLabMensajeCoorX.setText("Debe ingresar un número.");
+            }
         }
 
         try {
-            int coorY = Integer.parseInt(jTFCoorY.getText());
+            double coorY = Double.parseDouble(jTFCoorY.getText());
             cuartel.setCoordenadaY(coorY);
         } catch (NumberFormatException e) {
-            jLabMensajeCoorY.setForeground(Color.RED);
-            jLabMensajeCoorY.setText("Debe ingresar un número entero.");
             entradasValidas = false;
+            jLabMensajeCoorY.setForeground(Color.RED);
+            if (jTFCoorY.getText().isBlank()) {
+                jLabMensajeCoorY.setText("Debe completar este campo.");
+            } else {
+                jLabMensajeCoorY.setText("Debe ingresar un número.");
+            }
         }
 
         if (entradasValidas && enAgregacion) {
-            if (cuartelData.guardarCuartel(cuartel)) {
+            if (cuartelData.insertarCuartel(cuartel)) {
                 jLabAux.setText("<html>Se registró el cuartel \""
                         + cuartel.getNombreCuartel() + "\".</html>");
                 JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
                 configurarJCBCuarteles();
-                modoPrevioABusqueda();
-                jTFNombre.setText("");
-                enAgregacion = false;
+                modoRegistroEncontrado();
             } else {
                 jLabAux.setText("<html>No se pudo registrar el cuartel \""
                         + cuartel.getNombreCuartel() + "\".</html>");
@@ -605,9 +641,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
                 configurarJCBCuarteles();
-                modoPrevioABusqueda();
-                jTFNombre.setText("");
-                enModificacion = false;
+                modoRegistroEncontrado();
             } else {
                 jLabAux.setText("<html>No se pudo modificar el cuartel \""
                         + cuartel.getNombreCuartel() + "\".</html>");
@@ -655,7 +689,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
         if (cuartelData.estaNombreEntreInactivos(nombreCuartel)) {
             jLabMensajeDemasDatos.setText("");
             jLabMensajeNombre.setForeground(Color.RED);
-            jLabMensajeNombre.setText("<html>Este nombre ya se encuentra ocupado por un "
+            jLabMensajeNombre.setText("<html>Este nombre se encuentra ocupado por un "
                     + "cuartel dado de baja. Por favor, ingrese otro.</html>");
             return;
         }
@@ -686,8 +720,8 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
                 + "\"?</html>");
         if (JOptionPane.showConfirmDialog(this, jLabAux, "Advertencia", JOptionPane.YES_NO_OPTION)
                 == JOptionPane.YES_OPTION) {
-            jLabAux.setText("Se dió de baja al cuartel \"" + nombreCuartel + "\".");
-            if (cuartelData.eliminarCuartelPorNombre(nombreCuartel)) {
+            if (cuartelData.eliminarLogicamenteCuartel(cuartel)) {
+                jLabAux.setText("Se dió de baja al cuartel \"" + nombreCuartel + "\".");
                 JOptionPane.showMessageDialog(this, jLabAux, "Información",
                         JOptionPane.INFORMATION_MESSAGE);
                 configurarJCBCuarteles();
@@ -711,7 +745,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jTFNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFNombreKeyTyped
-        if (!enModificacion) {
+        if (!enModificacion && !enModoPrevioABusqueda) {
             modoPrevioABusqueda();
         }
     }//GEN-LAST:event_jTFNombreKeyTyped
@@ -731,7 +765,6 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabCoorX;
     private javax.swing.JLabel jLabCoorY;
     private javax.swing.JLabel jLabCorreoElec;
-    private javax.swing.JLabel jLabCuartel;
     private javax.swing.JLabel jLabDemasDatos;
     private javax.swing.JLabel jLabDireccion;
     private javax.swing.JLabel jLabGestionCuarteles;
@@ -746,6 +779,7 @@ public class GestionCuartel extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabNombre;
     private javax.swing.JLabel jLabSelecCuartel;
     private javax.swing.JLabel jLabTelefono;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPDemasDatos;
     private javax.swing.JTextField jTFCoorX;
     private javax.swing.JTextField jTFCoorY;
